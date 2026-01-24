@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Semantic Search - Test Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .search-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .search-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .search-tab:hover {
+            color: #667eea;
+        }
+
+        .search-mode {
+            display: none;
+        }
+
+        .search-mode.active {
+            display: block;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9ff;
+        }
+
+        .image-upload-area:hover {
+            background: #f0f0ff;
+            border-color: #764ba2;
+        }
+
+        .image-upload-area.dragover {
+            background: #e8e8ff;
+            border-color: #764ba2;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .search-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .option-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .fixed-info {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .fixed-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .fixed-value {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .mmr-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .examples {
+            margin-top: 20px;
+        }
+
+        .examples-title {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .example-tag {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-tag:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .results-count {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .results-time {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .product-card {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .product-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #eee;
+            display: block;
+        }
+
+        .product-image.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .image-carousel {
+            position: relative;
+        }
+
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-nav.prev {
+            left: 8px;
+        }
+
+        .image-nav.next {
+            right: 8px;
+        }
+
+        .image-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .image-thumb {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .image-paths {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 6px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .product-meta {
+            font-size: 0.85em;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .product-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .detail-chip {
+            background: #eef2ff;
+            color: #3f51b5;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .product-link {
+            font-size: 0.85em;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .product-link:hover {
+            text-decoration: underline;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #5c6bc0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .product-id {
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .error {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .product-header {
+                flex-direction: column;
+            }
+
+            .product-score {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Smart Semantic Search</h1>
+            <p>Search 25,000+ Amazon products using natural language (English, French, Arabic)</p>
+        </div>
+
+        <div class="search-card">
+            <div class="search-tabs">
+                <button class="search-tab active" onclick="switchMode('text')" id="textTab">
+                    🔍 Text Search
+                </button>
+                <button class="search-tab" onclick="switchMode('image')" id="imageTab" style="opacity: 0.5;" title="Requires multi-vector setup from Kaggle notebook">
+                    🖼️ Image Search
+                </button>
+            </div>
+
+            <!-- Text Search Mode -->
+            <div class="search-mode active" id="textSearchMode">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="searchInput" 
+                        placeholder="Try: 'wireless headphones', 'machine à café', 'حقيبة ظهر'..."
+                        autofocus
+                    >
+                    <button class="search-btn" onclick="search()">Search</button>
+                </div>
+            </div>
+
+            <!-- Image Search Mode -->
+            <div class="search-mode" id="imageSearchMode">
+                <div id="imageSearchNotReady" style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: block;">
+                    <p style="margin: 0; color: #1565c0; font-weight: 600;">📋 Configuration requise</p>
+                    <p style="margin: 8px 0 0 0; color: #1565c0; font-size: 0.9em;">
+                        La recherche par image nécessite le notebook Kaggle multi-vecteurs.<br>
+                        1. Exécutez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">generate_multi_vectors_kaggle.ipynb</code> sur Kaggle<br>
+                        2. Téléchargez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">multi_vector_embeddings.pkl</code><br>
+                        3. Exécutez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">python upload_multi_vectors.py</code>
+                    </p>
+                </div>
+                <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imageFileInput').click()">
+                    <div class="upload-icon">📸</div>
+                    <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">Upload an Image</p>
+                    <p style="color: #666; font-size: 0.9em;">Click or drag & drop an image here</p>
+                    <p style="color: #999; font-size: 0.8em; margin-top: 8px;">Find similar products by image</p>
+                    <img id="imagePreview" class="image-preview" style="display: none;">
+                </div>
+                <input type="file" id="imageFileInput" class="file-input" accept="image/*" onchange="handleImageSelect(event)">
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="search-btn" id="imageSearchBtn" onclick="searchByImage()" disabled>
+                        🔍 Search by Image
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-options">
+                <div class="option-group">
+                    <label class="option-label">
+                        <input type="checkbox" id="mmrToggle">
+                        <span>🎯 Diverse Results (MMR)</span>
+                    </label>
+                    <span style="font-size: 0.85em; color: #666;">Different brands & categories</span>
+                </div>
+
+            </div>
+
+            <div class="examples">
+                <div class="examples-title">💡 Try these examples:</div>
+                <div class="example-tags">
+                    <div class="example-tag" onclick="searchExample('wireless headphones')">🎧 Wireless Headphones</div>
+                    <div class="example-tag" onclick="searchExample('coffee maker')">☕ Coffee Maker</div>
+                    <div class="example-tag" onclick="searchExample('laptop backpack')">🎒 Laptop Backpack</div>
+                    <div class="example-tag" onclick="searchExample('smart watch')">⌚ Smart Watch</div>
+                    <div class="example-tag" onclick="searchExample('kitchen knife')">🔪 Kitchen Knife</div>
+                    <div class="example-tag" onclick="searchExample('yoga mat')">🧘 Yoga Mat</div>
+                    <div class="example-tag" onclick="searchExample('machine espresso')">☕ Machine Espresso (FR)</div>
+                    <div class="example-tag" onclick="searchExample('سماعة بلوتوث')">🎵 Bluetooth Speaker (AR)</div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Searching through 25,000+ products...</p>
+            </div>
+
+            <div class="error" id="error"></div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="search-card">
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount"></div>
+                    <div class="results-time" id="resultsTime"></div>
+                </div>
+                <div id="resultsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8001';
+
+        // Fixed search configuration
+        const FIXED_THRESHOLD = 0.3; // 30% minimum match
+        const FIXED_LIMIT = 30; // 30 products max
+
+        let selectedImageFile = null;
+        let imageSearchAvailable = false;
+
+        // Check if image search is available (vectors compatible)
+        async function checkImageSearchStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/status/image-search`);
+                if (response.ok) {
+                    const data = await response.json();
+                    imageSearchAvailable = data.available;
+                    if (imageSearchAvailable) {
+                        // Hide the warning and enable the tab
+                        document.getElementById('imageSearchNotReady').style.display = 'none';
+                        document.getElementById('imageTab').style.opacity = '1';
+                        document.getElementById('imageTab').title = 'Search by image';
+                    }
+                }
+            } catch (e) {
+                // API not running or endpoint doesn't exist - keep warning visible
+                console.log('Image search status check failed:', e);
+            }
+        }
+
+        // Check on page load
+        checkImageSearchStatus();
+
+        // Switch between text and image search modes
+        function switchMode(mode) {
+            const textTab = document.getElementById('textTab');
+            const imageTab = document.getElementById('imageTab');
+            const textMode = document.getElementById('textSearchMode');
+            const imageMode = document.getElementById('imageSearchMode');
+
+            if (mode === 'text') {
+                textTab.classList.add('active');
+                imageTab.classList.remove('active');
+                textMode.classList.add('active');
+                imageMode.classList.remove('active');
+            } else {
+                textTab.classList.remove('active');
+                imageTab.classList.add('active');
+                textMode.classList.remove('active');
+                imageMode.classList.add('active');
+            }
+        }
+
+        // Handle image file selection
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('imageSearchBtn').disabled = false;
+                };
+                reader.readAsDataURL(file); // This gives us base64
+            }
+        }
+
+        // Drag and drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                selectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('imageSearchBtn').disabled = false;
+                };
+                reader.readAsDataURL(file); // This gives us base64
+            }
+        });
+
+        // Search by image
+        function searchByImage() {
+            if (!selectedImageFile) {
+                alert('Please select an image first');
+                return;
+            }
+
+            // Show loading, hide results and errors
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            const startTime = performance.now();
+
+            // Get search parameters
+            const mmrEnabled = document.getElementById('mmrToggle').checked;
+            const threshold = FIXED_THRESHOLD;
+            const limit = FIXED_LIMIT;
+
+            // Convert image to base64
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const base64Image = e.target.result; // data:image/jpeg;base64,...
+
+                    const requestBody = {
+                        image_base64: base64Image,
+                        limit: limit,
+                        threshold: threshold,
+                        mmr: mmrEnabled,
+                    };
+
+                    const response = await fetch(`${API_BASE}/search/image`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    });
+
+                    if (!response.ok) {
+                        let errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+                        try {
+                            const errorData = await response.json();
+                            if (errorData.detail) {
+                                errorMsg = errorData.detail;
+                            } else if (errorData.error) {
+                                errorMsg = errorData.error;
+                                if (errorData.solution) {
+                                    errorMsg += `\n\nSolution: ${errorData.solution}`;
+                                }
+                            }
+                        } catch (e) {
+                            // Could not parse JSON error body
+                        }
+                        throw new Error(errorMsg);
+                    }
+
+                    const data = await response.json();
+                    
+                    // Check for API error in response body (even with HTTP 200)
+                    if (data.error) {
+                        let errorMsg = data.error;
+                        if (data.solution) {
+                            errorMsg += `\n\nSolution: ${data.solution}`;
+                        }
+                        throw new Error(errorMsg);
+                    }
+                    
+                    const endTime = performance.now();
+                    const duration = ((endTime - startTime) / 1000).toFixed(2);
+
+                    displayResults(data.results || [], `Image: ${selectedImageFile.name}`, duration, data.mmr_enabled, 30);
+                } catch (error) {
+                    console.error('Image search error:', error);
+                    showError(`Failed to search by image: ${error.message}. Make sure the API server is running and CLIP model is loaded.`);
+                } finally {
+                    document.getElementById('loading').style.display = 'none';
+                }
+            };
+            reader.onerror = function() {
+                document.getElementById('loading').style.display = 'none';
+                showError('Failed to read image file.');
+            };
+            reader.readAsDataURL(selectedImageFile);
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search();
+            }
+        });
+
+        function searchExample(query) {
+            document.getElementById('searchInput').value = query;
+            search();
+        }
+
+        async function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            // Show loading, hide results and errors
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            const startTime = performance.now();
+            
+            // Get search parameters
+            const mmrEnabled = document.getElementById('mmrToggle').checked;
+            const threshold = FIXED_THRESHOLD;
+            const limit = FIXED_LIMIT;
+
+            try {
+                let url = `${API_BASE}/search?q=${encodeURIComponent(query)}&mmr=${mmrEnabled}&limit=${limit}&threshold=${threshold}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const endTime = performance.now();
+                const duration = ((endTime - startTime) / 1000).toFixed(2);
+
+                displayResults(data.results, query, duration, data.mmr_enabled, 30);
+            } catch (error) {
+                console.error('Search error:', error);
+                showError(`Failed to search: ${error.message}. Make sure the API server is running on port 8001.`);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayResults(results, query, duration, mmrEnabled, thresholdPercent) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsCount = document.getElementById('resultsCount');
+            const resultsTime = document.getElementById('resultsTime');
+            
+            // Ensure results is always an array
+            if (!results || !Array.isArray(results)) {
+                results = [];
+            }
+
+            const mmrBadge = mmrEnabled ? '<span class="mmr-badge">🎯 DIVERSE</span>' : '';
+            const thresholdInfo = thresholdPercent > 0 ? ` (min ${thresholdPercent}% match)` : '';
+            resultsCount.innerHTML = `Found ${results.length} results for "${query}"${thresholdInfo} ${mmrBadge}`;
+            resultsTime.textContent = `⚡ ${duration}s`;
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No results found</h3>
+                        <p>Try different keywords or check the examples above</p>
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = results.map((product, index) => {
+                    // Handle price safely
+                    const price = parseFloat(product.price) || 0;
+                    const listedPrice = parseFloat(product.listed_price) || 0;
+                    const salePrice = parseFloat(product.sale_price) || 0;
+                    const priceValue = salePrice > 0 ? salePrice : price;
+                    const priceText = priceValue > 0 ? `$${priceValue.toFixed(2)}` : 'Price not available';
+                    const priceOld = listedPrice > priceValue ? `<span style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-left: 8px;">$${listedPrice.toFixed(2)}</span>` : '';
+                    
+                    // Handle score safely
+                    const score = product.score ? (product.score * 100).toFixed(1) : '0.0';
+                    
+                    // Handle brand and rating
+                    const brandHtml = product.brand ? `<span style="color: #999; font-size: 0.9em;">by ${escapeHtml(product.brand)}</span>` : '';
+                    const ratingCount = product.review_count ? ` (${product.review_count} reviews)` : '';
+                    const ratingHtml = product.rating ? `<span style="color: #ff9800; margin-left: 10px;">⭐ ${product.rating}${ratingCount}</span>` : '';
+
+                    // Images
+                    const imageUrls = normalizeImages(product.image_urls || product.imageUrls || product.image);
+                    const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
+                    const carouselId = `carousel-${index}`;
+                    const imagesData = encodeURIComponent(JSON.stringify(imageUrls));
+                    const hasMultiple = imageUrls.length > 1;
+                    const imageHtml = imageUrl
+                        ? `<div class="image-carousel" id="${carouselId}" data-images="${imagesData}" data-index="0">
+                               <img class="product-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name || 'Product')}" loading="lazy">
+                               ${hasMultiple ? `<button class="image-nav prev" onclick="changeImage('${carouselId}', -1)">‹</button>` : ''}
+                               ${hasMultiple ? `<button class="image-nav next" onclick="changeImage('${carouselId}', 1)">›</button>` : ''}
+                           </div>`
+                        : `<div class="product-image placeholder">No image</div>`;
+                    const rawImageUrls = product.image_urls || product.imageUrls || product.image;
+                    const pathsText = imageUrls.length === 0 && rawImageUrls ? String(rawImageUrls) : "";
+                    const pathsHtml = pathsText
+                        ? `<div class="image-paths">Image URLs: ${escapeHtml(pathsText)}</div>`
+                        : '';
+
+                    // Breadcrumbs
+                    const breadcrumbs = normalizeBreadcrumbs(product.breadcrumbs);
+                    const breadcrumbsHtml = breadcrumbs ? `<div class="product-meta">${escapeHtml(breadcrumbs)}</div>` : '';
+
+                    // Details chips
+                    const chips = [];
+                    if (product.color) chips.push(`Color: ${product.color}`);
+                    if (product.material) chips.push(`Material: ${product.material}`);
+                    if (product.size) chips.push(`Size: ${product.size}`);
+                    if (product.style) chips.push(`Style: ${product.style}`);
+                    const chipsHtml = chips.length > 0
+                        ? `<div class="product-details">${chips.map(c => `<span class="detail-chip">${escapeHtml(c)}</span>`).join('')}</div>`
+                        : '';
+
+                    // Product URL
+                    const urlHtml = product.url
+                        ? `<a class="product-link" href="${escapeHtml(product.url)}" target="_blank" rel="noopener noreferrer">View on Amazon</a>`
+                        : '';
+                    
+                    return `
+                    <div class="product-card">
+                        ${imageHtml}
+                        ${pathsHtml}
+                        <div class="product-header">
+                            <div class="product-name">
+                                ${escapeHtml(product.name || 'Unknown Product')}
+                                ${brandHtml}
+                            </div>
+                            <div class="product-score">${score}% match</div>
+                        </div>
+                        ${breadcrumbsHtml}
+                        <div class="product-category">
+                            ${escapeHtml(product.category || 'Uncategorized')}
+                            ${ratingHtml}
+                        </div>
+                        ${chipsHtml}
+                        <div class="product-description">${escapeHtml(product.description || 'No description available')}</div>
+                        <div class="product-footer">
+                            <div class="product-price">${priceText}${priceOld}</div>
+                            <div class="product-id">ID: ${escapeHtml(String(product.id))}</div>
+                        </div>
+                        ${urlHtml ? `<div style="margin-top: 8px;">${urlHtml}</div>` : ''}
+                    </div>
+                `;
+                }).join('');
+            }
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function parseMaybeJsonArray(value) {
+            if (!value) return [];
+            if (Array.isArray(value)) return value;
+            if (typeof value === 'string') {
+                const trimmed = value.trim();
+                if (!trimmed) return [];
+                if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                    try {
+                        const parsed = JSON.parse(trimmed);
+                        return Array.isArray(parsed) ? parsed : [parsed];
+                    } catch {
+                        return [];
+                    }
+                }
+                return [trimmed];
+            }
+            return [];
+        }
+
+        function normalizeBreadcrumbs(value) {
+            const items = parseMaybeJsonArray(value);
+            if (!items.length) return '';
+            const names = items.map(item => {
+                if (typeof item === 'string') return item;
+                if (item && typeof item === 'object' && item.name) return item.name;
+                return '';
+            }).filter(Boolean);
+            return names.join(' > ');
+        }
+
+        function normalizeImages(value) {
+            const items = parseMaybeJsonArray(value);
+            const urls = [];
+            for (const item of items) {
+                if (typeof item === 'string') {
+                    urls.push(item);
+                } else if (item && typeof item === 'object') {
+                    if (item.url) urls.push(item.url);
+                    if (item.link) urls.push(item.link);
+                }
+            }
+            return urls;
+        }
+
+        function changeImage(carouselId, delta) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+            const img = carousel.querySelector('img');
+            if (!img) return;
+            const data = carousel.getAttribute('data-images');
+            if (!data) return;
+            let images = [];
+            try {
+                images = JSON.parse(decodeURIComponent(data));
+            } catch {
+                images = [];
+            }
+            if (!images.length) return;
+            let index = parseInt(carousel.getAttribute('data-index') || '0', 10);
+            index = (index + delta + images.length) % images.length;
+            carousel.setAttribute('data-index', String(index));
+            img.src = images[index];
+        }
+
+        // Check API connection on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                if (response.ok) {
+                    console.log('✅ API connection OK');
+                }
+            } catch (error) {
+                console.warn('⚠️  API not available. Make sure to run: uvicorn app:app --port 8001');
+            }
+        });
+    </script>
+</body>
+</html>

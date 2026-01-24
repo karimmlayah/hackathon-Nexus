@@ -1,0 +1,19 @@
+# Environnement virtuel Python
+.venv/
+venv/
+env/
+
+# Fichier des variables d'environnement
+.env
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

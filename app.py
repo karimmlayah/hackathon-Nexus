@@ -25,7 +25,9 @@ from qdrant import (
     get_qdrant_client,
     search_products,
     upsert_products,
+    get_stats,
 )
+from chatbot_service import ChatbotService
 
 
 load_dotenv()  # Loads .env locally for development
@@ -148,6 +150,14 @@ async def lifespan(app: FastAPI):
     app.state.embedder = embedder
     app.state.image_embedder = image_embedder
     app.state.collection_name = collection_name
+    
+    # Initialize Chatbot Service
+    try:
+        app.state.chatbot = ChatbotService(embedder)
+        logger.info("✅ Chatbot Service initialized!")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize Chatbot Service: {e}")
+        app.state.chatbot = None
 
     yield
 
@@ -158,6 +168,31 @@ app = FastAPI(
     description="Semantic (vector) search over products using Qdrant Cloud and SentenceTransformers.",
     lifespan=lifespan,
 )
+
+@app.get("/api/stats")
+async def stats_endpoint():
+    """
+    Get aggregate stats for dashboard
+    """
+    client = get_qdrant_client()
+    collection_name = os.getenv("QDRANT_COLLECTION", DEFAULT_COLLECTION_NAME)
+    stats = get_stats(client, collection_name)
+    return stats
+
+class ChatRequest(BaseModel):
+    message: str
+    currency: str = "USD"
+
+@app.post("/api/chat")
+async def chat_endpoint(request: ChatRequest):
+    """
+    Chat with the RAG assistant
+    """
+    if not app.state.chatbot:
+        raise HTTPException(status_code=503, detail="Chatbot service not available")
+    
+    response = await app.state.chatbot.get_response(request.message, request.currency)
+    return response
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -176,6 +211,22 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def home():
     """Redirect to search interface"""
     return FileResponse("static/index.html")
+
+
+@app.get("/shop.html", response_class=HTMLResponse)
+def shop():
+    """Serve shop page"""
+    return FileResponse("static/shop.html")
+
+
+@app.get("/{page}.html", response_class=HTMLResponse)
+def serve_html_pages(page: str):
+    """Serve other HTML pages from static directory"""
+    import os
+    file_path = f"static/{page}.html"
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="Page not found")
 
 
 @app.get("/status/image-search")
@@ -228,46 +279,99 @@ def image_search_status():
         }
 
 
+
+
+# =============================
+# API
+# =============================
+
 @app.get("/products")
 def list_products(
-    limit: int = Query(10, ge=1, le=100, description="Number of products to return"),
-    category: str = Query(None, description="Filter by category")
+    limit: int = Query(12, ge=1, le=100, description="Number of products per page"),
+    page: int = Query(1, ge=1, description="Page number"),
+    category: str = Query(None, description="Filter by category"),
 ):
-    """Get products from Qdrant (real data)"""
-    client = app.state.qdrant_client
-    collection_name = app.state.collection_name
+    """
+    Get products from Qdrant with pagination & category filter
+    """
+    from qdrant_client.http import models
+    from qdrant import map_qdrant_product
+    import logging
     
-    try:
-        # If category is provided, use semantic search to find relevant products
-        # This is more robust than scrolling and filtering in memory
-        if category and category != "All Products":
-            embedder = app.state.embedder
-            query_vector = embedder.embed_text(category)
-            
-            from qdrant import search_products
-            return search_products(
-                client=client,
-                collection_name=collection_name,
-                query_vector=query_vector,
-                limit=limit,
-                vector_name="text_dense"
-            )
+    logger = logging.getLogger("uvicorn")
+    client = app.state.qdrant_client
+    collection = app.state.collection_name
 
-        # Standard browsing: scroll through the collection
+    try:
+        # Get total count
+        collection_info = client.get_collection(collection)
+        total_count = collection_info.points_count
+        
+        # Calculate offset for pagination
+        offset = (page - 1) * limit
+        
+        # Scroll through Qdrant with offset
         results, _ = client.scroll(
-            collection_name=collection_name,
+            collection_name=collection,
             limit=limit,
+            offset=offset,
             with_payload=True,
         )
         
-        from qdrant import map_qdrant_product
-        return [map_qdrant_product(p) for p in results]
+        products = [map_qdrant_product(p) for p in results]
+        
+        # Filter by category after mapping if needed
+        if category and category != "All Products":
+            category_lower = category.lower()
+            # Get more results for filtering
+            all_results, _ = client.scroll(
+                collection_name=collection,
+                limit=limit * 10,
+                with_payload=True,
+            )
+            all_products = [map_qdrant_product(p) for p in all_results]
+            filtered = [
+                p for p in all_products 
+                if p.get("category", "").lower() == category_lower 
+                or category_lower in p.get("category", "").lower()
+                or p.get("category", "").lower() in category_lower
+            ]
+            total_count = len(filtered)
+            products = filtered[offset:offset+limit]
+        
+        total_pages = (total_count + limit - 1) // limit
+
+        return {
+            "products": products,
+            "total_count": total_count,
+            "total_pages": total_pages,
+            "current_page": page,
+            "limit": limit
+        }
+
     except Exception as e:
-        # Fallback to CSV data if Qdrant fails
+        # =============================
+        # Fallback CSV
+        # =============================
+        logger.error(f"❌ Qdrant error: {e}")
+
         filtered = PRODUCTS
         if category and category != "All Products":
-            filtered = [p for p in PRODUCTS if category.lower() in p.get("category", "").lower()]
-        return filtered[:limit]
+            filtered = [
+                p for p in PRODUCTS
+                if category.lower() in (p.get("category") or "").lower()
+            ]
+
+        total_count = len(filtered)
+        offset = (page - 1) * limit
+
+        return {
+            "products": filtered[offset:offset + limit],
+            "total_count": total_count,
+            "total_pages": (total_count + limit - 1) // limit,
+            "current_page": page,
+            "limit": limit
+        }
 
 
 @app.get("/search")

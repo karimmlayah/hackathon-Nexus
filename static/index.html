@@ -20,15 +20,48 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        /* Sticky Main Header */
+        .sticky-header {
+            position: sticky;
+            top: 45px;
+            z-index: 999;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Force consistent image sizes in product cards */
+        .product-item-inner-item img {
+            height: 200px !important;
+            width: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /* Chatbot product images */
+        .product-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-right: 1px solid #eee;
+            padding: 5px;
+        }
+
+        /* Carousel images */
+        .header-carousel-item img {
+            max-height: 400px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,14 +77,14 @@
 
 
 
-    <div class="container-fluid px-5 py-4 d-none d-lg-block">
+    <div class="container-fluid px-5 py-4 d-none d-lg-block sticky-header">
         <div class="row gx-0 align-items-center text-center">
             <div class="col-md-4 col-lg-3 text-center text-lg-start">
                 <div class="d-inline-flex align-items-center">
                     <a href="" class="navbar-brand p-0">
                         <h1 class="display-5 text-primary m-0"><i
                                 class="fas fa-shopping-bag text-secondary me-2"></i>FinFit</h1>
-                        <!-- <img src="img/logo.png" alt="Logo"> -->
+                        <!-- <img src="/static/img/logo.png" alt="Logo"> -->
                     </a>
                 </div>
             </div>
@@ -113,7 +146,7 @@
                             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                             style="display: none;">0</span>
                     </a>
-                    <span id="cartTotal" class="text-dark ms-3 fw-bold">$0.00</span>
+                    <!-- <span id="cartTotal" class="text-dark ms-3 fw-bold">$0.00</span> -->
                 </div>
             </div>
         </div>
@@ -168,7 +201,9 @@
                                     </div>
                                 </li>
                             </ul>
+
                         </div>
+
                     </div>
                 </nav>
             </div>
@@ -177,7 +212,7 @@
                     <a href="" class="navbar-brand d-block d-lg-none">
                         <h1 class="display-5 text-secondary m-0"><i
                                 class="fas fa-shopping-bag text-white me-2"></i>FinFit</h1>
-                        <!-- <img src="img/logo.png" alt="Logo"> -->
+                        <!-- <img src="/static/img/logo.png" alt="Logo"> -->
                     </a>
                     <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse">
@@ -263,7 +298,8 @@
             </div>
             <div class="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
                 <div class="carousel-header-banner h-100">
-                    <img src="img/header-img.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Image">
+                    <img src="/static/img/header-img.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;"
+                        alt="Image">
                     <div class="carousel-banner-offer">
                         <p class="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save $48.00</p>
                         <p class="text-primary fs-5 fw-bold mb-0">Special Offer</p>
@@ -483,7 +519,7 @@
                 <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
                     <a href="#">
                         <div class="bg-primary rounded position-relative">
-                            <img src="img/product-banner.jpg" class="img-fluid w-100 rounded" alt="">
+                            <img src="/static/img/product-banner.jpg" class="img-fluid w-100 rounded" alt="">
                             <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
                                 style="background: rgba(255, 255, 255, 0.5);">
                                 <h3 class="display-5 text-primary">EOS Rebel <br> <span>T7i Kit</span></h3>
@@ -496,7 +532,7 @@
                 <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
                     <a href="#">
                         <div class="text-center bg-primary rounded position-relative">
-                            <img src="img/product-banner-2.jpg" class="img-fluid w-100" alt="">
+                            <img src="/static/img/product-banner-2.jpg" class="img-fluid w-100" alt="">
                             <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
                                 style="background: rgba(242, 139, 0, 0.5);">
                                 <h2 class="display-2 text-secondary">SALE</h2>
@@ -527,7 +563,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -560,7 +596,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -593,7 +629,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -626,141 +662,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
-                                    <div class="products-mini-icon rounded-circle bg-primary">
-                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="products-mini-content p-3">
-                                    <a href="#" class="d-block mb-2">SmartPhone</a>
-                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                    <del class="me-2 fs-5">$1,250.00</del>
-                                    <span class="text-primary fs-5">$1,050.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="products-mini-add border p-3">
-                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-carousel owl-carousel productList-item">
-                    <div class="productImg-item products-mini-item border">
-                        <div class="row g-0">
-                            <div class="col-5">
-                                <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-8.png" class="img-fluid w-100 h-100" alt="Image">
-                                    <div class="products-mini-icon rounded-circle bg-primary">
-                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="products-mini-content p-3">
-                                    <a href="#" class="d-block mb-2">SmartPhone</a>
-                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                    <del class="me-2 fs-5">$1,250.00</del>
-                                    <span class="text-primary fs-5">$1,050.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="products-mini-add border p-3">
-                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="productImg-item products-mini-item border">
-                        <div class="row g-0">
-                            <div class="col-5">
-                                <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-9.png" class="img-fluid w-100 h-100" alt="Image">
-                                    <div class="products-mini-icon rounded-circle bg-primary">
-                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="products-mini-content p-3">
-                                    <a href="#" class="d-block mb-2">SmartPhone</a>
-                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                    <del class="me-2 fs-5">$1,250.00</del>
-                                    <span class="text-primary fs-5">$1,050.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="products-mini-add border p-3">
-                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="productImg-item products-mini-item border">
-                        <div class="row g-0">
-                            <div class="col-5">
-                                <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-10.png" class="img-fluid w-100 h-100" alt="Image">
-                                    <div class="products-mini-icon rounded-circle bg-primary">
-                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="products-mini-content p-3">
-                                    <a href="#" class="d-block mb-2">SmartPhone</a>
-                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                    <del class="me-2 fs-5">$1,250.00</del>
-                                    <span class="text-primary fs-5">$1,050.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="products-mini-add border p-3">
-                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="productImg-item products-mini-item border">
-                        <div class="row g-0">
-                            <div class="col-5">
-                                <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -795,7 +697,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-12.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-8.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -828,7 +730,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-13.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-9.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -861,7 +763,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-14.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-10.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -894,7 +796,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-15.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -929,7 +831,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-16.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-12.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -962,7 +864,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-17.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-13.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -995,7 +897,141 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-14.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <div class="products-mini-icon rounded-circle bg-primary">
+                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="products-mini-content p-3">
+                                    <a href="#" class="d-block mb-2">SmartPhone</a>
+                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
+                                    <del class="me-2 fs-5">$1,250.00</del>
+                                    <span class="text-primary fs-5">$1,050.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="products-mini-add border p-3">
+                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
+                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                            <div class="d-flex">
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
+                                        class="rounded-circle btn-sm-square border"><i
+                                            class="fas fa-random"></i></i></a>
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
+                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="productImg-item products-mini-item border">
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <div class="products-mini-img border-end h-100">
+                                    <img src="/static/img/product-15.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <div class="products-mini-icon rounded-circle bg-primary">
+                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="products-mini-content p-3">
+                                    <a href="#" class="d-block mb-2">SmartPhone</a>
+                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
+                                    <del class="me-2 fs-5">$1,250.00</del>
+                                    <span class="text-primary fs-5">$1,050.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="products-mini-add border p-3">
+                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
+                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                            <div class="d-flex">
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
+                                        class="rounded-circle btn-sm-square border"><i
+                                            class="fas fa-random"></i></i></a>
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
+                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="productImg-carousel owl-carousel productList-item">
+                    <div class="productImg-item products-mini-item border">
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <div class="products-mini-img border-end h-100">
+                                    <img src="/static/img/product-16.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <div class="products-mini-icon rounded-circle bg-primary">
+                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="products-mini-content p-3">
+                                    <a href="#" class="d-block mb-2">SmartPhone</a>
+                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
+                                    <del class="me-2 fs-5">$1,250.00</del>
+                                    <span class="text-primary fs-5">$1,050.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="products-mini-add border p-3">
+                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
+                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                            <div class="d-flex">
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
+                                        class="rounded-circle btn-sm-square border"><i
+                                            class="fas fa-random"></i></i></a>
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
+                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="productImg-item products-mini-item border">
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <div class="products-mini-img border-end h-100">
+                                    <img src="/static/img/product-17.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <div class="products-mini-icon rounded-circle bg-primary">
+                                        <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="products-mini-content p-3">
+                                    <a href="#" class="d-block mb-2">SmartPhone</a>
+                                    <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
+                                    <del class="me-2 fs-5">$1,250.00</del>
+                                    <span class="text-primary fs-5">$1,050.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="products-mini-add border p-3">
+                            <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
+                                    class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                            <div class="d-flex">
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
+                                        class="rounded-circle btn-sm-square border"><i
+                                            class="fas fa-random"></i></i></a>
+                                <a href="#"
+                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
+                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="productImg-item products-mini-item border">
+                        <div class="row g-0">
+                            <div class="col-5">
+                                <div class="products-mini-img border-end h-100">
+                                    <img src="/static/img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1046,7 +1082,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1081,7 +1117,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1116,7 +1152,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-5.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-5.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1151,7 +1187,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1186,7 +1222,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1221,7 +1257,7 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <img src="img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
+                                    <img src="/static/img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
                                     <div class="products-mini-icon rounded-circle bg-primary">
                                         <a href="#"><i class="fa fa-eye fa-1x text-white"></i></a>
                                     </div>
@@ -1378,16 +1414,47 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 
+    <!-- AI Chatbot UI -->
+    <div class="ai-chatbot-btn" onclick="toggleChat()" title="Ask our AI Assistant">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-robot me-2"></i>
+                <h5>FinFit AI Assistant</h5>
+            </div>
+            <div class="close-chat" onclick="toggleChat()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message message-ai">
+                Hello! I'm your FinFit assistant. How can I help you find the best electronics today?
+            </div>
+        </div>
+        <div class="chat-footer">
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" placeholder="Ask me anything..."
+                    onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                <button class="send-btn" onclick="sendChatMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/static/lib/wow/wow.min.js"></script>
+    <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
 
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="/static/js/main.js"></script>
 
     <!-- Integration Script -->
     <script>
@@ -1486,7 +1553,7 @@
                 cart.push({
                     name: product.name,
                     price: product.price || product.final_price || 0,
-                    image: product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png',
+                    image: product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png',
                     quantity: 1
                 });
             }
@@ -1508,7 +1575,7 @@
                 wishlist.push({
                     name: product.name,
                     price: product.price || product.final_price || 0,
-                    image: product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png'
+                    image: product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png'
                 });
                 showToast(`Added to favorites: ${product.name}`);
             }
@@ -1550,7 +1617,71 @@
         }
 
         // Initialize counters on load
-        document.addEventListener('DOMContentLoaded', updateCounters);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCounters();
+            updateCurrency(); // Initialize currency on load
+        });
+
+        // --- Currency Converter Logic ---
+        const exchangeRates = {
+            'USD': 1,
+            'EUR': 0.92,
+            'TND': 3.1
+        };
+
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'TND': 'DT'
+        };
+
+        function updateCurrency() {
+            const currency = document.getElementById('currencySelector').value;
+            const rate = exchangeRates[currency];
+            const symbol = currencySymbols[currency];
+
+            // 1. Update all price elements in the DOM
+            document.querySelectorAll('.text-primary.fs-5.fw-bold, .product-price, .fs-4.text-muted, .fs-4.text-white').forEach(el => {
+                // Store original USD price if not already stored
+                if (!el.dataset.usdPrice) {
+                    // Try to extract number from text
+                    const match = el.textContent.match(/[\d\.,]+/);
+                    if (match) {
+                        el.dataset.usdPrice = parseFloat(match[0].replace(/,/g, ''));
+                    }
+                }
+
+                if (el.dataset.usdPrice) {
+                    const usdPrice = parseFloat(el.dataset.usdPrice);
+                    const converted = (usdPrice * rate).toFixed(2);
+                    el.textContent = `${symbol}${converted}`;
+                }
+            });
+
+            // 2. Update specific cart totals if visible
+            const cartTotal = document.getElementById('cartTotal');
+            if (cartTotal) {
+                // Recalculate based on cart state, not just text
+                // ... handled by updateCounters actually, but we need to force re-render or handle it here
+            }
+
+            // Re-render components that might need it if simple text replacement isn't enough, 
+            // but for now text replacement covers most static-ish content.
+            // Future calls to renderResults will need to know the current currency.
+        }
+
+        // Override helper to format price
+        function formatPrice(priceInUsd) {
+            const currency = document.getElementById('currencySelector') ? document.getElementById('currencySelector').value : 'USD';
+            const rate = exchangeRates[currency];
+            const symbol = currencySymbols[currency];
+
+            if (typeof priceInUsd !== 'number') return priceInUsd; // Fallback
+
+            return `${symbol}${(priceInUsd * rate).toFixed(2)}`;
+        }
+
+        // --- End Currency Logic ---
 
         // --- End Logic ---
 
@@ -1706,8 +1837,8 @@
                     ? `${API_BASE}/products?limit=12&category=${encodeURIComponent(category)}`
                     : `${API_BASE}/products?limit=12`;
                 const response = await fetch(url);
-                const products = await response.json();
-                renderResults(products, gridId);
+                const data = await response.json();
+                renderResults(data.products, gridId);
             } catch (e) {
                 console.error(`Failed to load tab ${tabId}:`, e);
                 grid.innerHTML = `
@@ -1726,7 +1857,7 @@
         }
 
         function renderMiniProduct(product) {
-            const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png';
+            const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png';
             const finalPrice = product.price || product.final_price || 0;
             const title = (product.name || product.title || 'Premium Product').substring(0, 40) + ((product.name && product.name.length > 40) ? '...' : '');
             const productUrl = product.url || product.product_url || '#';
@@ -1738,7 +1869,7 @@
                     <div class="row g-0">
                         <div class="col-5">
                             <div class="products-mini-img border-end h-100">
-                                <img src="${imageUrl}" class="img-fluid w-100 h-100" alt="${title}" style="object-fit: contain; background: white;" onerror="this.src='img/placeholder.png'">
+                                <img src="${imageUrl}" class="img-fluid w-100 h-100" alt="${title}" style="object-fit: contain; background: white;" onerror="this.src='/static/img/placeholder.png'">
                                 <div class="products-mini-icon rounded-circle bg-primary">
                                     <a href="${productUrl}" target="_blank"><i class="fa fa-eye fa-1x text-white"></i></a>
                                 </div>
@@ -1773,7 +1904,8 @@
             try {
                 // Fetch more to allow for random selection
                 const response = await fetch(`${API_BASE}/products?limit=50`);
-                let products = await response.json();
+                let data = await response.json();
+                let products = data.products || [];
 
                 // Shuffle and pick 12
                 products = products.sort(() => Math.random() - 0.5).slice(0, 12);
@@ -1834,7 +1966,8 @@
             try {
                 // Fetch a good amount and sort by rating
                 const response = await fetch(`${API_BASE}/products?limit=100`);
-                let products = await response.json();
+                let data = await response.json();
+                let products = data.products || [];
 
                 // Sort by rating (high to low) and pick top 6
                 products = products
@@ -1862,7 +1995,8 @@
             if (!container) return;
             try {
                 const response = await fetch(`${API_BASE}/products?limit=50`);
-                const products = await response.json();
+                const data = await response.json();
+                const products = data.products || [];
                 // Pick random 2 products with images
                 const selected = products
                     .filter(p => p.image)
@@ -1873,7 +2007,7 @@
                 container.innerHTML = selected.map((p, i) => {
                     const animation = i === 0 ? 'fadeInLeft' : 'fadeInRight';
                     const delay = (0.1 * (i + 1)).toFixed(1);
-                    const img = p.image || 'img/placeholder.png';
+                    const img = p.image || '/static/img/placeholder.png';
                     const title = (p.name || 'Premium Product').substring(0, 40);
                     const price = p.price || 0;
                     const url = p.url || '#';
@@ -1887,9 +2021,9 @@
                                     <img src="${img}" class="img-fluid w-100 rounded" alt="${title}" style="height: 380px; object-fit: cover; background: white;">
                                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
                                         style="background: ${bgOverlay};">
-                                        <h3 class="display-5 ${textClass}">${title}</h3>
-                                        <p class="fs-4 ${i === 0 ? 'text-muted' : 'text-white'}">$${typeof price === 'number' ? price.toFixed(2) : price}</p>
-                                        <div class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'} rounded-pill align-self-start py-2 px-4">Shop Now</div>
+                                <h3 class="display-5 ${textClass}">${title}</h3>
+                                <p class="fs-4 ${i === 0 ? 'text-muted' : 'text-white'}" data-usd-price="${price}">${formatPrice(price)}</p>
+                                <a class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'} rounded-pill align-self-start py-2 px-4" href="${url}" target="_blank">Shop Now</a>
                                     </div>
                                 </div>
                             </a>
@@ -1949,7 +2083,7 @@
             products.forEach((product, index) => {
                 const delay = (0.1 * (index % 4)).toFixed(1);
                 // Use the simplified 'image' key or fallback
-                const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png';
+                const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png';
                 const finalPrice = product.price || product.final_price || 0;
                 const title = product.name || product.title || 'Premium Product';
                 const productUrl = product.url || product.product_url || '#';
@@ -1961,7 +2095,7 @@
                         <div class="product-item rounded wow fadeInUp" data-wow-delay="${delay}s">
                             <div class="product-item-inner border rounded">
                                 <div class="product-item-inner-item" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff;">
-                                    <img src="${imageUrl}" class="img-fluid" alt="${title}" style="max-height: 100%; object-fit: contain;" onerror="this.src='img/placeholder.png'">
+                                    <img src="${imageUrl}" class="img-fluid" alt="${title}" style="max-height: 100%; object-fit: contain;" onerror="this.src='/static/img/placeholder.png'">
                                     ${product.discount ? `<div class="product-sale">-${product.discount}%</div>` : ''}
                                     <div class="product-details">
                                         <button class="btn btn-link text-white p-0" onclick="viewProduct(${index})"><i class="fa fa-eye fa-1x"></i></button>
@@ -1973,8 +2107,8 @@
                                     <a href="#tab-1" data-bs-toggle="pill" onclick="loadTab('tab-1', '${category}')" class="d-block mb-1 text-muted small text-uppercase">${category}</a>
                                     <a href="${productUrl}" target="_blank" class="d-block h6 text-truncate mb-2" title="${title}">${title}</a>
                                     <div class="mb-2">
-                                        <span class="text-primary fs-5 fw-bold">$${typeof finalPrice === 'number' ? finalPrice.toFixed(2) : finalPrice}</span>
-                                        ${initialPrice && initialPrice > finalPrice ? `<del class="text-muted ms-2 small">$${typeof initialPrice === 'number' ? initialPrice.toFixed(2) : initialPrice}</del>` : ''}
+                                        <span class="text-primary fs-5 fw-bold" data-usd-price="${finalPrice}">${formatPrice(finalPrice)}</span>
+                                        ${initialPrice && initialPrice > finalPrice ? `<del class="text-muted ms-2 small" data-usd-price="${initialPrice}">${formatPrice(initialPrice)}</del>` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -2028,13 +2162,49 @@
 
             try {
                 const response = await fetch(`${API_BASE}/products?limit=50`);
-                const products = await response.json();
-                const withImages = products.filter(p => p.image || (p.image_urls && p.image_urls[0]));
+                const data = await response.json();
+                const products = data.products || [];
+
+                // Keep products with images OR fallback if none have images
+                let withImages = products.filter(p => p.image || (p.image_urls && p.image_urls[0]));
+                if (withImages.length === 0 && products.length > 0) {
+                    withImages = products; // Fallback to all products
+                }
+
                 // Shuffle and pick 2 random
                 const shuffled = withImages.sort(() => Math.random() - 0.5);
                 const selected = shuffled.slice(0, 2);
 
-                if (selected.length === 0) return;
+                if (selected.length === 0) {
+                    // Empty state - show something default
+                    // Destroy owl carousel if it was inited by main.js
+                    if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
+                        try { $(container).owlCarousel('destroy'); } catch (e) { }
+                    }
+                    container.innerHTML = `
+                        <div class="row g-0 header-carousel-item align-items-center">
+                            <div class="col-xl-6 carousel-img wow fadeInLeft" data-wow-delay="0.1s">
+                                <img src="/static/img/header-img.jpg" class="img-fluid w-100" alt="Context" style="object-fit: contain; max-height: 320px;">
+                            </div>
+                            <div class="col-xl-6 carousel-content p-4">
+                                <h4 class="text-uppercase fw-bold mb-4 wow fadeInRight" data-wow-delay="0.1s" style="letter-spacing: 3px;">Welcome to FinFit</h4>
+                                <h1 class="display-3 text-capitalize mb-4 wow fadeInRight" data-wow-delay="0.3s">Amazing Products</h1>
+                                <a class="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight" data-wow-delay="0.7s" href="shop.html">Browse Shop</a>
+                            </div>
+                        </div>`;
+                    // Re-init simple
+                    if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
+                        $(container).owlCarousel({
+                            items: 1,
+                            autoplay: true,
+                            smartSpeed: 2000,
+                            dots: false,
+                            loop: true,
+                            nav: false
+                        });
+                    }
+                    return;
+                }
 
                 // Destroy owl carousel if it was inited by main.js
                 if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
@@ -2042,7 +2212,7 @@
                 }
 
                 container.innerHTML = selected.map(p => {
-                    const img = p.image || (p.image_urls && p.image_urls[0]) || 'img/placeholder.png';
+                    const img = p.image || (p.image_urls && p.image_urls[0]) || '/static/img/placeholder.png';
                     const name = (p.name || 'Product').substring(0, 55) + ((p.name && p.name.length > 55) ? '...' : '');
                     const cat = p.category || 'Product';
                     const url = p.url || '#';
@@ -2057,7 +2227,7 @@
                     return `
                         <div class="row g-0 header-carousel-item align-items-center">
                             <div class="col-xl-6 carousel-img wow fadeInLeft" data-wow-delay="0.1s">
-                                <img src="${img}" class="img-fluid w-100" alt="${name}" style="object-fit: contain; max-height: 320px;" onerror="this.src='img/placeholder.png'">
+                                <img src="${img}" class="img-fluid w-100" alt="${name}" style="object-fit: contain; max-height: 320px;" onerror="this.src='/static/img/placeholder.png'">
                             </div>
                             <div class="col-xl-6 carousel-content p-4">
                                 <h4 class="text-uppercase fw-bold mb-4 wow fadeInRight" data-wow-delay="0.1s" style="letter-spacing: 3px;">${saveText}</h4>
@@ -2096,7 +2266,8 @@
             try {
                 // Get products with discounts from Qdrant
                 const response = await fetch(`${API_BASE}/products?limit=50`);
-                const products = await response.json();
+                const data = await response.json();
+                const products = data.products || [];
 
                 // Filter products with discounts and sort by discount percentage
                 const productsWithDiscounts = products
@@ -2132,7 +2303,7 @@
                     const discountPercent = product.discountPercent || 0;
                     const category = product.category || 'Product';
                     const productName = (product.name || 'Premium Product').substring(0, 30) + (product.name && product.name.length > 30 ? '...' : '');
-                    const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png';
+                    const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png';
                     const productUrl = product.url || '#';
 
                     const delay = index === 0 ? '0.2s' : '0.3s';
@@ -2146,7 +2317,7 @@
                                     <h3 class="text-primary">${productName}</h3>
                                     <h1 class="display-3 text-secondary mb-0">${discountPercent}% <span class="text-primary fw-normal">Off</span></h1>
                                 </div>
-                                <img src="${imageUrl}" class="img-fluid" alt="${productName}" style="max-height: 150px; object-fit: contain;" onerror="this.src='img/placeholder.png'">
+                                <img src="${imageUrl}" class="img-fluid" alt="${productName}" style="max-height: 150px; object-fit: contain;" onerror="this.src='/static/img/placeholder.png'">
                             </a>
                         </div>
                     `;
@@ -2164,6 +2335,103 @@
                         <p class="text-muted">Featured offers will appear here</p>
                     </div>
                 `;
+            }
+        }
+
+        // Chatbot Functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            if (!chatWindow) return;
+            chatWindow.classList.toggle('active');
+            if (chatWindow.classList.contains('active')) {
+                const input = document.getElementById('chatInput');
+                if (input) input.focus();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const chatBody = document.getElementById('chatBody');
+            if (!input || !chatBody) return;
+            const message = input.value.trim();
+
+            if (message === '') return;
+
+            // Add User Message
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'chat-message message-user';
+            userMsgDiv.textContent = message;
+            chatBody.appendChild(userMsgDiv);
+
+            // Clear Input
+            input.value = '';
+
+            // Add Loading Indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'chat-message message-ai loading';
+            loadingDiv.innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Thinking...';
+            loadingDiv.id = 'ai-loading';
+            chatBody.appendChild(loadingDiv);
+
+            // Scroll to bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            const currency = document.getElementById('currencySelector') ? document.getElementById('currencySelector').value : 'USD';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        currency: currency
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+                const data = await response.json();
+
+                const loader = document.getElementById('ai-loading');
+                if (loader) loader.remove();
+
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = 'chat-message message-ai';
+                let contentHtml = data.answer.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                if (data.products && data.products.length > 0) {
+                    contentHtml += `<div class="product-results">`;
+                    data.products.forEach(p => {
+                        // Use the 'image_url' we sent from the backend
+                        const img = p.image_url || '/static/img/placeholder.png';
+                        // Convert price using our frontend helper
+                        const priceDisplay = p.price_usd ? formatPrice(p.price_usd) : p.price;
+
+                        contentHtml += `
+                        <div class="product-card" onclick="window.open('${p.url || '#'}', '_blank')">
+                            <img src="${img}" onerror="this.src='/static/img/placeholder.png'">
+                            <div class="product-info">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-meta">
+                                    <span class="product-price" data-usd-price="${p.price_usd}">${priceDisplay}</span> • <span class="product-availability">${p.availability || 'In Stock'}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    contentHtml += `</div>`;
+                }
+
+                aiMsgDiv.innerHTML = contentHtml;
+                chatBody.appendChild(aiMsgDiv);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } catch (error) {
+                console.error('Chat error:', error);
+                const loader = document.getElementById('ai-loading');
+                if (loader) loader.remove();
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'chat-message message-ai text-danger';
+                errorDiv.textContent = "Oops! I hit a snag. Please check your connection.";
+                chatBody.appendChild(errorDiv);
             }
         }
 

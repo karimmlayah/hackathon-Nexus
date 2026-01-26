@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Products Pagination Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .product {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .product h3 {
+            font-size: 14px;
+            margin: 8px 0 4px;
+        }
+
+        .product p {
+            margin: 0;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .pagination {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .pagination button {
+            padding: 8px 14px;
+            margin: 0 5px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🛒 Products</h1>
+
+<div class="products" id="products"></div>
+
+<div class="pagination">
+    <button id="prev">⬅ Prev</button>
+    <span id="pageInfo"></span>
+    <button id="next">Next ➡</button>
+</div>
+
+<script>
+    const API_URL = "http://127.0.0.1:8000/products";
+    const LIMIT = 12;
+
+    let currentPage = 1;
+    let totalPages = 1;
+
+    async function loadProducts(page = 1) {
+        const res = await fetch(`${API_URL}?page=${page}&limit=${LIMIT}`);
+        const data = await res.json();
+
+        const container = document.getElementById("products");
+        container.innerHTML = "";
+
+        data.products.forEach(p => {
+            container.innerHTML += `
+                <div class="product">
+                    <img src="${p.image || 'https://via.placeholder.com/300'}">
+                    <h3>${p.title || 'No title'}</h3>
+                    <p>${p.category || ''}</p>
+                    <p><b>${p.price || ''}</b></p>
+                </div>
+            `;
+        });
+
+        currentPage = data.current_page;
+        totalPages = data.total_pages;
+
+        document.getElementById("pageInfo").innerText =
+            `Page ${currentPage} / ${totalPages}`;
+
+        document.getElementById("prev").disabled = currentPage <= 1;
+        document.getElementById("next").disabled = currentPage >= totalPages;
+    }
+
+    document.getElementById("prev").onclick = () => {
+        if (currentPage > 1) loadProducts(currentPage - 1);
+    };
+
+    document.getElementById("next").onclick = () => {
+        if (currentPage < totalPages) loadProducts(currentPage + 1);
+    };
+
+    // First load
+    loadProducts();
+</script>
+
+</body>
+</html>

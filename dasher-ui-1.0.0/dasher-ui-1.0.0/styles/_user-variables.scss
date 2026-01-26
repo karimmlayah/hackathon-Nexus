@@ -1,0 +1,24 @@
+//
+// user-variables.scss
+// Use this to overwrite Bootstrap and FinFit variables
+//
+// Overriding FinFit color palette from Green to Blue
+$primary: #0d6efd;
+$blue: #0d6efd;
+
+// Light shades
+$primary-100: #d0e2ff;
+$primary-100-rgb: 208, 226, 255;
+$primary-200: #a6c8ff;
+$primary-300: #78a9ff;
+$primary-300-rgb: 120, 169, 255;
+$primary-400: #4589ff;
+$primary-500: #0d6efd;
+
+// Dark shades
+$primary-600: #0f62fe;
+$primary-700: #0043ce;
+$primary-700-rgb: 0, 67, 206;
+$primary-800: #002d9c;
+$primary-900: #001d6c;
+$primary-900-rgb: 0, 29, 108;

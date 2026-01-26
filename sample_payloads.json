@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "payload": {
+      "id": 1,
+      "image_url": "https://m.media-amazon.com/images/I/51rnJbc9CrL._SX300_SY300_QL70_FMwebp_.jpg",
+      "product_name": "Unknown",
+      "total_urls_found": 3,
+      "valid_urls": 3,
+      "line_number": 1
+    }
+  },
+  {
+    "id": 10,
+    "payload": {
+      "id": 10,
+      "image_url": "https://m.media-amazon.com/images/I/41Nrrokd0-L._AC_US40_.jpg",
+      "product_name": "Unknown",
+      "total_urls_found": 7,
+      "valid_urls": 7,
+      "line_number": 10
+    }
+  },
+  {
+    "id": 20,
+    "payload": {
+      "id": 20,
+      "image_url": "https://m.media-amazon.com/images/I/51kFbr5EjoL._AC_US100_.jpg",
+      "product_name": "Unknown",
+      "total_urls_found": 8,
+      "valid_urls": 8,
+      "line_number": 20
+    }
+  }
+]

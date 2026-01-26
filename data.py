@@ -210,5 +210,10 @@ CSV_PATH = os.path.join(
 max_products_env = os.getenv("MAX_PRODUCTS")
 max_products = int(max_products_env) if max_products_env else None
 
-PRODUCTS: List[Dict[str, Any]] = load_products_from_csv(CSV_PATH, max_products=max_products)
+# Load products from Amazon CSV dataset (if it exists)
+if os.path.exists(CSV_PATH):
+    PRODUCTS: List[Dict[str, Any]] = load_products_from_csv(CSV_PATH, max_products=max_products)
+else:
+    # CSV is missing, which is fine if we are using Qdrant directly
+    PRODUCTS: List[Dict[str, Any]] = []
 

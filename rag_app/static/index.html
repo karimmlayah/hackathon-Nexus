@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Intelligence System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Knowledge Base Configuration -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">✨</div>
+                <h1>Neural RAG</h1>
+            </div>
+
+            <div class="section-title">Knowledge Base</div>
+
+            <div class="card">
+                <h3>Active Cloud Collection</h3>
+                <div class="stats" style="color: #22c55e; border: none; padding: 0;">
+                    amazon30015
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    The system retrieves real-time product data directly from your Qdrant Cloud infrastructure.
+                </p>
+            </div>
+
+            <div class="section-title">System Status</div>
+            <div class="status-panel">
+                <div class="status-item">
+                    <span class="dot online"></span>
+                    <span>Qdrant Vector DB</span>
+                </div>
+                <div class="status-item">
+                    <span class="dot online"></span>
+                    <span>Groq LLM Engine</span>
+                </div>
+                <div class="stats" id="stats-display">
+                    Ready to process
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <div class="chat-header">
+                <h2>Interactive Query</h2>
+                <div class="subtitle">Ask questions based on your knowledge base</div>
+            </div>
+
+            <div class="messages-container" id="messages-container">
+                <div class="message system">
+                    <div class="avatar">⚡</div>
+                    <div class="content">
+                        Hello! I am your Senior Shopping Assistant. I have special access to the amazon30015
+                        product catalog and can help you find products, compare prices, and check availability.
+                    </div>
+                </div>
+                <!-- Messages will be injected here -->
+            </div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="user-input" placeholder="Type your question here..."
+                        onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()" class="send-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

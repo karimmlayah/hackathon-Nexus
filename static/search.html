@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +35,7 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .header p {
@@ -46,7 +47,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             margin-bottom: 30px;
         }
 
@@ -277,8 +278,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .results {
@@ -536,6 +542,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -548,7 +555,8 @@
                 <button class="search-tab active" onclick="switchMode('text')" id="textTab">
                     🔍 Text Search
                 </button>
-                <button class="search-tab" onclick="switchMode('image')" id="imageTab" style="opacity: 0.5;" title="Requires multi-vector setup from Kaggle notebook">
+                <button class="search-tab" onclick="switchMode('image')" id="imageTab" style="opacity: 0.5;"
+                    title="Requires multi-vector setup from Kaggle notebook">
                     🖼️ Image Search
                 </button>
             </div>
@@ -556,36 +564,38 @@
             <!-- Text Search Mode -->
             <div class="search-mode active" id="textSearchMode">
                 <div class="search-box">
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        id="searchInput" 
-                        placeholder="Try: 'wireless headphones', 'machine à café', 'حقيبة ظهر'..."
-                        autofocus
-                    >
+                    <input type="text" class="search-input" id="searchInput"
+                        placeholder="Try: 'wireless headphones', 'machine à café', 'حقيبة ظهر'..." autofocus>
                     <button class="search-btn" onclick="search()">Search</button>
                 </div>
             </div>
 
             <!-- Image Search Mode -->
             <div class="search-mode" id="imageSearchMode">
-                <div id="imageSearchNotReady" style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: block;">
+                <div id="imageSearchNotReady"
+                    style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: block;">
                     <p style="margin: 0; color: #1565c0; font-weight: 600;">📋 Configuration requise</p>
                     <p style="margin: 8px 0 0 0; color: #1565c0; font-size: 0.9em;">
                         La recherche par image nécessite le notebook Kaggle multi-vecteurs.<br>
-                        1. Exécutez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">generate_multi_vectors_kaggle.ipynb</code> sur Kaggle<br>
-                        2. Téléchargez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">multi_vector_embeddings.pkl</code><br>
-                        3. Exécutez <code style="background: #fff; padding: 2px 6px; border-radius: 4px;">python upload_multi_vectors.py</code>
+                        1. Exécutez <code
+                            style="background: #fff; padding: 2px 6px; border-radius: 4px;">generate_multi_vectors_kaggle.ipynb</code>
+                        sur Kaggle<br>
+                        2. Téléchargez <code
+                            style="background: #fff; padding: 2px 6px; border-radius: 4px;">multi_vector_embeddings.pkl</code><br>
+                        3. Exécutez <code
+                            style="background: #fff; padding: 2px 6px; border-radius: 4px;">python upload_multi_vectors.py</code>
                     </p>
                 </div>
-                <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imageFileInput').click()">
+                <div class="image-upload-area" id="uploadArea"
+                    onclick="document.getElementById('imageFileInput').click()">
                     <div class="upload-icon">📸</div>
                     <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 8px;">Upload an Image</p>
                     <p style="color: #666; font-size: 0.9em;">Click or drag & drop an image here</p>
                     <p style="color: #999; font-size: 0.8em; margin-top: 8px;">Find similar products by image</p>
                     <img id="imagePreview" class="image-preview" style="display: none;">
                 </div>
-                <input type="file" id="imageFileInput" class="file-input" accept="image/*" onchange="handleImageSelect(event)">
+                <input type="file" id="imageFileInput" class="file-input" accept="image/*"
+                    onchange="handleImageSelect(event)">
                 <div style="margin-top: 15px; text-align: center;">
                     <button class="search-btn" id="imageSearchBtn" onclick="searchByImage()" disabled>
                         🔍 Search by Image
@@ -696,7 +706,7 @@
             if (file) {
                 selectedImageFile = file;
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const preview = document.getElementById('imagePreview');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
@@ -708,21 +718,21 @@
 
         // Drag and drop handlers
         const uploadArea = document.getElementById('uploadArea');
-        uploadArea.addEventListener('dragover', function(e) {
+        uploadArea.addEventListener('dragover', function (e) {
             e.preventDefault();
             uploadArea.classList.add('dragover');
         });
-        uploadArea.addEventListener('dragleave', function() {
+        uploadArea.addEventListener('dragleave', function () {
             uploadArea.classList.remove('dragover');
         });
-        uploadArea.addEventListener('drop', function(e) {
+        uploadArea.addEventListener('drop', function (e) {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
             if (file && file.type.startsWith('image/')) {
                 selectedImageFile = file;
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const preview = document.getElementById('imagePreview');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
@@ -753,7 +763,7 @@
 
             // Convert image to base64
             const reader = new FileReader();
-            reader.onload = async function(e) {
+            reader.onload = async function (e) {
                 try {
                     const base64Image = e.target.result; // data:image/jpeg;base64,...
 
@@ -791,7 +801,7 @@
                     }
 
                     const data = await response.json();
-                    
+
                     // Check for API error in response body (even with HTTP 200)
                     if (data.error) {
                         let errorMsg = data.error;
@@ -800,7 +810,7 @@
                         }
                         throw new Error(errorMsg);
                     }
-                    
+
                     const endTime = performance.now();
                     const duration = ((endTime - startTime) / 1000).toFixed(2);
 
@@ -812,7 +822,7 @@
                     document.getElementById('loading').style.display = 'none';
                 }
             };
-            reader.onerror = function() {
+            reader.onerror = function () {
                 document.getElementById('loading').style.display = 'none';
                 showError('Failed to read image file.');
             };
@@ -820,7 +830,7 @@
         }
 
         // Search on Enter key
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 search();
             }
@@ -833,7 +843,7 @@
 
         async function search() {
             const query = document.getElementById('searchInput').value.trim();
-            
+
             if (!query) {
                 alert('Please enter a search query');
                 return;
@@ -845,7 +855,7 @@
             document.getElementById('error').style.display = 'none';
 
             const startTime = performance.now();
-            
+
             // Get search parameters
             const mmrEnabled = document.getElementById('mmrToggle').checked;
             const threshold = FIXED_THRESHOLD;
@@ -853,9 +863,9 @@
 
             try {
                 let url = `${API_BASE}/search?q=${encodeURIComponent(query)}&mmr=${mmrEnabled}&limit=${limit}&threshold=${threshold}`;
-                
+
                 const response = await fetch(url);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -877,7 +887,7 @@
             const resultsContainer = document.getElementById('resultsContainer');
             const resultsCount = document.getElementById('resultsCount');
             const resultsTime = document.getElementById('resultsTime');
-            
+
             // Ensure results is always an array
             if (!results || !Array.isArray(results)) {
                 results = [];
@@ -899,16 +909,62 @@
             } else {
                 resultsContainer.innerHTML = results.map((product, index) => {
                     // Handle price safely
-                    const price = parseFloat(product.price) || 0;
+                    const price = parseFloat(product.price) || 0; // This is the FINAL PRICE
+                    const explicitInitialPrice = parseFloat(product.initial_price) || 0;
+
+                    let priceHtml = '';
+                    let discountHtml = '';
+                    let initialPrice = 0;
+                    let discountVal = 0;
+
+                    // Debug logging for specific product
+                    if (String(product.id) === "8875" || (product.name && product.name.includes("Hardwired"))) {
+                        console.log("DEBUG Product:", product.name);
+                        console.log("Prices - Final:", price, "Initial:", explicitInitialPrice);
+                        console.log("Discount Raw:", product.discount);
+                    }
+
+                    // 1. Try to get discount from field
+                    if (product.discount && String(product.discount) !== 'NULL') {
+                        const discountStr = String(product.discount).replace('-', '').replace('%', '').trim();
+                        discountVal = parseFloat(discountStr);
+                    }
+
+                    // 2. Logic to determine Initial Price and Discount
+                    if (explicitInitialPrice > price) {
+                        // We have explicit initial price
+                        initialPrice = explicitInitialPrice;
+                        // Calculate discount if missing
+                        if (!discountVal || discountVal === 0) {
+                            discountVal = Math.round(((initialPrice - price) / initialPrice) * 100);
+                        }
+                    } else if (discountVal > 0) {
+                        // We have discount but no explicit initial price -> Calculate it
+                        initialPrice = price / (1 - (discountVal / 100));
+                    }
+
+                    // 3. Generate HTML
+                    if (initialPrice > price && discountVal > 0) {
+                        // Initial Price (Strikethrough + Red)
+                        priceHtml += `<span style="text-decoration: line-through; color: #ef5350; font-size: 0.9em; margin-right: 8px;">$${initialPrice.toFixed(2)}</span>`;
+
+                        // Discount Badge
+                        discountHtml = `<span style="background: #ffebee; color: #c62828; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: 600; margin-left: 8px;">-${discountVal}%</span>`;
+                    }
+
+                    // Final Price
+                    const priceText = price > 0 ? `$${price.toFixed(2)}` : 'Price not available';
+                    priceHtml += `<span style="color: #667eea; font-weight: 700;">${priceText}</span>${discountHtml}`;
+
+                    // Legacy handling fallback (if listed_price is used instead of initial_price)
                     const listedPrice = parseFloat(product.listed_price) || 0;
-                    const salePrice = parseFloat(product.sale_price) || 0;
-                    const priceValue = salePrice > 0 ? salePrice : price;
-                    const priceText = priceValue > 0 ? `$${priceValue.toFixed(2)}` : 'Price not available';
-                    const priceOld = listedPrice > priceValue ? `<span style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-left: 8px;">$${listedPrice.toFixed(2)}</span>` : '';
-                    
+                    if (initialPrice === 0 && discountVal === 0 && listedPrice > price) {
+                        priceHtml = `<span style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-right: 8px;">$${listedPrice.toFixed(2)}</span>` + priceHtml;
+                    }
+
                     // Handle score safely
                     const score = product.score ? (product.score * 100).toFixed(1) : '0.0';
-                    
+
                     // Handle brand and rating
                     const brandHtml = product.brand ? `<span style="color: #999; font-size: 0.9em;">by ${escapeHtml(product.brand)}</span>` : '';
                     const ratingCount = product.review_count ? ` (${product.review_count} reviews)` : '';
@@ -951,7 +1007,7 @@
                     const urlHtml = product.url
                         ? `<a class="product-link" href="${escapeHtml(product.url)}" target="_blank" rel="noopener noreferrer">View on Amazon</a>`
                         : '';
-                    
+
                     return `
                     <div class="product-card">
                         ${imageHtml}
@@ -971,7 +1027,7 @@
                         ${chipsHtml}
                         <div class="product-description">${escapeHtml(product.description || 'No description available')}</div>
                         <div class="product-footer">
-                            <div class="product-price">${priceText}${priceOld}</div>
+                            <div class="product-price">${priceHtml}</div>
                             <div class="product-id">ID: ${escapeHtml(String(product.id))}</div>
                         </div>
                         ${urlHtml ? `<div style="margin-top: 8px;">${urlHtml}</div>` : ''}
@@ -1073,4 +1129,5 @@
         });
     </script>
 </body>
+
 </html>

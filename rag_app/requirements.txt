@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+qdrant-client
+groq
+fastembed>=0.5.0
+python-multipart
+beautifulsoup4
+requests
+pypdf
+pandas
+python-dotenv
+pydantic
+pydantic-settings
+httpx

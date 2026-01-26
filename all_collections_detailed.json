@@ -1,0 +1,32 @@
+[
+  {
+    "name": "nexus-adam",
+    "points": 1505,
+    "vectors": "{'image': VectorParams(size=512, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None), 'semantic': VectorParams(size=384, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None)}"
+  },
+  {
+    "name": "nexus-text",
+    "points": 25874,
+    "vectors": "size=384 distance=<Distance.COSINE: 'Cosine'> hnsw_config=None quantization_config=None on_disk=None datatype=None multivector_config=None"
+  },
+  {
+    "name": "hm_ecommerce_105k",
+    "points": 105126,
+    "vectors": "size=384 distance=<Distance.COSINE: 'Cosine'> hnsw_config=None quantization_config=None on_disk=None datatype=None multivector_config=None"
+  },
+  {
+    "name": "nexus-multivector_3k_f",
+    "points": 3145,
+    "vectors": "{'image_dense': VectorParams(size=512, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None), 'text_dense': VectorParams(size=384, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None)}"
+  },
+  {
+    "name": "images-only-clip",
+    "points": 1524,
+    "vectors": "size=512 distance=<Distance.COSINE: 'Cosine'> hnsw_config=None quantization_config=None on_disk=None datatype=None multivector_config=None"
+  },
+  {
+    "name": "nexus-multivector",
+    "points": 198483,
+    "vectors": "{'image_dense': VectorParams(size=512, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None), 'image_text_dense': VectorParams(size=512, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None), 'text_dense': VectorParams(size=384, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None)}"
+  }
+]

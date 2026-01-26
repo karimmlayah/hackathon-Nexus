@@ -1,0 +1,85 @@
+{
+  "collection_info": {
+    "status": "found",
+    "points_count": 3145,
+    "vectors_config": "{'image_dense': VectorParams(size=512, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None), 'text_dense': VectorParams(size=384, distance=<Distance.COSINE: 'Cosine'>, hnsw_config=None, quantization_config=None, on_disk=None, datatype=None, multivector_config=None)}"
+  },
+  "samples": [
+    {
+      "id": 0,
+      "title": "Accutire MS-4021B Digital Tire Pressure Gauge with",
+      "vector_keys": [
+        "image_dense",
+        "text_dense"
+      ],
+      "image_vector_len": 512
+    },
+    {
+      "id": 1,
+      "title": "PULOTE 100PCS Pink Plastic Plates - Heavy Duty Pin",
+      "vector_keys": [
+        "text_dense",
+        "image_dense"
+      ],
+      "image_vector_len": 512
+    },
+    {
+      "id": 2,
+      "title": "Aqua Select Resin Step in a Box White | Ultra Stur",
+      "vector_keys": [
+        "image_dense",
+        "text_dense"
+      ],
+      "image_vector_len": 512
+    },
+    {
+      "id": 3,
+      "title": "Art3d 4-Piece Wood Slat Acoustic Panels for Stylis",
+      "vector_keys": [
+        "text_dense",
+        "image_dense"
+      ],
+      "image_vector_len": 512
+    },
+    {
+      "id": 4,
+      "title": "4th of July Door Sign Independence Day Wreath Patr",
+      "vector_keys": [
+        "text_dense",
+        "image_dense"
+      ],
+      "image_vector_len": 512
+    }
+  ],
+  "self_search": {
+    "query_id": 0,
+    "results": [
+      {
+        "id": 3,
+        "score": 0.0,
+        "title": "Art3d 4-Piece Wood Slat Acoustic Panels for Stylis"
+      },
+      {
+        "id": 1,
+        "score": 0.0,
+        "title": "PULOTE 100PCS Pink Plastic Plates - Heavy Duty Pin"
+      },
+      {
+        "id": 9,
+        "score": 0.0,
+        "title": "HOST FREEZE Margarita Cocktail Glasses, Frozen Cup"
+      },
+      {
+        "id": 6,
+        "score": 0.0,
+        "title": "Seresto Large Dog Vet-Recommended Flea & Tick Trea"
+      },
+      {
+        "id": 10,
+        "score": 0.0,
+        "title": "HAVLULAND |Pack of 2| Turkish Beach Towels Oversiz"
+      }
+    ],
+    "status": "FAILED - Top hit is different"
+  }
+}

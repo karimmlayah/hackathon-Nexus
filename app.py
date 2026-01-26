@@ -175,7 +175,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/", response_class=HTMLResponse)
 def home():
     """Redirect to search interface"""
-    return FileResponse("static/search.html")
+    return FileResponse("static/index.html")
 
 
 @app.get("/status/image-search")
@@ -229,13 +229,31 @@ def image_search_status():
 
 
 @app.get("/products")
-def list_products(limit: int = Query(10, ge=1, le=100, description="Number of products to return")):
+def list_products(
+    limit: int = Query(10, ge=1, le=100, description="Number of products to return"),
+    category: str = Query(None, description="Filter by category")
+):
     """Get products from Qdrant (real data)"""
     client = app.state.qdrant_client
     collection_name = app.state.collection_name
     
     try:
-        # Scroll through Qdrant to get real products
+        # If category is provided, use semantic search to find relevant products
+        # This is more robust than scrolling and filtering in memory
+        if category and category != "All Products":
+            embedder = app.state.embedder
+            query_vector = embedder.embed_text(category)
+            
+            from qdrant import search_products
+            return search_products(
+                client=client,
+                collection_name=collection_name,
+                query_vector=query_vector,
+                limit=limit,
+                vector_name="text_dense"
+            )
+
+        # Standard browsing: scroll through the collection
         results, _ = client.scroll(
             collection_name=collection_name,
             limit=limit,
@@ -243,11 +261,13 @@ def list_products(limit: int = Query(10, ge=1, le=100, description="Number of pr
         )
         
         from qdrant import map_qdrant_product
-        products = [map_qdrant_product(p) for p in results]
-        return products
+        return [map_qdrant_product(p) for p in results]
     except Exception as e:
         # Fallback to CSV data if Qdrant fails
-        return PRODUCTS[:limit]
+        filtered = PRODUCTS
+        if category and category != "All Products":
+            filtered = [p for p in PRODUCTS if category.lower() in p.get("category", "").lower()]
+        return filtered[:limit]
 
 
 @app.get("/search")
@@ -273,21 +293,21 @@ def search(
     """
     embedder: Embedder = app.state.embedder
     client = app.state.qdrant_client
-    collection_name: str = app.state.collection_name
-
-    query_vector = embedder.embed_text(q)
     
-    # Use specific collection for text search as requested
-    text_collection = "nexus-text"
+    # Use the unified collection for both text and image
+    # containing 'text_dense' and 'image_dense' vectors
+    collection_name = app.state.collection_name
+    
+    query_vector = embedder.embed_text(q)
     
     items = search_products(
         client=client,
-        collection_name=text_collection,
+        collection_name=collection_name,
         query_vector=query_vector,
         limit=limit,
         score_threshold=threshold,
         use_mmr=mmr,
-        vector_name=None, # nexus-text uses a default unnamed vector
+        vector_name="text_dense", # Use explicit text vector
     )
     return {
         "query": q,
@@ -310,13 +330,7 @@ class ImageSearchRequest(BaseModel):
 async def search_by_image(request: ImageSearchRequest):
     """
     Multimodal search: find products similar to an uploaded image.
-    
-    Uses CLIP to encode the image and search in the same vector space as text.
-    
-    - **image_base64**: Base64 encoded image (data:image/jpeg;base64,... or just base64 string)
-    - **limit**: Max number of results (1-50)
-    - **threshold**: Minimum similarity score (0.0-1.0)
-    - **mmr**: Enable diversity mode
+    Uses 'nexus-multivector_3k_f' collection with 'image_dense' vector.
     """
     if not app.state.image_embedder:
         raise HTTPException(
@@ -348,34 +362,13 @@ async def search_by_image(request: ImageSearchRequest):
         )
     
     client = app.state.qdrant_client
-    collection_name: str = app.state.collection_name
+    # Use the unified collection
+    collection_name = app.state.collection_name
     
-    # Check vector size compatibility
-    collection_info = client.get_collection(collection_name)
-    vectors_config = collection_info.config.params.vectors
+    # Check vector size compatibility (optional log, but good for debug)
+    # image_vector_size = len(query_vector) # Should be 512
     
-    # Handle both named vectors (dict) and single vector configurations
-    if isinstance(vectors_config, dict):
-        # We are doing image search, so we check 'image_dense' size
-        target_vector = vectors_config.get("image_dense") or list(vectors_config.values())[0]
-        collection_vector_size = target_vector.size
-    else:
-        collection_vector_size = vectors_config.size
-        
-    image_vector_size = len(query_vector)
-    
-    if image_vector_size != collection_vector_size:
-        return JSONResponse(
-            status_code=400,
-            content={
-                "error": f"Vector size mismatch: Image vector is {image_vector_size}D, but collection expects {collection_vector_size}D.",
-                "solution": "Products need to be re-encoded with CLIP model. Run: python reload_qdrant_clip.py",
-                "image_vector_size": image_vector_size,
-                "collection_vector_size": collection_vector_size,
-            }
-        )
-    
-    # Search with image vector
+    # Search with image vector in the unified collection
     items = search_products(
         client=client,
         collection_name=collection_name,
@@ -385,6 +378,9 @@ async def search_by_image(request: ImageSearchRequest):
         use_mmr=request.mmr,
         vector_name="image_dense", # Use 'image_dense' vector for image search
     )
+    
+    # Data is already in the payload (title, final_price, etc.)
+    # The map_qdrant_product function handles mapping these fields to standard keys
     
     return {
         "query": "Image search",

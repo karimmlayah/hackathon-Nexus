@@ -139,7 +139,7 @@
     <!-- Topbar End -->
 
     <!-- Navbar & Hero Start -->
-    <div class="container-fluid nav-bar p-0">
+    <div class="container-fluid nav-bar p-0 sticky-top shadow-sm">
         <div class="row gx-0 bg-primary px-5 align-items-center">
             <div class="col-lg-3 d-none d-lg-block">
                 <nav class="navbar navbar-light position-relative" style="width: 250px;">
@@ -535,7 +535,7 @@
     <!-- Copyright End -->
 
 
-    
+
     <!-- AI Chatbot UI -->
     <div class="ai-chatbot-btn" onclick="toggleChat()" title="Ask our AI Assistant">
         <i class="fas fa-robot"></i>
@@ -558,7 +558,8 @@
         </div>
         <div class="chat-footer">
             <div class="chat-input-group">
-                <input type="text" id="chatInput" placeholder="Ask me anything..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                <input type="text" id="chatInput" placeholder="Ask me anything..."
+                    onkeypress="if(event.key === 'Enter') sendChatMessage()">
                 <button class="send-btn" onclick="sendChatMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -582,7 +583,7 @@
 
     <script>
         // Chatbot Functions
-        
+
         // Chatbot Functions
         function toggleChat() {
             const chatWindow = document.getElementById('chatWindow');
@@ -624,30 +625,30 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })
             })
-            .then(response => response.json())
-            .then(data => {
-                // Remove Loading
-                const loader = document.getElementById('ai-loading');
-                if (loader) loader.remove();
+                .then(response => response.json())
+                .then(data => {
+                    // Remove Loading
+                    const loader = document.getElementById('ai-loading');
+                    if (loader) loader.remove();
 
-                // Add AI Message
-                const aiMsgDiv = document.createElement('div');
-                aiMsgDiv.className = 'chat-message message-ai';
-                // Handing basic markdown/newlines
-                aiMsgDiv.innerHTML = data.response.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                chatBody.appendChild(aiMsgDiv);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                const loader = document.getElementById('ai-loading');
-                if (loader) loader.remove();
-                
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'chat-message message-ai text-danger';
-                errorDiv.textContent = "Oops! I hit a snag. Please check your connection and try again.";
-                chatBody.appendChild(errorDiv);
-            });
+                    // Add AI Message
+                    const aiMsgDiv = document.createElement('div');
+                    aiMsgDiv.className = 'chat-message message-ai';
+                    // Handing basic markdown/newlines
+                    aiMsgDiv.innerHTML = data.response.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                    chatBody.appendChild(aiMsgDiv);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const loader = document.getElementById('ai-loading');
+                    if (loader) loader.remove();
+
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'chat-message message-ai text-danger';
+                    errorDiv.textContent = "Oops! I hit a snag. Please check your connection and try again.";
+                    chatBody.appendChild(errorDiv);
+                });
         }
 
     </script>

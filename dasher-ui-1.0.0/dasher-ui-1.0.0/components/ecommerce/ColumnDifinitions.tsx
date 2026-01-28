@@ -1,7 +1,7 @@
 //import node module libraries
 import { Fragment } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { IconEdit, IconEye, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconEye, IconTrash, IconShoppingCart, IconHeart } from "@tabler/icons-react";
 import { Badge, Button, Image } from "react-bootstrap";
 import Link from "next/link";
 
@@ -84,9 +84,8 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
       return (
         <Badge
           bg={`${statusText === "Active" ? "success-subtle" : "danger-subtle"}`}
-          text={`${
-            statusText === "Active" ? "success-emphasis" : "danger-emphasis"
-          }`}
+          text={`${statusText === "Active" ? "success-emphasis" : "danger-emphasis"
+            }`}
           pill={true}
         >
           {statusText}
@@ -97,9 +96,59 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
   {
     accessorKey: "",
     header: "Action",
-    cell: () => {
+    cell: ({ row }) => {
+      const handleAddToCart = async () => {
+        const token = localStorage.getItem("finfit_token");
+        if (!token) {
+          alert("Please login first");
+          return;
+        }
+        try {
+          const response = await fetch(`http://localhost:8000/api/user/cart?product_id=${row.original.id}`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          if (response.ok) alert("Added to cart!");
+        } catch (err) { alert("Failed to add to cart"); }
+      };
+
+      const handleAddToFavorites = async () => {
+        const token = localStorage.getItem("finfit_token");
+        if (!token) {
+          alert("Please login first");
+          return;
+        }
+        try {
+          const response = await fetch(`http://localhost:8000/api/user/favorites?product_id=${row.original.id}`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          if (response.ok) alert("Added to favorites!");
+        } catch (err) { alert("Failed to add to favorites"); }
+      };
+
       return (
         <Fragment>
+          <FinFitTippy content="Add to Cart">
+            <Button
+              onClick={handleAddToCart}
+              variant="ghost btn-icon"
+              size="sm"
+              className="rounded-circle text-primary"
+            >
+              <IconShoppingCart size={16} />
+            </Button>
+          </FinFitTippy>
+          <FinFitTippy content="Add to Favorites">
+            <Button
+              onClick={handleAddToFavorites}
+              variant="ghost btn-icon"
+              size="sm"
+              className="rounded-circle text-danger"
+            >
+              <IconHeart size={16} />
+            </Button>
+          </FinFitTippy>
           <FinFitTippy content="View">
             <Button
               href=""
@@ -108,9 +157,6 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
               className="rounded-circle"
             >
               <IconEye size={16} />
-              <div id="eyeThree" className="d-none">
-                <span>View</span>
-              </div>
             </Button>
           </FinFitTippy>
           <FinFitTippy content="Edit">
@@ -121,9 +167,6 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
               className="rounded-circle"
             >
               <IconEdit size={16} />
-              <div id="editTwo" className="d-none">
-                <span>Edit</span>
-              </div>
             </Button>
           </FinFitTippy>
           <FinFitTippy content="Delete">
@@ -134,9 +177,6 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
               className="rounded-circle"
             >
               <IconTrash size={16} />
-              <div id="trashThree" className="d-none">
-                <span>Delete</span>
-              </div>
             </Button>
           </FinFitTippy>
         </Fragment>

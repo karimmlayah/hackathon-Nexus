@@ -1,8 +1,8 @@
-//import node modules libraries
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Image } from "react-bootstrap";
 import Link from "next/link";
 import { IconLogin2 } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 //import routes files
 import { UserMenuItem } from "routes/HeaderRoute";
@@ -24,6 +24,39 @@ const CustomToggle = React.forwardRef<HTMLAnchorElement, UserToggleProps>(
 );
 
 const UserMenu = () => {
+  const router = useRouter();
+  const [user, setUser] = useState<{ name: string, email: string } | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("finfit_token");
+      if (!token) return;
+
+      try {
+        const response = await fetch("http://localhost:8000/api/user/profile", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else {
+          localStorage.removeItem("finfit_token");
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile");
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("finfit_token");
+    router.push("/sign-in");
+  };
+
   return (
     <Dropdown>
       <Dropdown.Toggle as={CustomToggle}>
@@ -43,8 +76,8 @@ const UserMenu = () => {
             className="avatar avatar-md rounded-circle"
           />
           <div>
-            <h4 className="mb-0 fs-5">Jitu Chauhan</h4>
-            <p className="mb-0 text-secondar small">@imjituchauhan</p>
+            <h4 className="mb-0 fs-5">{user ? user.name : "Guest User"}</h4>
+            <p className="mb-0 text-secondary small">{user ? user.email : "Not logged in"}</p>
           </div>
         </div>
         <div className="p-3 d-flex flex-column gap-1">
@@ -52,6 +85,7 @@ const UserMenu = () => {
             <Dropdown.Item
               key={item.id}
               className="d-flex align-items-center gap-2"
+              href={item.link || "#"}
             >
               <span>{item.icon}</span>
               <span>{item.title}</span>
@@ -60,7 +94,8 @@ const UserMenu = () => {
         </div>
         <div className="border-dashed border-top mb-4 pt-4 px-6">
           <Link
-            href=""
+            href="#"
+            onClick={handleLogout}
             className="text-secondary d-flex align-items-center gap-2"
           >
             <span>

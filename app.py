@@ -8,11 +8,12 @@ from typing import Any, Dict, List
 import base64
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Depends, status
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from data import PRODUCTS
 from embedder import Embedder
@@ -25,9 +26,11 @@ from qdrant import (
     get_qdrant_client,
     search_products,
     upsert_products,
-    get_stats,
 )
-from chatbot_service import ChatbotService
+from database import init_db, get_db
+from models import User
+from schemas import UserCreate, UserLogin, TokenResponse, UserResponse
+from auth import create_access_token, get_current_user
 
 
 load_dotenv()  # Loads .env locally for development
@@ -150,14 +153,10 @@ async def lifespan(app: FastAPI):
     app.state.embedder = embedder
     app.state.image_embedder = image_embedder
     app.state.collection_name = collection_name
-    
-    # Initialize Chatbot Service
-    try:
-        app.state.chatbot = ChatbotService(embedder)
-        logger.info("✅ Chatbot Service initialized!")
-    except Exception as e:
-        logger.error(f"❌ Failed to initialize Chatbot Service: {e}")
-        app.state.chatbot = None
+
+    # Initialize database
+    logger.info("🗄️  Initializing database...")
+    init_db()
 
     yield
 
@@ -168,31 +167,6 @@ app = FastAPI(
     description="Semantic (vector) search over products using Qdrant Cloud and SentenceTransformers.",
     lifespan=lifespan,
 )
-
-@app.get("/api/stats")
-async def stats_endpoint():
-    """
-    Get aggregate stats for dashboard
-    """
-    client = get_qdrant_client()
-    collection_name = os.getenv("QDRANT_COLLECTION", DEFAULT_COLLECTION_NAME)
-    stats = get_stats(client, collection_name)
-    return stats
-
-class ChatRequest(BaseModel):
-    message: str
-    currency: str = "USD"
-
-@app.post("/api/chat")
-async def chat_endpoint(request: ChatRequest):
-    """
-    Chat with the RAG assistant
-    """
-    if not app.state.chatbot:
-        raise HTTPException(status_code=503, detail="Chatbot service not available")
-    
-    response = await app.state.chatbot.get_response(request.message, request.currency)
-    return response
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -215,18 +189,32 @@ def home():
 
 @app.get("/shop.html", response_class=HTMLResponse)
 def shop():
-    """Serve shop page"""
+    """Shop page"""
     return FileResponse("static/shop.html")
 
 
-@app.get("/{page}.html", response_class=HTMLResponse)
-def serve_html_pages(page: str):
-    """Serve other HTML pages from static directory"""
-    import os
-    file_path = f"static/{page}.html"
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    raise HTTPException(status_code=404, detail="Page not found")
+@app.get("/cart.html", response_class=HTMLResponse)
+def cart():
+    """Cart page"""
+    return FileResponse("static/cart.html")
+
+
+@app.get("/single.html", response_class=HTMLResponse)
+def single():
+    """Single product page"""
+    return FileResponse("static/single.html")
+
+
+@app.get("/contact.html", response_class=HTMLResponse)
+def contact():
+    """Contact page"""
+    return FileResponse("static/contact.html")
+
+
+@app.get("/{page_name}.html", response_class=HTMLResponse)
+def static_page(page_name: str):
+    """Serve any HTML file from static folder"""
+    return FileResponse(f"static/{page_name}.html")
 
 
 @app.get("/status/image-search")
@@ -279,99 +267,69 @@ def image_search_status():
         }
 
 
-
-
-# =============================
-# API
-# =============================
-
 @app.get("/products")
 def list_products(
-    limit: int = Query(12, ge=1, le=100, description="Number of products per page"),
-    page: int = Query(1, ge=1, description="Page number"),
-    category: str = Query(None, description="Filter by category"),
+    limit: int = Query(10, ge=1, le=100, description="Number of products to return"),
+    category: str = Query(None, description="Filter by category")
 ):
-    """
-    Get products from Qdrant with pagination & category filter
-    """
-    from qdrant_client.http import models
-    from qdrant import map_qdrant_product
-    import logging
-    
-    logger = logging.getLogger("uvicorn")
+    """Get products from Qdrant (real data)"""
     client = app.state.qdrant_client
-    collection = app.state.collection_name
-
+    collection_name = app.state.collection_name
+    
+    # Category mapping for grouping specific categories
+    category_keywords = {
+        "Electronics": ["KVM", "Switches", "Converters", "Lights", "LED", "PA Systems", "Sensors"],
+        "Fashion": ["Coats", "Helmets", "Collars", "Liners", "Cologne", "Undergarment"],
+        "Decoration": ["Wall", "Decals", "Wreaths", "Hooks", "Panels", "Seats", "Cushions", "Mats"],
+        "Home": ["Water", "Heaters", "Burners", "Plates", "Glassware", "Litter"],
+        "Furniture": ["Chairs", "Workseats", "Seats", "Cushions", "Stadium"]
+    }
+    
     try:
-        # Get total count
-        collection_info = client.get_collection(collection)
-        total_count = collection_info.points_count
+        from qdrant_client.http import models
         
-        # Calculate offset for pagination
-        offset = (page - 1) * limit
-        
-        # Scroll through Qdrant with offset
+        # Scroll through Qdrant - get more results if filtering
+        scroll_limit = limit * 5 if category and category != "All Products" else limit
         results, _ = client.scroll(
-            collection_name=collection,
-            limit=limit,
-            offset=offset,
+            collection_name=collection_name,
+            limit=scroll_limit,
             with_payload=True,
         )
         
+        from qdrant import map_qdrant_product
         products = [map_qdrant_product(p) for p in results]
         
-        # Filter by category after mapping if needed
+        # Filter by category after mapping (more reliable)
         if category and category != "All Products":
             category_lower = category.lower()
-            # Get more results for filtering
-            all_results, _ = client.scroll(
-                collection_name=collection,
-                limit=limit * 10,
-                with_payload=True,
-            )
-            all_products = [map_qdrant_product(p) for p in all_results]
-            filtered = [
-                p for p in all_products 
-                if p.get("category", "").lower() == category_lower 
-                or category_lower in p.get("category", "").lower()
-                or p.get("category", "").lower() in category_lower
-            ]
-            total_count = len(filtered)
-            products = filtered[offset:offset+limit]
+            
+            # Check if it's a general category (Electronics, Fashion, etc.)
+            keywords = category_keywords.get(category, [])
+            
+            filtered = []
+            for p in products:
+                prod_cat_lower = p.get("category", "").lower()
+                
+                if keywords:
+                    # Check if product category matches any keyword
+                    if any(keyword.lower() in prod_cat_lower for keyword in keywords):
+                        filtered.append(p)
+                else:
+                    # Fallback to exact or partial match
+                    if (category_lower == prod_cat_lower 
+                        or category_lower in prod_cat_lower 
+                        or prod_cat_lower in category_lower):
+                        filtered.append(p)
+            
+            products = filtered[:limit]
         
-        total_pages = (total_count + limit - 1) // limit
-
-        return {
-            "products": products,
-            "total_count": total_count,
-            "total_pages": total_pages,
-            "current_page": page,
-            "limit": limit
-        }
-
+        return products[:limit]
     except Exception as e:
-        # =============================
-        # Fallback CSV
-        # =============================
-        logger.error(f"❌ Qdrant error: {e}")
-
+        # Fallback to CSV data if Qdrant fails
         filtered = PRODUCTS
         if category and category != "All Products":
-            filtered = [
-                p for p in PRODUCTS
-                if category.lower() in (p.get("category") or "").lower()
-            ]
-
-        total_count = len(filtered)
-        offset = (page - 1) * limit
-
-        return {
-            "products": filtered[offset:offset + limit],
-            "total_count": total_count,
-            "total_pages": (total_count + limit - 1) // limit,
-            "current_page": page,
-            "limit": limit
-        }
+            filtered = [p for p in PRODUCTS if category.lower() in p.get("category", "").lower()]
+        return filtered[:limit]
 
 
 @app.get("/search")
@@ -494,4 +452,100 @@ async def search_by_image(request: ImageSearchRequest):
         "count": len(items),
         "search_type": "image",
     }
+
+
+# ====== AUTHENTICATION ROUTES ======
+
+@app.post("/auth/signup", response_model=TokenResponse)
+def signup(user_data: UserCreate, db: Session = Depends(get_db)):
+    """Register a new user"""
+    # Check if user already exists
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
+    # Create new user
+    user = User(
+        name=user_data.name,
+        email=user_data.email,
+        phone=user_data.phone
+    )
+    user.set_password(user_data.password)
+    
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    
+    # Create token
+    access_token = create_access_token(data={"sub": user.email, "user_id": user.id})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": UserResponse.model_validate(user)
+    }
+
+
+@app.post("/auth/signin", response_model=TokenResponse)
+def signin(login_data: UserLogin, db: Session = Depends(get_db)):
+    """Login user"""
+    # Find user by email
+    user = db.query(User).filter(User.email == login_data.email).first()
+    
+    if not user or not user.verify_password(login_data.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
+    
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User account is disabled"
+        )
+    
+    # Create token
+    access_token = create_access_token(data={"sub": user.email, "user_id": user.id})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": UserResponse.model_validate(user)
+    }
+
+
+@app.get("/auth/me", response_model=UserResponse)
+def get_current_user_info(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Get current authenticated user info"""
+    user = db.query(User).filter(User.id == current_user.get("user_id")).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return UserResponse.model_validate(user)
+
+
+@app.post("/auth/logout")
+def logout():
+    """Logout user (frontend should delete token)"""
+    return {"message": "Logged out successfully"}
+
+
+# Alternative routes for compatibility with dashboard
+@app.post("/api/login", response_model=TokenResponse)
+def api_login(login_data: UserLogin, db: Session = Depends(get_db)):
+    """Login user (API endpoint for dashboard)"""
+    return signin(login_data, db)
+
+
+@app.post("/api/register", response_model=TokenResponse)
+def api_register(user_data: UserCreate, db: Session = Depends(get_db)):
+    """Register a new user (API endpoint for dashboard)"""
+    return signup(user_data, db)
 

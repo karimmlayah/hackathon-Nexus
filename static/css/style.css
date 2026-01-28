@@ -117,6 +117,20 @@
 }
 /*** Topbar End ***/
 
+/* Sticky Header Global Styles */
+.header-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.sticky-header {
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
 
 /*** Navbar ***/
 .nav-bar .categories-bars .categories-bars-item {
@@ -920,7 +934,7 @@
     font-size: 24px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    z-index: 100;
+    z-index: 2100;
     transition: all 0.3s ease;
     animation: pulse-ai 2s infinite;
 }
@@ -951,7 +965,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    z-index: 101;
+    z-index: 2200;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-origin: bottom right;
     transform: scale(0);

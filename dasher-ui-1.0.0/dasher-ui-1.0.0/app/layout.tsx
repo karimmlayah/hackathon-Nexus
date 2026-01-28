@@ -30,10 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClientWrapper>
-      <html lang="en" className="expanded">
-        <body className={`${publicSans.variable}`}>{children}</body>
-      </html>
-    </ClientWrapper>
+    <html lang="en" className="expanded">
+      <body className={`${publicSans.variable}`}>
+        <ClientWrapper>{children}</ClientWrapper>
+      </body>
+    </html>
   );
 }

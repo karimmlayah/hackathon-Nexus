@@ -43,20 +43,22 @@ const DashboardStats = () => {
     if (stats) {
       if (index === 0) { // Total Projects -> Total Products
         newTitle = "Total Products";
-        newValue = stats.total_products.toString();
+        newValue = (stats.total_products ?? 0).toString();
         newBottomValue = "from Qdrant";
       } else if (index === 1) { // Task -> Categories
         newTitle = "Categories";
-        newValue = stats.total_categories.toString();
+        newValue = (stats.total_categories ?? 0).toString();
         newBottomValue = "Unique counts";
       } else if (index === 2) { // Members -> Brands
         newTitle = "Brands";
-        newValue = stats.total_brands.toString();
+        newValue = (stats.total_brands ?? 0).toString();
         newBottomValue = "Featured";
       } else if (index === 3) { // Productivity -> In Stock
         newTitle = "Products In Stock";
-        newValue = stats.in_stock.toString();
-        newBottomValue = ((stats.in_stock / stats.total_products) * 100).toFixed(0) + "%";
+        const inStock = stats.in_stock ?? 0;
+        const total = stats.total_products ?? 1;
+        newValue = inStock.toString();
+        newBottomValue = ((inStock / total) * 100).toFixed(0) + "%";
         stat.description = "Availability";
       }
     }

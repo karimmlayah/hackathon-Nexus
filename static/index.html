@@ -32,11 +32,29 @@
     <style>
         /* Sticky Main Header */
         .sticky-header {
-            position: sticky;
-            top: 45px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 999;
             background: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        /* Add padding to body to account for fixed header and navbar */
+        body {
+            padding-top: 200px;
+        }
+
+        /* Fixed Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 105px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 998;
         }
 
         /* Force consistent image sizes in product cards */
@@ -60,6 +78,71 @@
         .header-carousel-item img {
             max-height: 400px;
             object-fit: contain;
+        }
+
+        /* User Dropdown Menu Styling */
+        .user-dropdown-menu {
+            animation: slideDown 0.2s ease-out !important;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-dropdown-menu .dropdown-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .user-dropdown-menu .dropdown-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #0d6efd;
+            padding-left: 13px;
+            margin-left: 0;
+        }
+
+        .user-dropdown-menu .dropdown-item.text-danger:hover {
+            background-color: #fff5f5;
+            border-left-color: #dc3545;
+        }
+
+        /* User Icon Hover Effect */
+        #userDropdown:hover span {
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4) !important;
+            transform: scale(1.05);
+        }
+
+        #userDropdown span {
+            transition: all 0.2s ease;
+        }
+
+        /* Ensure proper display/hide of auth icons */
+        #loginLink {
+            display: block !important;
+        }
+
+        #userMenu {
+            display: none !important;
+        }
+
+        #userMenu[style*="display: block"] {
+            display: block !important;
+        }
+
+        #loginLink[style*="display: none"] {
+            display: none !important;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
@@ -132,6 +215,36 @@
             </div>
             <div class="col-md-4 col-lg-3 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center">
+                    <!-- User/Login Icon -->
+                    <div id="userIconContainer" class="me-3">
+                        <!-- Login Link (when not authenticated) -->
+                        <a href="signin.html" id="loginLink" class="text-muted d-flex align-items-center justify-content-center" title="Sign In" style="display: block;">
+                            <span class="rounded-circle btn-md-square border"><i class="fas fa-user"></i></span>
+                        </a>
+                        
+                        <!-- User Menu (when authenticated) -->
+                        <div id="userMenu" class="dropdown" style="display: none;">
+                            <a href="#" class="dropdown-toggle text-muted d-flex align-items-center justify-content-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="User Menu" style="text-decoration: none;">
+                                <span class="rounded-circle btn-md-square bg-primary text-white border-0" style="font-size: 14px; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3); transition: all 0.2s ease;">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown" style="min-width: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
+                                <li style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+                                    <div style="font-size: 13px; color: #999;">Logged in as</div>
+                                    <div id="userNameDisplay" style="font-weight: 600; color: #333; margin-top: 4px;"></div>
+                                </li>
+                                <li><hr class="dropdown-divider m-0"></li>
+                                <li><a class="dropdown-item" href="/" style="padding: 10px 16px;"><i class="fas fa-home" style="color: #0d6efd; margin-right: 8px; width: 16px;"></i>Home</a></li>
+                                <li><a class="dropdown-item" href="cart.html" style="padding: 10px 16px;"><i class="fas fa-shopping-cart" style="color: #ffc107; margin-right: 8px; width: 16px;"></i>My Cart</a></li>
+                                <li><a class="dropdown-item" href="wishlist.html" style="padding: 10px 16px;"><i class="fas fa-heart" style="color: #dc3545; margin-right: 8px; width: 16px;"></i>Favorites</a></li>
+                                <li><a class="dropdown-item" href="#" style="padding: 10px 16px;"><i class="fas fa-cog" style="color: #6c757d; margin-right: 8px; width: 16px;"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider m-0"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutBtn" style="padding: 10px 16px;"><i class="fas fa-sign-out-alt" style="margin-right: 8px; width: 16px;"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
                     <a href="wishlist.html"
                         class="text-muted d-flex align-items-center justify-content-center me-3 position-relative">
                         <span class="rounded-circle btn-md-square border"><i class="fas fa-heart"></i></span>
@@ -1456,6 +1569,82 @@
     <!-- Template Javascript -->
     <script src="/static/js/main.js"></script>
 
+    <!-- Auth Script -->
+    <script>
+        // Check authentication status and update UI
+        function updateAuthUI() {
+            try {
+                const token = localStorage.getItem('finfit_token');
+                const userJson = localStorage.getItem('finfit_user');
+                const user = userJson ? JSON.parse(userJson) : null;
+                
+                const loginLink = document.getElementById('loginLink');
+                const userMenu = document.getElementById('userMenu');
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                const logoutBtn = document.getElementById('logoutBtn');
+                
+                if (token && user) {
+                    // User is logged in - show user menu, hide login link
+                    if (loginLink) {
+                        loginLink.style.visibility = 'hidden';
+                        loginLink.style.width = '0';
+                        loginLink.style.height = '0';
+                        loginLink.style.display = 'none';
+                        loginLink.classList.add('d-none');
+                    }
+                    if (userMenu) {
+                        userMenu.style.display = 'block';
+                        userMenu.classList.remove('d-none');
+                    }
+                    if (userNameDisplay) userNameDisplay.textContent = user.name + ' (' + user.email + ')';
+                    
+                    if (logoutBtn) {
+                        logoutBtn.onclick = function(e) {
+                            e.preventDefault();
+                            logout();
+                            return false;
+                        };
+                    }
+                } else {
+                    // User is not logged in - show login link, hide user menu
+                    if (loginLink) {
+                        loginLink.style.visibility = 'visible';
+                        loginLink.style.width = 'auto';
+                        loginLink.style.height = 'auto';
+                        loginLink.style.display = 'block';
+                        loginLink.classList.remove('d-none');
+                    }
+                    if (userMenu) {
+                        userMenu.style.display = 'none';
+                        userMenu.classList.add('d-none');
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating auth UI:', error);
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('finfit_token');
+            localStorage.removeItem('finfit_user');
+            location.reload();
+        }
+        
+        // Initialize auth UI when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateAuthUI);
+        } else {
+            updateAuthUI();
+        }
+        
+        // Also update on page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateAuthUI();
+            }
+        });
+    </script>
+
     <!-- Integration Script -->
     <script>
         const API_BASE = (window.location.protocol === 'file:')
@@ -1620,6 +1809,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateCounters();
             updateCurrency(); // Initialize currency on load
+            
+            // Load initial content
+            loadTab('tab-1', null);  // Load all products initially
+            loadHeaderCarousel();     // Load carousel
+            loadProductListCarousel(); // Load product list carousel
+            loadFeaturedOffers();     // Load featured offers
+            loadDynamicBanners();     // Load banners
+            loadBestsellers();        // Load bestsellers
+            loadCarouselProducts();   // Load carousel products
         });
 
         // --- Currency Converter Logic ---
@@ -1838,7 +2036,8 @@
                     : `${API_BASE}/products?limit=12`;
                 const response = await fetch(url);
                 const data = await response.json();
-                renderResults(data.products, gridId);
+                const products = Array.isArray(data) ? data : (data.products || []);
+                renderResults(products, gridId);
             } catch (e) {
                 console.error(`Failed to load tab ${tabId}:`, e);
                 grid.innerHTML = `
@@ -1905,7 +2104,7 @@
                 // Fetch more to allow for random selection
                 const response = await fetch(`${API_BASE}/products?limit=50`);
                 let data = await response.json();
-                let products = data.products || [];
+                let products = Array.isArray(data) ? data : (data.products || []);
 
                 // Shuffle and pick 12
                 products = products.sort(() => Math.random() - 0.5).slice(0, 12);
@@ -1967,7 +2166,7 @@
                 // Fetch a good amount and sort by rating
                 const response = await fetch(`${API_BASE}/products?limit=100`);
                 let data = await response.json();
-                let products = data.products || [];
+                let products = Array.isArray(data) ? data : (data.products || []);
 
                 // Sort by rating (high to low) and pick top 6
                 products = products
@@ -1978,7 +2177,8 @@
                 // If no ratings, just pick random 6
                 if (products.length < 6) {
                     const response2 = await fetch(`${API_BASE}/products?limit=50`);
-                    const all = await response2.json();
+                    const data2 = await response2.json();
+                    const all = Array.isArray(data2) ? data2 : (data2.products || []);
                     products = all.sort(() => Math.random() - 0.5).slice(0, 6);
                 }
 
@@ -1996,7 +2196,7 @@
             try {
                 const response = await fetch(`${API_BASE}/products?limit=50`);
                 const data = await response.json();
-                const products = data.products || [];
+                const products = Array.isArray(data) ? data : (data.products || []);
                 // Pick random 2 products with images
                 const selected = products
                     .filter(p => p.image)
@@ -2050,6 +2250,13 @@
             loadTab('tab-1', null);
         }
 
+        function parseDiscount(discountValue) {
+            if (!discountValue) return null;
+            // Extract number from discount string like "-32%", "32%", "-32", "32"
+            const match = String(discountValue).match(/(\d+)/);
+            return match ? parseInt(match[1]) : null;
+        }
+
         function renderResults(products, gridId, headerMessage = null) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
@@ -2096,7 +2303,7 @@
                             <div class="product-item-inner border rounded">
                                 <div class="product-item-inner-item" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff;">
                                     <img src="${imageUrl}" class="img-fluid" alt="${title}" style="max-height: 100%; object-fit: contain;" onerror="this.src='/static/img/placeholder.png'">
-                                    ${product.discount ? `<div class="product-sale">-${product.discount}%</div>` : ''}
+                                    ${product.discount ? `<div class="product-sale">-${parseDiscount(product.discount)}%</div>` : ''}
                                     <div class="product-details">
                                         <button class="btn btn-link text-white p-0" onclick="viewProduct(${index})"><i class="fa fa-eye fa-1x"></i></button>
                                         <button class="btn btn-link text-white p-0 ms-2" onclick="toggleWishlist(${index})"><i class="fas fa-heart fa-1x"></i></button>
@@ -2163,7 +2370,7 @@
             try {
                 const response = await fetch(`${API_BASE}/products?limit=50`);
                 const data = await response.json();
-                const products = data.products || [];
+                const products = Array.isArray(data) ? data : (data.products || []);
 
                 // Keep products with images OR fallback if none have images
                 let withImages = products.filter(p => p.image || (p.image_urls && p.image_urls[0]));
@@ -2267,7 +2474,7 @@
                 // Get products with discounts from Qdrant
                 const response = await fetch(`${API_BASE}/products?limit=50`);
                 const data = await response.json();
-                const products = data.products || [];
+                const products = Array.isArray(data) ? data : (data.products || []);
 
                 // Filter products with discounts and sort by discount percentage
                 const productsWithDiscounts = products

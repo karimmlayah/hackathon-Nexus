@@ -7,8 +7,8 @@ from passlib.context import CryptContext
 
 Base = declarative_base()
 
-# Password hashing using Argon2 (more secure and doesn't have bcrypt's 72-byte limitation)
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# Password hashing using pbkdf2_sha256 (no external binary dependencies)
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 
 class User(Base):
@@ -21,6 +21,7 @@ class User(Base):
     phone = Column(String(20), nullable=True)
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
+    role = Column(String(20), default="user", nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     

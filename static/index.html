@@ -90,6 +90,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -218,33 +219,56 @@
                     <!-- User/Login Icon -->
                     <div id="userIconContainer" class="me-3">
                         <!-- Login Link (when not authenticated) -->
-                        <a href="signin.html" id="loginLink" class="text-muted d-flex align-items-center justify-content-center" title="Sign In" style="display: block;">
+                        <a href="signin.html" id="loginLink"
+                            class="text-muted d-flex align-items-center justify-content-center" title="Sign In"
+                            style="display: block;">
                             <span class="rounded-circle btn-md-square border"><i class="fas fa-user"></i></span>
                         </a>
-                        
+
                         <!-- User Menu (when authenticated) -->
                         <div id="userMenu" class="dropdown" style="display: none;">
-                            <a href="#" class="dropdown-toggle text-muted d-flex align-items-center justify-content-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="User Menu" style="text-decoration: none;">
-                                <span class="rounded-circle btn-md-square bg-primary text-white border-0" style="font-size: 14px; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3); transition: all 0.2s ease;">
+                            <a href="#"
+                                class="dropdown-toggle text-muted d-flex align-items-center justify-content-center"
+                                id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="User Menu"
+                                style="text-decoration: none;">
+                                <span class="rounded-circle btn-md-square bg-primary text-white border-0"
+                                    style="font-size: 14px; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3); transition: all 0.2s ease;">
                                     <i class="fas fa-user"></i>
                                 </span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown" style="min-width: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
+                            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu"
+                                aria-labelledby="userDropdown"
+                                style="min-width: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
                                 <li style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
                                     <div style="font-size: 13px; color: #999;">Logged in as</div>
-                                    <div id="userNameDisplay" style="font-weight: 600; color: #333; margin-top: 4px;"></div>
+                                    <div id="userNameDisplay" style="font-weight: 600; color: #333; margin-top: 4px;">
+                                    </div>
                                 </li>
-                                <li><hr class="dropdown-divider m-0"></li>
-                                <li><a class="dropdown-item" href="/" style="padding: 10px 16px;"><i class="fas fa-home" style="color: #0d6efd; margin-right: 8px; width: 16px;"></i>Home</a></li>
-                                <li><a class="dropdown-item" href="cart.html" style="padding: 10px 16px;"><i class="fas fa-shopping-cart" style="color: #ffc107; margin-right: 8px; width: 16px;"></i>My Cart</a></li>
-                                <li><a class="dropdown-item" href="wishlist.html" style="padding: 10px 16px;"><i class="fas fa-heart" style="color: #dc3545; margin-right: 8px; width: 16px;"></i>Favorites</a></li>
-                                <li><a class="dropdown-item" href="#" style="padding: 10px 16px;"><i class="fas fa-cog" style="color: #6c757d; margin-right: 8px; width: 16px;"></i>Settings</a></li>
-                                <li><hr class="dropdown-divider m-0"></li>
-                                <li><a class="dropdown-item text-danger" href="#" id="logoutBtn" style="padding: 10px 16px;"><i class="fas fa-sign-out-alt" style="margin-right: 8px; width: 16px;"></i>Logout</a></li>
+                                <li>
+                                    <hr class="dropdown-divider m-0">
+                                </li>
+                                <li><a class="dropdown-item" href="/" style="padding: 10px 16px;"><i class="fas fa-home"
+                                            style="color: #0d6efd; margin-right: 8px; width: 16px;"></i>Home</a></li>
+                                <li><a class="dropdown-item" href="cart.html" style="padding: 10px 16px;"><i
+                                            class="fas fa-shopping-cart"
+                                            style="color: #ffc107; margin-right: 8px; width: 16px;"></i>My Cart</a></li>
+                                <li><a class="dropdown-item" href="wishlist.html" style="padding: 10px 16px;"><i
+                                            class="fas fa-heart"
+                                            style="color: #dc3545; margin-right: 8px; width: 16px;"></i>Favorites</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" style="padding: 10px 16px;"><i class="fas fa-cog"
+                                            style="color: #6c757d; margin-right: 8px; width: 16px;"></i>Settings</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider m-0">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"
+                                        style="padding: 10px 16px;"><i class="fas fa-sign-out-alt"
+                                            style="margin-right: 8px; width: 16px;"></i>Logout</a></li>
                             </ul>
                         </div>
                     </div>
-                    
+
                     <a href="wishlist.html"
                         class="text-muted d-flex align-items-center justify-content-center me-3 position-relative">
                         <span class="rounded-circle btn-md-square border"><i class="fas fa-heart"></i></span>
@@ -1577,12 +1601,12 @@
                 const token = localStorage.getItem('finfit_token');
                 const userJson = localStorage.getItem('finfit_user');
                 const user = userJson ? JSON.parse(userJson) : null;
-                
+
                 const loginLink = document.getElementById('loginLink');
                 const userMenu = document.getElementById('userMenu');
                 const userNameDisplay = document.getElementById('userNameDisplay');
                 const logoutBtn = document.getElementById('logoutBtn');
-                
+
                 if (token && user) {
                     // User is logged in - show user menu, hide login link
                     if (loginLink) {
@@ -1597,9 +1621,9 @@
                         userMenu.classList.remove('d-none');
                     }
                     if (userNameDisplay) userNameDisplay.textContent = user.name + ' (' + user.email + ')';
-                    
+
                     if (logoutBtn) {
-                        logoutBtn.onclick = function(e) {
+                        logoutBtn.onclick = function (e) {
                             e.preventDefault();
                             logout();
                             return false;
@@ -1623,22 +1647,22 @@
                 console.error('Error updating auth UI:', error);
             }
         }
-        
+
         function logout() {
             localStorage.removeItem('finfit_token');
             localStorage.removeItem('finfit_user');
             location.reload();
         }
-        
+
         // Initialize auth UI when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', updateAuthUI);
         } else {
             updateAuthUI();
         }
-        
+
         // Also update on page visibility changes
-        document.addEventListener('visibilitychange', function() {
+        document.addEventListener('visibilitychange', function () {
             if (!document.hidden) {
                 updateAuthUI();
             }
@@ -1732,6 +1756,7 @@
         }
 
         function addToCart(index) {
+            if (!checkAuth()) return;
             const product = renderedProductsCache[index];
             if (!product) return;
 
@@ -1753,6 +1778,7 @@
         }
 
         function toggleWishlist(index) {
+            if (!checkAuth()) return;
             const product = renderedProductsCache[index];
             if (!product) return;
 
@@ -1809,7 +1835,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateCounters();
             updateCurrency(); // Initialize currency on load
-            
+
             // Load initial content
             loadTab('tab-1', null);  // Load all products initially
             loadHeaderCarousel();     // Load carousel

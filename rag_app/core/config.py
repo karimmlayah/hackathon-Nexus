@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     # Qdrant
     QDRANT_URL: str = ":memory:" # Default to in-memory if no URL provided
     QDRANT_API_KEY: str = ""
+    QDRANT_COLLECTION: str = "amazon30015"  # From .env: QDRANT_COLLECTION
     COLLECTION_NAME: str = "amazon30015"
     VECTOR_NAME: str = "text_dense"
     
@@ -23,5 +24,12 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        extra = "ignore"  # Ignore extra fields from .env
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Use QDRANT_COLLECTION from env if available
+        if self.QDRANT_COLLECTION and self.QDRANT_COLLECTION != "amazon30015":
+            self.COLLECTION_NAME = self.QDRANT_COLLECTION
 
 settings = Settings()

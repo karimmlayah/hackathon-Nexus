@@ -1040,6 +1040,7 @@
         }
 
         function addToCartCurrent() {
+            if (!checkAuth()) return;
             const productJson = localStorage.getItem('finfit_selected_product');
             if (!productJson) return;
             const product = JSON.parse(productJson);
@@ -1067,7 +1068,7 @@
         }
 
         // Chatbot Functions
-        
+
         // Chatbot Functions
         function toggleChat() {
             const chatWindow = document.getElementById('chatWindow');
@@ -1109,30 +1110,30 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })
             })
-            .then(response => response.json())
-            .then(data => {
-                // Remove Loading
-                const loader = document.getElementById('ai-loading');
-                if (loader) loader.remove();
+                .then(response => response.json())
+                .then(data => {
+                    // Remove Loading
+                    const loader = document.getElementById('ai-loading');
+                    if (loader) loader.remove();
 
-                // Add AI Message
-                const aiMsgDiv = document.createElement('div');
-                aiMsgDiv.className = 'chat-message message-ai';
-                // Handing basic markdown/newlines
-                aiMsgDiv.innerHTML = data.response.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                chatBody.appendChild(aiMsgDiv);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                const loader = document.getElementById('ai-loading');
-                if (loader) loader.remove();
-                
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'chat-message message-ai text-danger';
-                errorDiv.textContent = "Oops! I hit a snag. Please check your connection and try again.";
-                chatBody.appendChild(errorDiv);
-            });
+                    // Add AI Message
+                    const aiMsgDiv = document.createElement('div');
+                    aiMsgDiv.className = 'chat-message message-ai';
+                    // Handing basic markdown/newlines
+                    aiMsgDiv.innerHTML = data.response.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                    chatBody.appendChild(aiMsgDiv);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const loader = document.getElementById('ai-loading');
+                    if (loader) loader.remove();
+
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'chat-message message-ai text-danger';
+                    errorDiv.textContent = "Oops! I hit a snag. Please check your connection and try again.";
+                    chatBody.appendChild(errorDiv);
+                });
         }
 
     </script>

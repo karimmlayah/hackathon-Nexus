@@ -179,3 +179,15 @@
 
 })(jQuery);
 
+// Global Auth Check Function
+function checkAuth() {
+    const token = localStorage.getItem('finfit_token');
+    if (!token) {
+        // Create a custom alert or just use standard alert for now
+        alert('You must be logged in to access this feature.');
+        window.location.href = 'signin.html';
+        return false;
+    }
+    return true;
+}
+

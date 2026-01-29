@@ -432,6 +432,7 @@
         }
 
         function addToCartFromWishlist(index) {
+            if (!checkAuth()) return;
             let wishlist = JSON.parse(localStorage.getItem('finfit_wishlist')) || [];
             let cart = JSON.parse(localStorage.getItem('finfit_cart')) || [];
 

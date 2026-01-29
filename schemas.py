@@ -26,6 +26,7 @@ class UserLogin(BaseModel):
 class UserResponse(UserBase):
     """Schema for user response"""
     id: int
+    role: str
     is_active: bool
     created_at: datetime
     

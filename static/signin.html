@@ -385,23 +385,45 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'same-origin'
                 });
                 
                 const data = await response.json();
                 
-                if (response.ok) {
-                    localStorage.setItem('finfit_token', data.access_token);
+                if (response.ok && data.user) {
+                    // Store token and user info in localStorage
+                    localStorage.setItem('finfit_token', data.access_token || '');
                     localStorage.setItem('finfit_user', JSON.stringify(data.user));
-                    window.location.href = '/';
+                    
+                    // Debug log
+                    console.log('✅ Login successful:', data);
+                    console.log('🔐 User role:', data.user.role);
+                    console.log('📦 Stored in localStorage:', localStorage.getItem('finfit_user'));
+                    
+                    // Determine redirect URL
+                    let redirectUrl = '/';
+                    if (data.user.role === 'super_admin') {
+                        redirectUrl = 'http://localhost:3000';
+                        console.log('➡️ Admin detected, redirecting to:', redirectUrl);
+                    } else {
+                        console.log('➡️ User detected, redirecting to:', redirectUrl);
+                    }
+                    
+                    // Redirect immediately
+                    window.location.replace(redirectUrl);
                 } else {
-                    errorAlert.textContent = data.detail || 'Login failed';
+                    const errorMsg = data.detail || data.message || 'Login failed';
+                    console.error('❌ Login failed:', errorMsg);
+                    errorAlert.textContent = errorMsg;
                     errorAlert.style.display = 'block';
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = 'Sign In';
                 }
             } catch (error) {
-                errorAlert.textContent = 'Server connection failed';
+                console.error('❌ Error during login:', error);
+                errorAlert.textContent = 'Server connection failed: ' + error.message;
                 errorAlert.style.display = 'block';
-            } finally {
                 signinBtn.disabled = false;
                 signinBtn.textContent = 'Sign In';
             }

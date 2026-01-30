@@ -45,20 +45,23 @@ const DashboardStats = () => {
         newTitle = "Total Products";
         newValue = (stats.total_products ?? 0).toString();
         newBottomValue = "from Qdrant";
+        stat.description = "";
       } else if (index === 1) { // Task -> Categories
         newTitle = "Categories";
         newValue = (stats.total_categories ?? 0).toString();
         newBottomValue = "Unique counts";
+        stat.description = "";
       } else if (index === 2) { // Members -> Brands
         newTitle = "Brands";
         newValue = (stats.total_brands ?? 0).toString();
         newBottomValue = "Featured";
+        stat.description = "Found";
       } else if (index === 3) { // Productivity -> In Stock
         newTitle = "Products In Stock";
         const inStock = stats.in_stock ?? 0;
         const total = stats.total_products ?? 1;
         newValue = inStock.toString();
-        newBottomValue = ((inStock / total) * 100).toFixed(0) + "%";
+        newBottomValue = total > 0 ? ((inStock / total) * 100).toFixed(0) + "%" : "0%";
         stat.description = "Availability";
       }
     }

@@ -25,56 +25,58 @@ const CustomToggle = React.forwardRef<HTMLAnchorElement, UserToggleProps>(
 
 const UserMenu = () => {
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string, email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("finfit_token");
-      if (!token) return;
-
-      try {
-        const response = await fetch("http://localhost:8000/api/user/profile", {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else {
-          localStorage.removeItem("finfit_token");
-        }
-      } catch (err) {
-        console.error("Failed to fetch profile");
-      }
-    };
-
-    fetchProfile();
+    // Check for real token/user in localStorage
+    const storedUser = localStorage.getItem("finfit_user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      // Fallback or guest
+      setUser({
+        name: "Admin User",
+        email: "admin@finfit.com"
+      });
+    }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
     localStorage.removeItem("finfit_token");
-    router.push("/sign-in");
+    localStorage.removeItem("finfit_user");
+    // Redirect to the static sign-in page on the marketplace server
+    window.location.href = "http://localhost:8000/signin.html";
+  };
+
+  // Helper to get initials
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
     <Dropdown>
       <Dropdown.Toggle as={CustomToggle}>
-        <Avatar
-          type="image"
-          src={getAssetPath("/images/avatar/avatar-1.jpg")}
-          size="sm"
-          alt="User Avatar"
-          className="rounded-circle"
-        />
+        <div
+          className="rounded-circle d-flex align-items-center justify-content-center bg-primary text-white fw-bold"
+          style={{ width: "32px", height: "32px", fontSize: "14px" }}
+        >
+          {user ? getInitials(user.name) : "GU"}
+        </div>
       </Dropdown.Toggle>
       <Dropdown.Menu align="end" className="p-0 dropdown-menu-md">
         <div className="d-flex gap-3 align-items-center border-dashed border-bottom px-4 py-4">
-          <Image
-            src={getAssetPath("/images/avatar/avatar-1.jpg")}
-            alt=""
-            className="avatar avatar-md rounded-circle"
-          />
+          <div
+            className="rounded-circle d-flex align-items-center justify-content-center bg-primary text-white fw-bold display-6"
+            style={{ width: "48px", height: "48px", fontSize: "20px" }}
+          >
+            {user ? getInitials(user.name) : "GU"}
+          </div>
           <div>
             <h4 className="mb-0 fs-5">{user ? user.name : "Guest User"}</h4>
             <p className="mb-0 text-secondary small">{user ? user.email : "Not logged in"}</p>

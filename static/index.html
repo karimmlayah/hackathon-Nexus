@@ -178,6 +178,16 @@
                         <div class="search-bar-google d-flex align-items-center bg-white rounded-pill shadow-sm border px-3"
                             style="max-width: 600px; margin: 0 auto; height: 50px;">
                             <i class="fas fa-search text-muted me-3"></i>
+                            <div id="imagePreviewContainer" class="d-none me-2 position-relative"
+                                style="width: 40px; height: 40px;">
+                                <img id="searchImagePreview" src="" class="rounded"
+                                    style="width: 100%; height: 100%; object-fit: cover; border: 1px solid #ddd;">
+                                <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 start-100 translate-middle rounded-circle p-0"
+                                    style="width: 15px; height: 15px; font-size: 10px;" onclick="clearSearchImage()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                             <input id="searchInput" class="form-control border-0 bg-transparent shadow-none w-100"
                                 type="text" placeholder="Search Products..."
                                 onkeypress="if(event.key === 'Enter') handleSearchClick()" style="font-size: 1.1rem;">
@@ -556,6 +566,66 @@
     <!-- Products Offer End -->
 
 
+    <!-- AI Smart Search Start -->
+    <div class="container-fluid py-5 bg-white">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 wow fadeInLeft" data-wow-delay="0.1s">
+                    <div class="section-title text-start mb-4">
+                        <h5 class="text-primary text-uppercase" style="letter-spacing: 5px;">AI Shopping Assistant</h5>
+                        <h1 class="display-5 mb-4">Search Smarter with AI</h1>
+                    </div>
+                    <p class="mb-4">Upload an image of what you're looking for, or just describe it. Our AI understands
+                        visual concepts and text intents to find your perfect match.</p>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-square bg-primary rounded-circle p-4 me-3">
+                            <i class="fas fa-magic text-white fa-2x"></i>
+                        </div>
+                        <div class="ms-1">
+                            <h5>Multimodal Intent</h5>
+                            <p class="mb-0 text-muted">Combines image features with text requirements (e.g. "cheapest",
+                                "vintage").</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 wow fadeInRight" data-wow-delay="0.1s">
+                    <div class="bg-light rounded p-5 shadow-sm">
+                        <div class="mb-4">
+                            <textarea id="aiSearchInput" class="form-control border-0 rounded p-3 mb-3" rows="3"
+                                placeholder="Explain what you are looking for... (e.g. 'Show me the cheapest laptops similar to this image')"></textarea>
+
+                            <!-- Dropzone / Upload Area -->
+                            <div id="aiImageDropzone"
+                                class="border-2 border-dashed border-primary rounded p-4 text-center cursor-pointer mb-3 position-relative"
+                                onclick="document.getElementById('aiImageInput').click()"
+                                style="background: rgba(13, 110, 253, 0.05); cursor: pointer;">
+                                <div id="aiImagePlaceholder">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                    <p class="mb-0">Drag & Drop or Click to Upload Image</p>
+                                </div>
+                                <div id="aiImagePreviewContainer" class="d-none">
+                                    <img id="aiImagePreview" src="" class="img-fluid rounded mb-2"
+                                        style="max-height: 200px;">
+                                    <button type="button" class="btn btn-sm btn-danger rounded-pill px-3"
+                                        onclick="event.stopPropagation(); clearAiImage();">
+                                        <i class="fas fa-trash me-1"></i> Remove
+                                    </button>
+                                </div>
+                                <input type="file" id="aiImageInput" class="d-none" accept="image/*"
+                                    onchange="handleAiImageSelect(event)">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100 py-3 rounded-pill fs-5 shadow-sm"
+                            onclick="performAiSearch()">
+                            <i class="fas fa-search me-2"></i> Ask AI Assistant
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- AI Smart Search End -->
+
     <!-- Our Products Start -->
     <div class="container-fluid product py-5">
         <div class="container py-5">
@@ -602,6 +672,17 @@
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                             <p class="mt-2 text-muted">Loading products from Qdrant Cloud...</p>
+                        </div>
+                        <div id="aiAnswerContainer-1" class="mb-4 d-none">
+                            <div class="bg-primary bg-opacity-10 rounded p-4 border border-primary border-opacity-25">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="bg-primary rounded-circle p-2 me-2">
+                                        <i class="fas fa-robot text-white"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-primary">AI Shopping Assistant</h5>
+                                </div>
+                                <div id="aiAnswerText-1" class="text-dark lead"></div>
+                            </div>
                         </div>
                         <div id="resultsGrid-1" class="row g-4">
                             <!-- Products loaded dynamically from Qdrant -->
@@ -1572,7 +1653,22 @@
             </div>
         </div>
         <div class="chat-footer">
+            <!-- Image Preview Area -->
+            <div id="chatImagePreviewContainer" class="d-none mb-2 p-2 bg-light rounded position-relative">
+                <img id="chatImagePreview" src="" class="rounded"
+                    style="max-height: 80px; max-width: 100px; object-fit: contain;">
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1"
+                    onclick="clearChatImage()" style="padding: 2px 6px; font-size: 10px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             <div class="chat-input-group">
+                <button class="btn btn-link text-muted p-2" onclick="document.getElementById('chatImageInput').click()"
+                    title="Upload Image">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="file" id="chatImageInput" class="d-none" accept="image/*"
+                    onchange="handleChatImageSelect(event)">
                 <input type="text" id="chatInput" placeholder="Ask me anything..."
                     onkeypress="if(event.key === 'Enter') sendChatMessage()">
                 <button class="send-btn" onclick="sendChatMessage()">
@@ -1674,10 +1770,33 @@
         const API_BASE = (window.location.protocol === 'file:')
             ? 'http://localhost:8000'
             : window.location.origin;
-        let selectedImageBase64 = null;
+        let selectedImageBase64 = null; // For main search
+        let selectedChatImageBase64 = null; // For chat
 
         function triggerImageUpload() {
             document.getElementById('imageInput').click();
+        }
+
+        function handleChatImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedChatImageBase64 = e.target.result; // Store base64 string
+                    const preview = document.getElementById('chatImagePreview');
+                    const previewContainer = document.getElementById('chatImagePreviewContainer');
+                    preview.src = selectedChatImageBase64;
+                    previewContainer.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearChatImage() {
+            selectedChatImageBase64 = null;
+            document.getElementById('chatImagePreview').src = '';
+            document.getElementById('chatImagePreviewContainer').classList.add('d-none');
+            document.getElementById('chatImageInput').value = ''; // Clear the file input
         }
 
         // Voice Search Implementation
@@ -1724,6 +1843,9 @@
             const product = renderedProductsCache[index];
             if (!product) return;
 
+            // Track interaction
+            trackInteraction('view', product.id);
+
             localStorage.setItem('finfit_selected_product', JSON.stringify(product));
             window.location.href = 'single.html';
         }
@@ -1755,10 +1877,35 @@
             cartTotal.textContent = '$' + totalPrice.toFixed(2);
         }
 
+        async function trackInteraction(type, productId) {
+            const userJson = localStorage.getItem('finfit_user');
+            if (!userJson) return;
+            try {
+                const user = JSON.parse(userJson);
+                const email = user.email;
+                if (!email) return;
+
+                fetch(`${API_BASE}/api/interactions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_email: email,
+                        type: type,
+                        product_id: productId.toString()
+                    })
+                });
+            } catch (e) {
+                console.error('Failed to track interaction:', e);
+            }
+        }
+
         function addToCart(index) {
             if (!checkAuth()) return;
             const product = renderedProductsCache[index];
             if (!product) return;
+
+            // Track interaction
+            trackInteraction('cart', product.id);
 
             const existingItem = cart.find(item => item.name === product.name); // Using name as ID for now
             if (existingItem) {
@@ -1793,6 +1940,8 @@
                     image: product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png'
                 });
                 showToast(`Added to favorites: ${product.name}`);
+                // Track interaction
+                trackInteraction('wishlist', product.id);
             }
 
             localStorage.setItem('finfit_wishlist', JSON.stringify(wishlist));
@@ -1909,37 +2058,116 @@
 
         // --- End Logic ---
 
-        // Handle image selection directly from the new camera icon
         function handleImageSelect(event) {
             const file = event.target.files[0];
             if (file) {
-                // Set mode to image
-                document.getElementById('searchMode').value = 'image';
-
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     selectedImageBase64 = e.target.result;
-                    // Trigger search immediately after selection
-                    searchByImage();
+
+                    // Show preview
+                    const previewContainer = document.getElementById('imagePreviewContainer');
+                    const previewImg = document.getElementById('searchImagePreview');
+                    if (previewContainer && previewImg) {
+                        previewImg.src = selectedImageBase64;
+                        previewContainer.classList.remove('d-none');
+                    }
+
+                    // Trigger search
+                    performSearch();
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function handleSearchClick() {
+        function clearSearchImage() {
+            selectedImageBase64 = null;
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            if (previewContainer) {
+                previewContainer.classList.add('d-none');
+            }
+
+            // Sync AI section if present
+            const aiPreview = document.getElementById('aiImagePreviewContainer');
+            const aiPlaceholder = document.getElementById('aiImagePlaceholder');
+            if (aiPreview && aiPlaceholder) {
+                aiPreview.classList.add('d-none');
+                aiPlaceholder.classList.remove('d-none');
+            }
+
+            // Trigger search again without image if there is text, or do nothing
             const query = document.getElementById('searchInput').value.trim();
-            if (query) {
-                document.getElementById('searchMode').value = 'text';
-                search();
-            } else if (selectedImageBase64) {
-                // If no text but image is selected (edge case if they clicked uploads before)
-                searchByImage();
+            if (query) performSearch();
+        }
+
+        function handleAiImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedImageBase64 = e.target.result;
+
+                    // Show preview in RAG section
+                    const previewContainer = document.getElementById('aiImagePreviewContainer');
+                    const placeholder = document.getElementById('aiImagePlaceholder');
+                    const previewImg = document.getElementById('aiImagePreview');
+                    if (previewContainer && previewImg && placeholder) {
+                        previewImg.src = selectedImageBase64;
+                        previewContainer.classList.remove('d-none');
+                        placeholder.classList.add('d-none');
+                    }
+
+                    // Sync top bar
+                    const topPreview = document.getElementById('imagePreviewContainer');
+                    const topImg = document.getElementById('searchImagePreview');
+                    if (topPreview && topImg) {
+                        topImg.src = selectedImageBase64;
+                        topPreview.classList.remove('d-none');
+                    }
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        async function search() {
+        function clearAiImage() {
+            selectedImageBase64 = null;
+            const aiPreview = document.getElementById('aiImagePreviewContainer');
+            const aiPlaceholder = document.getElementById('aiImagePlaceholder');
+            if (aiPreview && aiPlaceholder) {
+                aiPreview.classList.add('d-none');
+                aiPlaceholder.classList.remove('d-none');
+            }
+            document.getElementById('aiImageInput').value = '';
+
+            // Sync top bar
+            const topPreview = document.getElementById('imagePreviewContainer');
+            if (topPreview) topPreview.classList.add('d-none');
+
+            const query = document.getElementById('aiSearchInput').value.trim();
+            if (query) performAiSearch();
+        }
+
+        async function performAiSearch() {
+            const query = document.getElementById('aiSearchInput').value.trim();
+            // Sync with global search bar
+            document.getElementById('searchInput').value = query;
+
+            await performSearch();
+
+            // Ensure results visible
+            const resultsSection = document.getElementById('tab-1');
+            if (resultsSection) resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function handleSearchClick() {
+            performSearch();
+        }
+
+        async function performSearch() {
             const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
+            const imageBase64 = selectedImageBase64;
+
+            if (!query && !imageBase64) return;
 
             // Switch to tab-1 and show results there
             const tab1Link = document.querySelector('a[href="#tab-1"]');
@@ -1947,89 +2175,55 @@
 
             showLoading(true, '1');
             const grid = document.getElementById('resultsGrid-1');
-            if (grid) grid.innerHTML = ''; // Clear previous results
+            if (grid) grid.innerHTML = '';
 
             try {
-                const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}&limit=12&threshold=0.3`);
+                const response = await fetch(`${API_BASE}/api/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_query: query || null,
+                        image_base64: imageBase64 || null,
+                        limit: 15
+                    })
+                });
                 const data = await response.json();
 
-                // Show search context
+                // Show AI Answer if present
+                const answerContainer = document.getElementById('aiAnswerContainer-1');
+                const answerText = document.getElementById('aiAnswerText-1');
+                if (answerContainer && answerText && data.answer) {
+                    answerText.innerText = data.answer;
+                    answerContainer.classList.remove('d-none');
+                } else if (answerContainer) {
+                    answerContainer.classList.add('d-none');
+                }
+
                 if (data.results && data.results.length > 0) {
-                    renderResults(data.results, 'resultsGrid-1', `Search results for "${query}" (${data.count} found)`);
+                    let title = "Search results";
+                    if (query && imageBase64) title = `Multimodal results for "${query}" + Image`;
+                    else if (query) title = `Search results for "${query}"`;
+                    else if (imageBase64) title = "Image search results";
+
+                    renderResults(data.results, 'resultsGrid-1', `${title} (${data.count} found)`);
                     grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
                     grid.innerHTML = `
                         <div class="col-12 text-center py-5">
                             <i class="fas fa-search text-muted fa-3x mb-3"></i>
-                            <h4 class="text-muted">No products found for "${query}"</h4>
-                            <p class="text-muted">Try different keywords or browse categories</p>
+                            <h4 class="text-muted">No products found</h4>
                         </div>
                     `;
                 }
             } catch (error) {
                 console.error('Search failed:', error);
-                grid.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
-                        <h4 class="text-muted">Search failed</h4>
-                        <p class="text-muted">Please try again</p>
-                    </div>
-                `;
             } finally {
                 showLoading(false, '1');
             }
         }
 
         async function searchByImage() {
-            if (!selectedImageBase64) {
-                alert('Please choose an image first!');
-                return;
-            }
-
-            // Switch to tab-1 and show results there
-            const tab1Link = document.querySelector('a[href="#tab-1"]');
-            if (tab1Link) tab1Link.click();
-
-            showLoading(true, '1');
-            const grid = document.getElementById('resultsGrid-1');
-            if (grid) grid.innerHTML = ''; // Clear previous results
-
-            try {
-                const response = await fetch(`${API_BASE}/search/image`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        image_base64: selectedImageBase64,
-                        limit: 12,
-                        threshold: 0.3
-                    })
-                });
-                const data = await response.json();
-
-                if (data.results && data.results.length > 0) {
-                    renderResults(data.results, 'resultsGrid-1', `Image search results (${data.count} similar products found)`);
-                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    grid.innerHTML = `
-                        <div class="col-12 text-center py-5">
-                            <i class="fas fa-image text-muted fa-3x mb-3"></i>
-                            <h4 class="text-muted">No similar products found</h4>
-                            <p class="text-muted">Try a different image</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Image search failed:', error);
-                grid.innerHTML = `
-                    <div class="col-12 text-center py-5">
-                        <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
-                        <h4 class="text-muted">Image search failed</h4>
-                        <p class="text-muted">Please try again</p>
-                    </div>
-                `;
-            } finally {
-                showLoading(false, '1');
-            }
+            performSearch();
         }
 
         function showLoading(show, tabNum = null) {
@@ -2270,6 +2464,13 @@
         function clearSearch() {
             // Clear the search input
             document.getElementById('searchInput').value = '';
+            document.getElementById('aiSearchInput').value = '';
+            clearSearchImage();
+
+            // Clear AI answer
+            const answerContainer = document.getElementById('aiAnswerContainer-1');
+            if (answerContainer) answerContainer.classList.add('d-none');
+
             // Clear the results grid and reload all products
             const grid = document.getElementById('resultsGrid-1');
             if (grid) grid.innerHTML = '';
@@ -2497,37 +2698,54 @@
             if (!container) return;
 
             try {
-                // Get products with discounts from Qdrant
-                const response = await fetch(`${API_BASE}/products?limit=50`);
-                const data = await response.json();
-                const products = Array.isArray(data) ? data : (data.products || []);
+                let productsWithDiscounts = [];
+                const userJson = localStorage.getItem('finfit_user');
+                const user = userJson ? JSON.parse(userJson) : null;
 
-                // Filter products with discounts and sort by discount percentage
-                const productsWithDiscounts = products
-                    .filter(p => {
-                        const discount = p.discount || (p.initial_price && p.price && p.initial_price > p.price);
-                        return discount && p.image;
-                    })
-                    .map(p => {
-                        let discountPercent = 0;
-                        if (p.discount) {
-                            // Parse discount string like "-12%" or "12%"
-                            const match = p.discount.toString().match(/(\d+)/);
-                            discountPercent = match ? parseInt(match[1]) : 0;
-                        } else if (p.initial_price && p.price && p.initial_price > p.price) {
-                            discountPercent = Math.round(((p.initial_price - p.price) / p.initial_price) * 100);
-                        }
-                        return { ...p, discountPercent };
-                    })
-                    .sort((a, b) => b.discountPercent - a.discountPercent)
-                    .slice(0, 2); // Take top 2 products with highest discounts
+                if (user && user.email) {
+                    // Try to get personalized recommendations
+                    console.log('Fetching personalized recommendations for', user.email);
+                    const recResponse = await fetch(`${API_BASE}/api/recommendations?user_email=${encodeURIComponent(user.email)}&limit=2`);
+                    const recData = await recResponse.json();
+                    if (recData.success && recData.products && recData.products.length > 0) {
+                        productsWithDiscounts = recData.products.map(p => ({
+                            ...p,
+                            isPersonalized: true,
+                            discountPercent: Math.floor(Math.random() * 20) + 10 // Mock discount for UI consistency
+                        }));
+                    }
+                }
 
-                // If we don't have 2 products with discounts, fill with regular products
-                if (productsWithDiscounts.length < 2) {
-                    const regularProducts = products
-                        .filter(p => p.image && !productsWithDiscounts.find(po => po.id === p.id))
-                        .slice(0, 2 - productsWithDiscounts.length);
-                    productsWithDiscounts.push(...regularProducts);
+                if (productsWithDiscounts.length === 0) {
+                    // Fallback to top discounts if no recommendations
+                    const response = await fetch(`${API_BASE}/products?limit=50`);
+                    const data = await response.json();
+                    const products = Array.isArray(data) ? data : (data.products || []);
+
+                    productsWithDiscounts = products
+                        .filter(p => {
+                            const discount = p.discount || (p.initial_price && p.price && p.initial_price > p.price);
+                            return discount && p.image;
+                        })
+                        .map(p => {
+                            let discountPercent = 0;
+                            if (p.discount) {
+                                const match = p.discount.toString().match(/(\d+)/);
+                                discountPercent = match ? parseInt(match[1]) : 0;
+                            } else if (p.initial_price && p.price && p.initial_price > p.price) {
+                                discountPercent = Math.round(((p.initial_price - p.price) / p.initial_price) * 100);
+                            }
+                            return { ...p, discountPercent };
+                        })
+                        .sort((a, b) => b.discountPercent - a.discountPercent)
+                        .slice(0, 2);
+
+                    if (productsWithDiscounts.length < 2) {
+                        const regularProducts = products
+                            .filter(p => p.image && !productsWithDiscounts.find(po => po.id === p.id))
+                            .slice(0, 2 - productsWithDiscounts.length);
+                        productsWithDiscounts.push(...regularProducts);
+                    }
                 }
 
                 // Render the offers
@@ -2546,7 +2764,7 @@
                         <div class="col-lg-6 wow ${animation}" data-wow-delay="${delay}">
                             <a href="${productUrl}" target="_blank" class="d-flex align-items-center justify-content-between border bg-white rounded p-4" style="text-decoration: none;">
                                 <div>
-                                    <p class="text-muted mb-3">Find The Best ${category} for You!</p>
+                                    <p class="text-muted mb-3">${product.isPersonalized ? 'Recommended for You - Based on Your Interests' : `Find The Best ${category} for You!`}</p>
                                     <h3 class="text-primary">${productName}</h3>
                                     <h1 class="display-3 text-secondary mb-0">${discountPercent}% <span class="text-primary fw-normal">Off</span></h1>
                                 </div>
@@ -2617,6 +2835,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         message: message,
+                        image_base64: selectedChatImageBase64 || null,
                         currency: currency
                     })
                 });
@@ -2657,6 +2876,9 @@
                 aiMsgDiv.innerHTML = contentHtml;
                 chatBody.appendChild(aiMsgDiv);
                 chatBody.scrollTop = chatBody.scrollHeight;
+
+                // Clear the image after successful send
+                clearChatImage();
             } catch (error) {
                 console.error('Chat error:', error);
                 const loader = document.getElementById('ai-loading');
@@ -2667,6 +2889,52 @@
                 chatBody.appendChild(errorDiv);
             }
         }
+
+        async function updateAuthUI() {
+            const token = localStorage.getItem('finfit_token');
+            const storedUser = localStorage.getItem('finfit_user');
+            const loginLink = document.getElementById('loginLink');
+            const userMenu = document.getElementById('userMenu');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+
+            if (token) {
+                // User is logged in
+                if (loginLink) loginLink.style.setProperty('display', 'none', 'important');
+                if (userMenu) userMenu.style.setProperty('display', 'block', 'important');
+
+                // Use stored user info if available
+                if (userNameDisplay) {
+                    if (storedUser) {
+                        try {
+                            const userData = JSON.parse(storedUser);
+                            userNameDisplay.textContent = userData.name || "User";
+                        } catch (e) {
+                            userNameDisplay.textContent = "Admin User";
+                        }
+                    } else {
+                        userNameDisplay.textContent = "Admin User";
+                    }
+                }
+            } else {
+                // User is logged out
+                if (loginLink) loginLink.style.setProperty('display', 'block', 'important');
+                if (userMenu) userMenu.style.setProperty('display', 'none', 'important');
+            }
+        }
+
+        // Logout handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('finfit_token');
+                    localStorage.removeItem('finfit_user');
+                    updateAuthUI();
+                    window.location.reload();
+                });
+            }
+        });
 
         async function init() {
             console.log('🚀 Initializing FinFit - Loading everything from Qdrant Cloud...');
@@ -2683,6 +2951,21 @@
                 loadProductListCarousel(),
                 loadBestsellers()
             ]);
+
+            // **SESSION SYNC LOGIC START**
+            // Check for token in URL (passed from dashboard)
+            const urlParams = new URLSearchParams(window.location.search);
+            const tokenFromUrl = urlParams.get('token');
+            if (tokenFromUrl) {
+                console.log('🔄 Syncing session from Dashboard...');
+                localStorage.setItem('finfit_token', tokenFromUrl);
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // Always update UI on init
+            await updateAuthUI();
+            // **SESSION SYNC LOGIC END**
 
             console.log('✅ All dynamic content loaded from Qdrant Cloud!');
         }

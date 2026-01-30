@@ -170,9 +170,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hideLogo = false, containerId }) => {
                                                                 `/${menuLevel3Item.link}`
                                                               }
                                                               className={`nav-link ${location ===
-                                                                  `/${menuLevel3Item.link}`
-                                                                  ? "active"
-                                                                  : ""
+                                                                `/${menuLevel3Item.link}`
+                                                                ? "active"
+                                                                : ""
                                                                 }`}
                                                             >
                                                               {
@@ -220,8 +220,8 @@ const Sidebar: React.FC<SidebarProps> = ({ hideLogo = false, containerId }) => {
                                 <Link
                                   href={`/${menuLevel1Item?.link}`}
                                   className={`nav-link ${location === `/${menuLevel1Item.link}`
-                                      ? "active"
-                                      : ""
+                                    ? "active"
+                                    : ""
                                     }`}
                                 >
                                   {menuLevel1Item.name}
@@ -244,7 +244,7 @@ const Sidebar: React.FC<SidebarProps> = ({ hideLogo = false, containerId }) => {
                       className={`nav-link ${location === menu.link ? "active" : ""
                         }`}
                     >
-                      <span className="nav-icon">{menu.icon}</span>
+                      <span className="nav-icon me-3">{menu.icon}</span>
                       <span className="text">{menu.title}</span>
                     </Link>
                   </Nav.Item>
@@ -252,25 +252,7 @@ const Sidebar: React.FC<SidebarProps> = ({ hideLogo = false, containerId }) => {
               }
             }
           })}
-          <NavItem as="li" bsPrefix="">
-            <div className="text-center py-5 upgrade-ui">
-              <div>
-                <Avatar
-                  type="image"
-                  src={getAssetPath("/images/avatar/avatar-1.jpg")}
-                  size="md"
-                  className="rounded-circle"
-                />
-                <div className="my-3">
-                  <h5 className="mb-1 fs-6">Jitu Chauhan</h5>
-                  <span className="text-secondary">Free Version - 1 Month</span>
-                </div>
-                <Button variant="primary" href="#!">
-                  Upgrade
-                </Button>
-              </div>
-            </div>
-          </NavItem>
+
         </Accordion>
       </div>
     </div>

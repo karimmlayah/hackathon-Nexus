@@ -7,26 +7,12 @@ import re
 from typing import Any, Dict, List, Optional
 
 from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, PointStruct, VectorParams, NearestQuery, Mmr
+from qdrant_client.http.models import Distance, PointStruct, VectorParams, NearestQuery, Mmr, Filter, FieldCondition, Range, MatchValue
+
+from rag_app.core.database import get_deterministic_id, get_qdrant_client
 
 
-DEFAULT_COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "products")
-
-
-def get_qdrant_client() -> QdrantClient:
-    url = os.getenv("QDRANT_URL", "").strip()
-    api_key = os.getenv("QDRANT_API_KEY", "").strip()
-
-    if not url or not api_key:
-        raise RuntimeError(
-            "Missing Qdrant Cloud credentials. Please set QDRANT_URL and QDRANT_API_KEY."
-        )
-
-    # QdrantClient auto-detects REST; HTTPS URL is expected for Qdrant Cloud.
-    return QdrantClient(url=url, api_key=api_key, prefer_grpc=False)
-
-
-def ensure_collection(
+def ensure_collection_old(
     client: QdrantClient,
     collection_name: str,
     vector_size: int,
@@ -100,14 +86,9 @@ def upsert_products(
 
     points: List[PointStruct] = []
     for product, vector in zip(products, vectors, strict=True):
-        # Convert ID to int if it's numeric, otherwise use hash for string IDs
+        # Use deterministic mapping from string to int
         product_id = product["id"]
-        try:
-            # Try to convert to int if it's numeric
-            pid = int(product_id) if isinstance(product_id, (int, float)) else int(product_id)
-        except (ValueError, TypeError):
-            # For string IDs (like Amazon SKUs), use hash to create unique int
-            pid = abs(hash(str(product_id))) % (10**18)  # Keep within int64 range
+        pid = get_deterministic_id(product_id)
         
         payload = {
             "id": str(product_id),  # Keep original ID as string in payload
@@ -163,7 +144,6 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
         ""
     )
     
-    # If name is still empty, try to get it from 'brand' if brand is long
     brand_raw = payload.get("brand") or payload.get("brandName") or ""
     if not name and len(brand_raw) > 20:
         name = brand_raw
@@ -171,25 +151,21 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
     else:
         brand_display = brand_raw
         
-    # Final fallback for name
     if not name:
         name = f"Product {payload.get('row_id', point.id)}"
 
     # 2. Map Price
     price_val = 0.0
-    # Added 'final_price' for the new collection schema
     for p_field in ["final_price", "price", "salePrice", "sale_price", "listedPrice", "listed_price", "currentPrice"]:
         val = payload.get(p_field)
         if val and val != "":
             try:
-                # Handle formatted prices like "$19.99" or "19.99"
                 val_str = str(val).replace("$", "").replace(",", "").strip()
                 price_val = float(val_str)
                 if price_val > 0: break
             except: continue
     
     # 3. Handle Images
-    # Use 'image' first as it's the specific key in the user's example
     image_field = (
         payload.get("image") or
         payload.get("image_url") or 
@@ -203,10 +179,8 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
         image_urls = [str(url) for url in image_field if url]
     elif isinstance(image_field, str) and image_field.strip():
         trim_image = image_field.strip()
-        # Handle cases where the string might be a JSON-encoded list or comma-separated
         if trim_image.startswith("["):
             try:
-                # Handle potential formatting issues in JSON string
                 clean_json = trim_image.replace("'", '"')
                 parsed = json.loads(clean_json)
                 if isinstance(parsed, list):
@@ -214,14 +188,12 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
                 else:
                     image_urls = [str(parsed)]
             except:
-                # Regex fallback for URLs if JSON parsing fails
                 image_urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', trim_image)
         elif "," in trim_image:
             image_urls = [u.strip() for u in trim_image.split(",") if u.strip()]
         else:
             image_urls = [trim_image]
     
-    # Final image cleanup (remove potential brackets/quotes/dots if they slipped through)
     image_urls = [url.strip(' ."\'[]') for url in image_urls if "http" in str(url)]
     image_single = image_urls[0] if image_urls else None
     
@@ -240,8 +212,6 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
         else:
             description = str(desc_fallback)
     
-    # Map rating and review count
-    # Handle rating being a string "3.5" or number
     rating_raw = payload.get("rating")
     rating = 0.0
     if rating_raw:
@@ -251,7 +221,6 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
         
     review_count = payload.get("reviewCount") or payload.get("reviews_count") or payload.get("review_count")
 
-    # Map initial price if available
     initial_price_val = 0.0
     for p_field in ["initial_price", "original_price", "listedPrice", "listed_price", "compare_at_price"]:
         val = payload.get(p_field)
@@ -262,96 +231,40 @@ def map_qdrant_product(point: Any) -> Dict[str, Any]:
                 if initial_price_val > 0: break
             except: continue
 
-    # 5. Map Category - try multiple sources
+    # 5. Map Category
     category = None
-    
-    # First, try to parse 'categories' field (can be a list or string-formatted list)
     categories_field = payload.get("categories")
     if categories_field:
         categories_list = None
         if isinstance(categories_field, list):
             categories_list = categories_field
         elif isinstance(categories_field, str) and categories_field.strip():
-            # Try to parse string-formatted list like "['Health & Household', 'Household Supplies', ...]"
             try:
-                # Try JSON first (if it's JSON format)
                 if categories_field.strip().startswith('['):
-                    # Try ast.literal_eval for Python list format
                     try:
                         categories_list = ast.literal_eval(categories_field)
                     except:
-                        # Try JSON parsing
                         try:
-                            # Replace single quotes with double quotes for JSON
                             json_str = categories_field.replace("'", '"')
                             categories_list = json.loads(json_str)
                         except:
-                            # Fallback: split by comma if it's a simple comma-separated string
                             categories_list = [c.strip().strip("'\"") for c in categories_field.split(",") if c.strip()]
             except:
-                # If parsing fails, try simple split
                 if "," in categories_field:
                     categories_list = [c.strip().strip("'\"[]") for c in categories_field.split(",") if c.strip()]
         
-        # Extract the most specific category (last in list) or first if only one
         if categories_list and len(categories_list) > 0:
-            # Take the last category (most specific) or first if it's a single-item list
             category = str(categories_list[-1]).strip() if len(categories_list) > 1 else str(categories_list[0]).strip()
     
-    # If no category from 'categories' field, try direct 'category' field
     if not category or not category.strip() or category.lower() == "uncategorized":
         category = payload.get("category")
         if category and str(category).strip() and str(category).strip().lower() != "uncategorized":
             category = str(category).strip()
         else:
-            # Try nodeName (as used in data.py)
             node_name = payload.get("nodeName")
             if node_name and str(node_name).strip():
                 category = str(node_name).strip()
-            else:
-                # Try to extract from breadcrumbs
-                breadcrumbs = payload.get("breadcrumbs")
-                if breadcrumbs:
-                    if isinstance(breadcrumbs, list) and len(breadcrumbs) > 0:
-                        # Get the last breadcrumb (most specific category)
-                        last_breadcrumb = breadcrumbs[-1]
-                        if isinstance(last_breadcrumb, dict):
-                            category = last_breadcrumb.get("name") or str(last_breadcrumb)
-                        else:
-                            category = str(last_breadcrumb)
-                    elif isinstance(breadcrumbs, str) and breadcrumbs.strip():
-                        # Try to parse breadcrumb string
-                        parts = [p.strip() for p in breadcrumbs.split(">") if p.strip()]
-                        if parts:
-                            category = parts[-1]  # Last part is usually the category
-                
-                # If still no category, try new_path
-                if not category or not category.strip():
-                    new_path = payload.get("new_path")
-                    if new_path and isinstance(new_path, str):
-                        # Extract category from path (e.g., "Electronics > Computers > Laptops")
-                        path_parts = [p.strip() for p in new_path.split(">") if p.strip()]
-                        if path_parts:
-                            category = path_parts[-1]  # Last part is the category
-                
-                # Final fallback: try to infer from product name
-                if not category or not category.strip():
-                    name_lower = name.lower()
-                    # Simple keyword matching for common categories
-                    if any(kw in name_lower for kw in ["phone", "smartphone", "mobile", "tablet"]):
-                        category = "Mobiles & Tablets"
-                    elif any(kw in name_lower for kw in ["laptop", "computer", "desktop", "pc", "monitor"]):
-                        category = "Computers"
-                    elif any(kw in name_lower for kw in ["tv", "television", "screen", "display"]):
-                        category = "Electronics"
-                    elif any(kw in name_lower for kw in ["headphone", "speaker", "audio", "sound"]):
-                        category = "Electronics"
-                    elif any(kw in name_lower for kw in ["camera", "photo", "video", "recorder"]):
-                        category = "Electronics"
-                    else:
-                        category = "Uncategorized"
     
-    # Clean up category
     if not category or not str(category).strip():
         category = "Uncategorized"
     else:
@@ -385,24 +298,14 @@ def search_products(
     use_mmr: bool = False,
     mmr_diversity: float = 0.5,
     vector_name: Optional[str] = None,
+    query_filter: Optional[Filter] = None,
 ) -> List[Dict[str, Any]]:
-    """
-    Search products with optional MMR for diversity.
-    
-    Args:
-        use_mmr: Enable Maximal Marginal Relevance for diverse results
-        mmr_diversity: Diversity score (0.0 to 1.0). Default 0.5
-                      Higher = more diversity, Lower = more relevance
-    """
+    """Search products with optional MMR for diversity."""
     if use_mmr:
-        # Use MMR for diverse results
-        # Create Mmr object with diversity parameter
         mmr_config = Mmr(
-            diversity=mmr_diversity,  # 0.5 = balanced, 1.0 = max diversity, 0.0 = no diversity
-            candidates_limit=limit * 3  # Fetch 3x more candidates for MMR selection
+            diversity=mmr_diversity,
+            candidates_limit=limit * 3
         )
-        
-        # If vector_name is provided, we must use NamedVector in the query
         query = NearestQuery(
             nearest=query_vector,
             mmr=mmr_config
@@ -410,10 +313,12 @@ def search_products(
         response = client.query_points(
             collection_name=collection_name,
             query=query,
-            using=vector_name, # Specify vector name here if provided
+            using=vector_name,
             limit=limit,
             with_payload=True,
             score_threshold=score_threshold,
+            query_filter=query_filter,
+            timeout=30.0
         )
     else:
         # Standard vector search (most similar)
@@ -426,11 +331,12 @@ def search_products(
             limit=limit,
             with_payload=True,
             score_threshold=score_threshold,
+            query_filter=query_filter,
+            timeout=30.0
         )
 
     items: List[Dict[str, Any]] = [map_qdrant_product(p) for p in response.points]
     
-    # Apply brand diversity if MMR is enabled
     if use_mmr and len(items) > 1:
         items = rerank_by_brand_diversity(items)
     
@@ -438,10 +344,7 @@ def search_products(
 
 
 def rerank_by_brand_diversity(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """
-    Re-rank results to maximize brand diversity while maintaining score order.
-    At each step, picks the HIGHEST-scoring item with a brand different from the last.
-    """
+    """Re-rank results to maximize brand diversity while maintaining score order."""
     if len(items) <= 1:
         return items
     
@@ -450,7 +353,6 @@ def rerank_by_brand_diversity(items: List[Dict[str, Any]]) -> List[Dict[str, Any
     last_brand = None
     
     while remaining:
-        # Find the BEST (highest score) item with a different brand than the last one
         best_item = None
         best_idx = -1
         best_score = -1
@@ -462,14 +364,12 @@ def rerank_by_brand_diversity(items: List[Dict[str, Any]]) -> List[Dict[str, Any
             
             score = item.get("score", 0)
             
-            # Pick this item if it has a different brand AND higher score
             if brand != last_brand:
                 if best_item is None or score > best_score:
                     best_item = item
                     best_idx = idx
                     best_score = score
         
-        # If all remaining items have the same brand as last, take the highest-scoring one
         if best_item is None:
             best_idx = 0
             best_score = remaining[0].get("score", 0)
@@ -479,7 +379,6 @@ def rerank_by_brand_diversity(items: List[Dict[str, Any]]) -> List[Dict[str, Any
                     best_score = item.get("score", 0)
             best_item = remaining[best_idx]
         
-        # Add to results and update state
         reranked.append(best_item)
         last_brand = best_item.get("brand", "").strip().lower()
         if not last_brand:
@@ -487,4 +386,3 @@ def rerank_by_brand_diversity(items: List[Dict[str, Any]]) -> List[Dict[str, Any
         remaining.pop(best_idx)
     
     return reranked
-

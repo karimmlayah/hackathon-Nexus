@@ -1,7 +1,7 @@
 //import node module libraries
-import { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { IconEdit, IconEye, IconTrash, IconShoppingCart, IconHeart } from "@tabler/icons-react";
+import { IconEdit, IconEye, IconTrash } from "@tabler/icons-react";
 import { Badge, Button, Image } from "react-bootstrap";
 import Link from "next/link";
 
@@ -43,6 +43,9 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
     accessorKey: "name",
     header: "Product",
     cell: ({ row }) => {
+      const productName = row.original.name;
+      const [isExpanded, setIsExpanded] = useState(false);
+
       return (
         <div className="d-flex align-items-center">
           <Image
@@ -51,44 +54,92 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
             className="rounded-3"
             width="56"
           />
-          <div className="ms-3 d-flex flex-column">
-            <Link href="#!" className="text-inherit fw-semibold">
-              Transparent Sunglasses
-            </Link>
+          <div
+            className="ms-3 d-flex flex-column"
+            style={{
+              minWidth: isExpanded ? '500px' : '200px',
+              maxWidth: isExpanded ? 'none' : '200px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <span
+              className={`text-inherit fw-semibold ${isExpanded ? 'text-wrap' : 'text-truncate'}`}
+              style={{ width: '100%' }}
+              title={isExpanded ? "Click to collapse" : productName}
+            >
+              {productName}
+            </span>
           </div>
         </div>
       );
     },
   },
   {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => {
+      const desc = row.original.description || "";
+      const [isDescExpanded, setIsDescExpanded] = useState(false);
+      return (
+        <div
+          className="ms-3 d-flex flex-column"
+          style={{
+            minWidth: isDescExpanded ? '500px' : '150px',
+            maxWidth: isDescExpanded ? 'none' : '150px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          onClick={() => setIsDescExpanded(!isDescExpanded)}
+        >
+          <span
+            className={`text-inherit ${isDescExpanded ? 'text-wrap' : 'text-truncate'}`}
+            title={isDescExpanded ? "Click to collapse" : desc}
+          >
+            {desc}
+          </span>
+        </div>
+      );
+    }
+  },
+  {
     accessorKey: "category",
     header: "Category",
   },
   {
-    accessorKey: "addedDate",
-    header: "Added Date",
+    accessorKey: "brand",
+    header: "Brand",
   },
   {
     accessorKey: "price",
     header: "Price",
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity",
+    accessorKey: "rating",
+    header: "Rating",
+    cell: ({ row }) => {
+      return (
+        <div className="d-flex align-items-center">
+          <span className="text-warning">★</span>
+          <span className="ms-1">{row.original.rating || "N/A"}</span>
+        </div>
+      );
+    }
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "availability",
+    header: "Availability",
     cell: ({ row }) => {
-      const statusText = row.original.status;
+      const availability = row.original.availability || "Unknown";
+      const isInStock = availability.toLowerCase().includes("in stock");
       return (
         <Badge
-          bg={`${statusText === "Active" ? "success-subtle" : "danger-subtle"}`}
-          text={`${statusText === "Active" ? "success-emphasis" : "danger-emphasis"
-            }`}
+          bg={isInStock ? "success-subtle" : "danger-subtle"}
+          text={isInStock ? "success-emphasis" : "danger-emphasis"}
           pill={true}
         >
-          {statusText}
+          {availability}
         </Badge>
       );
     },
@@ -97,58 +148,8 @@ export const productListColumns: ColumnDef<ProductListType>[] = [
     accessorKey: "",
     header: "Action",
     cell: ({ row }) => {
-      const handleAddToCart = async () => {
-        const token = localStorage.getItem("finfit_token");
-        if (!token) {
-          alert("Please login first");
-          return;
-        }
-        try {
-          const response = await fetch(`http://localhost:8000/api/user/cart?product_id=${row.original.id}`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}` }
-          });
-          if (response.ok) alert("Added to cart!");
-        } catch (err) { alert("Failed to add to cart"); }
-      };
-
-      const handleAddToFavorites = async () => {
-        const token = localStorage.getItem("finfit_token");
-        if (!token) {
-          alert("Please login first");
-          return;
-        }
-        try {
-          const response = await fetch(`http://localhost:8000/api/user/favorites?product_id=${row.original.id}`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}` }
-          });
-          if (response.ok) alert("Added to favorites!");
-        } catch (err) { alert("Failed to add to favorites"); }
-      };
-
       return (
         <Fragment>
-          <FinFitTippy content="Add to Cart">
-            <Button
-              onClick={handleAddToCart}
-              variant="ghost btn-icon"
-              size="sm"
-              className="rounded-circle text-primary"
-            >
-              <IconShoppingCart size={16} />
-            </Button>
-          </FinFitTippy>
-          <FinFitTippy content="Add to Favorites">
-            <Button
-              onClick={handleAddToFavorites}
-              variant="ghost btn-icon"
-              size="sm"
-              className="rounded-circle text-danger"
-            >
-              <IconHeart size={16} />
-            </Button>
-          </FinFitTippy>
           <FinFitTippy content="View">
             <Button
               href=""

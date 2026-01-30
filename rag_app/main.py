@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
@@ -28,6 +28,28 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+# Demo users with roles
+DEMO_USERS = {
+    "admin@finfit.com": {
+        "password": "admin123",
+        "name": "Admin User",
+        "role": "super_admin",  # Super admin role
+        "email": "admin@finfit.com"
+    },
+    "user@finfit.com": {
+        "password": "user123",
+        "name": "Regular User",
+        "role": "user",  # Regular user role
+        "email": "user@finfit.com"
+    },
+    "test@example.com": {
+        "password": "test123",
+        "name": "Test User",
+        "role": "user",
+        "email": "test@example.com"
+    }
+}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -73,27 +95,23 @@ app.include_router(routes.router, prefix="/api")
 
 # Legacy search endpoints (for backward compatibility with frontend)
 @app.post("/search")
-async def legacy_search(user_query: str):
+async def legacy_search(user_query: str, limit: int = 12):
     """Legacy search endpoint that forwards to /api/search"""
     from api.routes import SearchRequest
-    request = SearchRequest(user_query=user_query)
+    request = SearchRequest(user_query=user_query, limit=limit)
     return await routes.production_search(request)
 
 @app.get("/search")
-async def legacy_search_get(q: str, limit: int = 12, threshold: float = 0.3):
+async def legacy_search_get(q: str, limit: int = 12):
     """Legacy GET search endpoint"""
     from api.routes import SearchRequest
-    request = SearchRequest(user_query=q)
+    request = SearchRequest(user_query=q, limit=limit)
     return await routes.production_search(request)
 
 @app.post("/search/image")
-async def legacy_search_image():
-    """Legacy image search endpoint"""
-    return {
-        "success": False,
-        "error": "Image search not implemented yet",
-        "products": []
-    }
+async def legacy_search_image(request: routes.SearchRequest):
+    """Legacy image search endpoint that forwards to /api/search/image"""
+    return await routes.production_search(request)
 
 @app.get("/status/image-search")
 async def image_search_status():
@@ -117,12 +135,37 @@ async def register(request: RegisterRequest):
 
 @app.post("/api/login")
 async def login(request: LoginRequest):
-    """User login endpoint"""
+    """
+    User login endpoint with role-based access.
+    
+    Demo credentials:
+    - admin@finfit.com / admin123 → super_admin (goes to dashboard)
+    - user@finfit.com / user123 → user (goes to e-commerce)
+    - test@example.com / test123 → user
+    """
+    # Check if user exists
+    user = DEMO_USERS.get(request.email)
+    
+    if not user or user["password"] != request.password:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+    
+    # Generate a dummy token (in production, use JWT)
+    import hashlib
+    token = hashlib.sha256(f"{request.email}{user['role']}".encode()).hexdigest()[:32]
+    
     return {
         "success": True,
-        "message": "Login feature coming soon",
-        "token": "dummy_token_123",
-        "user": {"email": request.email}
+        "message": "Login successful",
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "email": user["email"],
+            "name": user["name"],
+            "role": user["role"]  # Return the role
+        }
     }
 
 # Health check endpoint
@@ -156,6 +199,98 @@ def health_check():
     
     status_code = 200 if status["status"] == "healthy" else 503
     return JSONResponse(content=status, status_code=status_code)
+
+@app.get("/api/users")
+async def get_users():
+    """Get all registered users (excluding passwords)"""
+    return {
+        "success": True,
+        "users": [
+            {
+                "email": user["email"],
+                "name": user["name"],
+                "role": user["role"]
+            }
+            for user in DEMO_USERS.values()
+        ]
+    }
+
+@app.get("/api/dashboard/widgets")
+async def get_dashboard_widgets():
+    """Get data for dashboard widgets: top products and user stats"""
+    try:
+        # 1. User stats
+        user_counts = {"user": 0, "super_admin": 0, "admin": 0}
+        for user in DEMO_USERS.values():
+            role = user.get("role", "user")
+            user_counts[role] = user_counts.get(role, 0) + 1
+        
+        # 2. Top Products (by rating)
+        client = get_qdrant_client()
+        collection_name = settings.COLLECTION_NAME
+        
+        # Scroll a larger sample to find best rated (Qdrant doesn't support complex sort on payload as easily as SQL)
+        points, _ = client.scroll(
+            collection_name=collection_name,
+            limit=50,
+            with_payload=True,
+            with_vectors=False
+        )
+        
+        all_products = []
+        for point in points:
+            payload = point.payload
+            
+            # Extract and convert price (reusing logic from get_products)
+            raw_price = payload.get("price") or payload.get("final_price") or 0
+            raw_currency = payload.get("currency", "USD")
+            
+            try:
+                price_float = float(str(raw_price).replace(",", "")) if raw_price else 0
+            except (ValueError, TypeError):
+                price_float = 0
+                
+            # Convert to TND
+            price_tnd_str = "N/A"
+            if price_float > 0:
+                try:
+                    # Basic detection logic matches get_products
+                    if "IDR" in str(raw_currency).upper() or price_float > 1000:
+                        price_tnd = convert_to_tnd(price_float, "IDR")
+                    elif "TND" in str(raw_currency).upper() or "DT" in str(raw_currency).upper():
+                        price_tnd = price_float
+                    else:
+                        price_tnd = convert_to_tnd(price_float, "USD")
+                    
+                    price_tnd_str = f"{price_tnd:,.2f} DT"
+                except:
+                    price_tnd_str = f"{raw_price} {raw_currency}"
+
+            all_products.append({
+                "id": str(point.id),
+                "name": payload.get("name") or payload.get("title") or "Unknown Product",
+                "rating": float(payload.get("rating") or 0),
+                "price": price_tnd_str,
+                "image": payload.get("image_url") or payload.get("image") or "/static/img/placeholder.png",
+                "category": payload.get("category", "General")
+            })
+        
+        # Sort by rating and take top 5
+        top_products = sorted(all_products, key=lambda x: x["rating"], reverse=True)[:5]
+        
+        return {
+            "success": True,
+            "user_stats": {
+                "super_users": user_counts.get("super_admin", 0),
+                "admins": user_counts.get("admin", 0),
+                "regular_users": user_counts.get("user", 0),
+                "total_users": sum(user_counts.values())
+            },
+            "top_products": top_products
+        }
+    except Exception as e:
+        logger.error(f"Widget data error: {str(e)}")
+        return {"success": False, "error": str(e)}
 
 # Products endpoint - returns products from Qdrant
 @app.get("/products")
@@ -281,6 +416,29 @@ def get_products(limit: int = 12, category: str = None, page: int = 1):
 def read_root():
     """Serve index.html for root path"""
     return FileResponse("static/index.html")
+
+# Proxy to Next.js dashboard server
+@app.api_route("/dashboard", methods=["GET"])
+@app.api_route("/dashboard/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
+async def proxy_dashboard(path: str = "", request: Request = None):
+    """Proxy requests to Next.js server on port 3000"""
+    import httpx
+    
+    try:
+        # Construct the target URL
+        target_url = f"http://127.0.0.1:3000/dashboard/{path}" if path else "http://127.0.0.1:3000/"
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.request(
+                method=request.method,
+                url=target_url,
+                headers=request.headers,
+                content=await request.body()
+            )
+            return Response(content=response.content, status_code=response.status_code, headers=dict(response.headers))
+    except Exception as e:
+        logger.error(f"Proxy error: {str(e)}")
+        raise HTTPException(status_code=503, detail="Dashboard service unavailable")
 
 # Catch-all route for serving HTML pages (must be AFTER static mount and BEFORE more specific routes)
 @app.get("/{path:path}")

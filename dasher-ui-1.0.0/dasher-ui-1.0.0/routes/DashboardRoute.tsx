@@ -3,9 +3,10 @@ import { v4 as uuid } from "uuid";
 import {
   IconFiles,
   IconShoppingBag,
-  IconNews,
+  IconUsers,
   IconFile,
   IconLock,
+  IconLayoutDashboard,
 } from "@tabler/icons-react";
 
 //import custom type
@@ -14,53 +15,20 @@ import { MenuItemType } from "types/menuTypes";
 export const DashboardMenu: MenuItemType[] = [
   {
     id: uuid(),
-    title: "Project",
+    title: "Dashboard",
     link: "/",
-    icon: <IconFiles size={20} strokeWidth={1.5} />,
+    icon: <IconLayoutDashboard size={24} strokeWidth={1.5} />,
   },
   {
     id: uuid(),
     title: "Ecommerce",
     link: "/ecommerce",
-    icon: <IconShoppingBag size={20} strokeWidth={1.5} />,
+    icon: <IconShoppingBag size={24} strokeWidth={1.5} />,
   },
   {
     id: uuid(),
-    title: "Blog",
+    title: "Users",
     link: "/blog",
-    icon: <IconNews size={20} strokeWidth={1.5} />,
-  },
-  {
-    id: uuid(),
-    title: "My Cart",
-    link: "/cart",
-    icon: <IconShoppingBag size={20} strokeWidth={1.5} />,
-  },
-  {
-    id: uuid(),
-    title: "My Favorites",
-    link: "/favorites",
-    icon: <IconFiles size={20} strokeWidth={1.5} />,
-  },
-  {
-    id: uuid(),
-    title: "Auth",
-    link: "/sign-in",
-    icon: <IconLock size={20} strokeWidth={1.5} />,
-  },
-
-  {
-    id: uuid(),
-    title: "Pages",
-    grouptitle: true,
-  },
-  {
-    id: uuid(),
-    title: "Pages",
-    icon: <IconFile size={20} strokeWidth={1.5} />,
-    children: [
-      { id: uuid(), name: "Maintenance", link: "maintenance" },
-      { id: uuid(), name: "404 Error", link: "not-found" },
-    ],
-  },
+    icon: <IconUsers size={24} strokeWidth={1.5} />,
+  }
 ];

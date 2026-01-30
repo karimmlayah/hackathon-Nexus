@@ -6,23 +6,21 @@ import { useMediaQuery } from "react-responsive";
 import {
   IconArrowBarLeft,
   IconArrowBarRight,
-  IconBell,
   IconMenu2,
   IconSearch,
+  IconWorld,
 } from "@tabler/icons-react";
 import { Container, ListGroup, Navbar, Button } from "react-bootstrap";
 
 //import custom components
 import UserMenu from "./UserMenu";
 import Flex from "components/common/Flex";
-import NoficationList from "components/common/NoficationList";
 import OffcanvasSidebar from "layouts/OffcanvasSidebar";
 
 //import custom hooks
 import useMenu from "hooks/useMenu";
 
 const Header = () => {
-  const [isNoficationOpen, setIsNotificationOpen] = useState<boolean>(false);
   const { toggleMenuHandler, handleCollapsed } = useMenu();
 
   const isTablet = useMediaQuery({ maxWidth: 990 });
@@ -74,36 +72,42 @@ const Header = () => {
             className="d-flex align-items-center mb-0 gap-2"
           >
             <ListGroup.Item as="li">
-              <Button variant="white">
-                <span>
-                  <IconSearch size={16} />
-                </span>
-                <small className="ms-1">⌘K</small>
-              </Button>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const token = localStorage.getItem("finfit_token");
+                  const url = token ? `http://localhost:8000/?token=${token}` : "http://localhost:8000/";
+                  window.open(url, "_blank");
+                }}
+                className="btn btn-primary d-flex align-items-center gap-2 mb-0"
+              >
+                <IconWorld size={18} />
+                <span className="d-none d-md-block">Site Web</span>
+              </a>
             </ListGroup.Item>
 
-            <ListGroup.Item as="li">
-              <Button
-                variant="ghost"
-                className="position-relative btn-icon rounded-circle"
-                onClick={() => setIsNotificationOpen(true)}
-              >
-                <IconBell size={20} />
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mt-2 ms-n2">
-                  2<span className="visually-hidden">unread messages</span>
+            <ListGroup.Item as="li" className="d-none d-md-block">
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <IconSearch size={16} className="text-muted" />
                 </span>
-              </Button>
+                <input
+                  type="text"
+                  className="form-control border-start-0 ps-0"
+                  placeholder="Search..."
+                  aria-label="Search"
+                  style={{ maxWidth: '200px' }}
+                />
+              </div>
             </ListGroup.Item>
+
             <ListGroup.Item as="li">
               <UserMenu />
             </ListGroup.Item>
           </ListGroup>
         </Container>
       </Navbar>
-      <NoficationList
-        isOpen={isNoficationOpen}
-        onClose={() => setIsNotificationOpen(false)}
-      />
       {isTablet && <OffcanvasSidebar />}
     </Fragment>
   );

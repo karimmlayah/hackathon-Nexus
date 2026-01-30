@@ -35,10 +35,11 @@ except Exception as e:
     clip_embedder = None
 
 async def multimodal_search_and_answer(
-    question: str = None, 
-    image_base64: str = None, 
-    production_mode: bool = False, 
-    limit: int = 12
+    question: str = None,
+    image_base64: str = None,
+    production_mode: bool = False,
+    limit: int = 12,
+    sort_by: str = None,  # price-asc, price-desc
 ):
     """
     Multimodal RAG pipeline: Handles text, image, or both.
@@ -132,7 +133,9 @@ async def multimodal_search_and_answer(
         url = p.get("url") or p.get("product_url") or p.get("amazon_url") or "#"
         
         products_metadata.append({
+            "id": str(hit.id) if getattr(hit, "id", None) is not None else None,
             "name": name,
+            "title": name,
             "price": f"{price_numeric:,.2f} {raw_currency}".strip() or f"{price_numeric:,.2f} USD",
             "price_numeric": price_numeric,
             "availability": availability,
@@ -143,12 +146,18 @@ async def multimodal_search_and_answer(
             "score": hit.score
         })
 
-    # 4. Handle Price Sorting Intent
-    if question:
+    # 4. Apply sort_by from request (price-asc, price-desc) or intent from question
+    if sort_by:
+        if sort_by.lower() in ("price-asc", "price_asc", "asc"):
+            products_metadata.sort(key=lambda x: x["price_numeric"], reverse=False)
+            logger.info("Sorted results by price (asc) per sort_by")
+        elif sort_by.lower() in ("price-desc", "price_desc", "desc"):
+            products_metadata.sort(key=lambda x: x["price_numeric"], reverse=True)
+            logger.info("Sorted results by price (desc) per sort_by")
+    elif question:
         q_lower = question.lower()
         if any(word in q_lower for word in ["cheapest", "lowest price", "cheap", "expensive", "highest price"]):
             reverse = any(word in q_lower for word in ["expensive", "highest price"])
-            # Sort by price_numeric
             products_metadata.sort(key=lambda x: x["price_numeric"], reverse=reverse)
             logger.info(f"Sorted results by price (reverse={reverse}) due to intent in: {question}")
 

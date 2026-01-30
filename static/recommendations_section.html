@@ -1,0 +1,64 @@
+\u003c!-- Personalized Recommendations Section --\u003e
+\u003c!-- Add this section after "Our Products End" and before "Product List Start" --\u003e
+
+\u003c!-- Personalized Recommendations Start --\u003e
+\u003cdiv class=\"container-fluid bg-light py-5\" id=\"recommendationsSection\" style="display: none;"\u003e
+\u003cdiv class=\"container py-5\"\u003e
+\u003cdiv class=\"mx-auto text-center mb-5\" style=\"max-width: 900px;\"\u003e
+\u003ch4 class=\"text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow
+fadeInUp\"
+data-wow-delay=\"0.1s\"\u003e\u003ci class=\"fas fa-magic me-2\"\u003e\u003c/i\u003eRecommandé pour vous\u003c/h4\u003e
+\u003ch1 class=\"mb-0 display-5 wow fadeInUp\" data-wow-delay=\"0.3s\"\u003eBasé sur vos intérêts\u003c/h1\u003e
+\u003cp class=\"text-muted mt-3\" id=\"recommendationStrategy\"\u003eChargement de vos recommandations
+personnalisées...\u003c/p\u003e
+\u003c/div\u003e
+
+\u003c!-- Loading Spinner --\u003e
+\u003cdiv id=\"recommendationsLoading\" class=\"text-center py-5\"\u003e
+\u003cdiv class=\"spinner-border text-primary\" role=\"status\"\u003e
+\u003cspan class=\"visually-hidden\"\u003eLoading...\u003c/span\u003e
+\u003c/div\u003e
+\u003cp class=\"mt-2 text-muted\"\u003eAnalyse de vos préférences et de ceux d'utilisateurs similaires...\u003c/p\u003e
+\u003c/div\u003e
+
+\u003c!-- Recommendations Grid --\u003e
+\u003cdiv id=\"recommendationsGrid\" class=\"row g-4\" style=\"display: none;\"\u003e
+\u003c!-- Recommendations loaded dynamically by recommendations.js --\u003e
+\u003c/div\u003e
+
+\u003c!-- No Recommendations Message --\u003e
+\u003cdiv id=\"noRecommendations\" class=\"text-center py-5\" style=\"display: none;\"\u003e
+\u003ci class=\"fas fa-info-circle fa-3x text-muted mb-3\"\u003e\u003c/i\u003e
+\u003cp class=\"text-muted\"\u003eCommencez à explorer nos produits pour obtenir des recommandations
+personnalisées!\u003c/p\u003e
+\u003cp class=\"text-muted small\"\u003eNotre système analysera vos préférences et celles d'utilisateurs similaires pour
+vous recommander les meilleurs produits.\u003c/p\u003e
+\u003c/div\u003e
+\u003c/div\u003e
+\u003c/div\u003e
+\u003c!-- Personalized Recommendations End --\u003e
+
+\u003c!-- Add this script tag before the closing \u003c/body\u003e tag --\u003e
+\u003cscript src=\"/static/js/recommendations.js\"\u003e\u003c/script\u003e
+
+\u003c!-- Add this to your init() function in the main script --\u003e
+\u003c!--
+async function init() {
+// ... existing code ...
+
+await Promise.all([
+loadTab('tab-1', null),
+loadTab('tab-2', 'Electronics'),
+loadTab('tab-3', 'Fashion'),
+loadTab('tab-4', 'Decoration'),
+loadCarouselProducts(),
+loadFeaturedOffers(),
+loadDynamicBanners(),
+loadProductListCarousel(),
+loadBestsellers(),
+loadRecommendations() // ADD THIS LINE
+]);
+
+// ... rest of code ...
+}
+--\u003e

@@ -4,8 +4,10 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
+import re
 import sys
 import os
+import json
 from pydantic import BaseModel
 
 # Add current directory to path to allow relative imports
@@ -29,32 +31,68 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
-# Demo users with roles
-DEMO_USERS = {
-    "admin@finfit.com": {
-        "password": "admin123",
-        "name": "Admin User",
-        "role": "super_admin",  # Super admin role
-        "email": "admin@finfit.com"
-    },
-    "user@finfit.com": {
-        "password": "user123",
-        "name": "Regular User",
-        "role": "user",  # Regular user role
-        "email": "user@finfit.com"
-    },
-    "test@example.com": {
-        "password": "test123",
-        "name": "Test User",
-        "role": "user",
-        "email": "test@example.com"
-    }
-}
+def _setup_django():
+    """Configure and initialize Django so Cart/Favorites models and DB exist."""
+    import django
+    from django.conf import settings as dj_settings
+    if dj_settings.configured:
+        return
+    _root = os.path.dirname(os.path.abspath(__file__))
+    _parent = os.path.dirname(_root)
+    dj_settings.configure(
+        DEBUG=True,
+        DATABASES={
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": os.path.join(_parent, "rag_app.db"),
+            }
+        },
+        INSTALLED_APPS=[
+            "django.contrib.auth",
+            "django.contrib.contenttypes",
+            "rag_app",
+        ],
+        SECRET_KEY="django-insecure-rag-app-cart-favorites",
+        USE_TZ=True,
+    )
+    django.setup()
+    # Create tables if they don't exist (migrate rag_app)
+    try:
+        from django.core.management import call_command
+        call_command("migrate", "--run-syncdb", verbosity=0)
+    except Exception as e:
+        logger.warning("Django migrate skipped: %s", e)
+
+
+def _ensure_django_users():
+    """Create Django User for each DEMO_USERS so cart/favorites can link to user."""
+    from core.auth import DEMO_USERS
+    from django.contrib.auth.models import User
+    for u in DEMO_USERS.values():
+        email = u["email"]
+        if not User.objects.filter(email=email).exists():
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password="demo-no-login",  # unused; auth is via token
+            )
+            user.set_unusable_password()
+            user.save()
+            logger.info("Created Django user for %s", email)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Initialize and verify connections
     logger.info("🚀 Starting RAG Application...")
+    
+    # Django: required for Cart and Favorites (user-linked)
+    try:
+        _setup_django()
+        _ensure_django_users()
+        logger.info("✅ Django configured (cart & favorites linked to user)")
+    except Exception as e:
+        logger.warning("⚠️ Django not loaded (cart/favorites will 500): %s", e)
     
     # Verify Qdrant connection
     try:
@@ -92,6 +130,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Routes with /api prefix
 app.include_router(routes.router, prefix="/api")
+# Cart, recommendations, and user tracking (avoid "detail": "Not Found" on all pages)
+try:
+    from api import cart, recommendations, user_tracking
+    app.include_router(cart.router, prefix="/api")
+    app.include_router(recommendations.router, prefix="/api")
+    app.include_router(user_tracking.router)  # already has prefix /api/track
+except Exception as e:
+    logger.warning(f"Optional API routers (cart, recommendations, tracking) not loaded: {e}")
 
 # Legacy search endpoints (for backward compatibility with frontend)
 @app.post("/search")
@@ -122,7 +168,9 @@ async def image_search_status():
         "available": False
     }
 
-# Auth endpoints (placeholder - frontend calls these)
+# Auth: use shared DEMO_USERS and token from core.auth (cart/favorites use same token)
+from core.auth import DEMO_USERS, make_token
+
 @app.post("/api/register")
 async def register(request: RegisterRequest):
     """User registration endpoint"""
@@ -137,25 +185,16 @@ async def register(request: RegisterRequest):
 async def login(request: LoginRequest):
     """
     User login endpoint with role-based access.
-    
-    Demo credentials:
-    - admin@finfit.com / admin123 → super_admin (goes to dashboard)
-    - user@finfit.com / user123 → user (goes to e-commerce)
-    - test@example.com / test123 → user
+    Token is used by cart and favorites APIs (user must be connected).
+    Demo: admin@finfit.com / admin123, user@finfit.com / user123, test@example.com / test123
     """
-    # Check if user exists
     user = DEMO_USERS.get(request.email)
-    
     if not user or user["password"] != request.password:
         raise HTTPException(
             status_code=401,
             detail="Invalid email or password"
         )
-    
-    # Generate a dummy token (in production, use JWT)
-    import hashlib
-    token = hashlib.sha256(f"{request.email}{user['role']}".encode()).hexdigest()[:32]
-    
+    token = make_token(request.email, user["role"])
     return {
         "success": True,
         "message": "Login successful",
@@ -164,7 +203,7 @@ async def login(request: LoginRequest):
         "user": {
             "email": user["email"],
             "name": user["name"],
-            "role": user["role"]  # Return the role
+            "role": user["role"]
         }
     }
 
@@ -292,115 +331,284 @@ async def get_dashboard_widgets():
         logger.error(f"Widget data error: {str(e)}")
         return {"success": False, "error": str(e)}
 
+
+def _point_to_product(point) -> dict:
+    """Build product dict from a Qdrant point (payload + id)."""
+    payload = point.payload
+    category_value = _extract_category(payload)
+    raw_price = payload.get("price") or payload.get("final_price") or "N/A"
+    raw_currency = payload.get("currency", "")
+    try:
+        price_float = float(str(raw_price).replace(",", "")) if raw_price != "N/A" else 0
+    except (ValueError, TypeError):
+        price_float = 0
+    currency = "USD"
+    if raw_currency:
+        raw_currency = str(raw_currency).upper().strip()
+        if "IDR" in raw_currency or "Rp" in raw_currency:
+            currency = "IDR"
+        elif "DT" in raw_currency or "TND" in raw_currency:
+            currency = "TND"
+        elif "$" in raw_currency or "USD" in raw_currency:
+            currency = "USD"
+    else:
+        currency = "IDR" if price_float > 1000 else "USD"
+    if currency == "TND":
+        price_tnd = price_float
+        price_tnd_str = f"{price_float:,.2f} DT"
+    else:
+        try:
+            price_tnd = convert_to_tnd(price_float, currency)
+            price_tnd_str = f"{price_tnd:,.2f} DT"
+        except (ValueError, TypeError):
+            price_tnd = None
+            price_tnd_str = f"{raw_price} {currency}"
+    initial_price_raw = payload.get("initial_price") or payload.get("original_price") or payload.get("listedPrice") or ""
+    try:
+        initial_price_float = float(str(initial_price_raw).replace(",", "").replace("$", "").strip()) if initial_price_raw else 0
+    except (ValueError, TypeError):
+        initial_price_float = 0
+    discount_raw = payload.get("discount")
+    discount_percent = None
+    if discount_raw:
+        m = re.search(r"(\d+)", str(discount_raw))
+        if m:
+            discount_percent = int(m.group(1))
+    elif initial_price_float and price_tnd and initial_price_float > (price_tnd or 0):
+        discount_percent = min(99, int(round((1 - (price_tnd or 0) / initial_price_float) * 100)))
+
+    return {
+        "id": str(point.id) if point.id is not None else None,
+        "title": payload.get("name") or payload.get("title") or "Unknown Product",
+        "name": payload.get("name") or payload.get("title") or "Unknown Product",
+        "price": price_tnd_str,
+        "price_original": f"{raw_price} {currency}",
+        "price_numeric": price_tnd,
+        "currency": "TND",
+        "image": payload.get("image_url") or payload.get("image") or "/static/img/placeholder.png",
+        "availability": payload.get("availability", "In Stock"),
+        "category": category_value,
+        "description": (payload.get("description") or "")[:500] or "",
+        "topreview": (payload.get("topreview") or payload.get("top_review") or "").strip() or "",
+        "rating": payload.get("rating") or 4.5,
+        "url": payload.get("url") or payload.get("product_url") or "#",
+        "discount": discount_raw,
+        "discount_percent": discount_percent,
+        "initial_price": initial_price_float if initial_price_float else None,
+        "color": (payload.get("color") or "").strip() or None,
+    }
+
+
+def _extract_category(payload: dict) -> str:
+    """Extract a meaningful category from Qdrant payload."""
+    def _clean(s: str) -> str:
+        s = (s or "").strip()
+        if not s:
+            return ""
+        low = s.lower()
+        if low in ("uncategorized", "unknown", "n/a", "none", "null"):
+            return ""
+        return s
+
+    cat = _clean(str(payload.get("category") or ""))
+    if cat:
+        return cat
+
+    cats = payload.get("categories")
+    if isinstance(cats, list):
+        for v in reversed(cats):
+            c = _clean(str(v))
+            if c:
+                return c
+    elif isinstance(cats, str) and cats.strip():
+        raw = cats.strip()
+        parsed = None
+        if raw.startswith("[") and raw.endswith("]"):
+            try:
+                parsed = json.loads(raw)
+            except Exception:
+                parsed = None
+        if isinstance(parsed, list):
+            for v in reversed(parsed):
+                c = _clean(str(v))
+                if c:
+                    return c
+        parts = [p.strip().strip("'\"[]") for p in raw.split(",")]
+        for v in reversed(parts):
+            c = _clean(v)
+            if c:
+                return c
+
+    node_name = _clean(str(payload.get("nodeName") or ""))
+    if node_name:
+        return node_name
+    return "General"
+
+
+@app.get("/product/{product_id}")
+def get_product(product_id: str):
+    """Get a single product by ID from Qdrant (for single product page)."""
+    try:
+        client = get_qdrant_client()
+        collection_name = settings.COLLECTION_NAME
+        point_id = product_id if isinstance(product_id, str) and product_id.isdigit() else product_id
+        try:
+            point_id = int(point_id)
+        except (ValueError, TypeError):
+            pass
+        records = client.retrieve(
+            collection_name=collection_name,
+            ids=[point_id],
+            with_payload=True,
+            with_vectors=False,
+        )
+        if not records:
+            raise HTTPException(status_code=404, detail="Product not found")
+        product = _point_to_product(records[0])
+        return {"success": True, "product": product}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching product {product_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/products/facets")
+def get_products_facets():
+    """Return real category values from Qdrant payloads (for sidebar filters)."""
+    try:
+        client = get_qdrant_client()
+        collection_name = settings.COLLECTION_NAME
+        category_counts = {}
+        offset = None
+        for _ in range(30):
+            points, next_offset = client.scroll(
+                collection_name=collection_name,
+                limit=500,
+                offset=offset,
+                with_payload=True,
+                with_vectors=False,
+            )
+            if not points:
+                break
+            for point in points:
+                cat = _extract_category(point.payload)
+                if cat and cat.lower() != "general":
+                    category_counts[cat] = category_counts.get(cat, 0) + 1
+            if next_offset is None:
+                break
+            offset = next_offset
+        categories_sorted = sorted(
+            category_counts.keys(),
+            key=lambda k: (-category_counts[k], k.lower()),
+        )
+        return {"success": True, "categories": categories_sorted[:60]}
+    except Exception as e:
+        logger.error(f"Error fetching facets: {str(e)}")
+        return {"success": False, "categories": []}
+
+
 # Products endpoint - returns products from Qdrant
 @app.get("/products")
-def get_products(limit: int = 12, category: str = None, page: int = 1):
+def get_products(
+    limit: int = 12,
+    category: str = None,
+    page: int = 1,
+    min_price: float = None,
+    max_price: float = None,
+    sort: str = None,
+):
     """
-    Get products from Qdrant vector database with pagination support.
-    
-    Parameters:
-    - limit: Number of products to return per page (default 12)
-    - category: Optional category filter (Electronics, Fashion, etc.)
-    - page: Page number for pagination (default 1)
+    Get products from Qdrant with pagination and filters.
+    - category: exact match against extracted category
+    - min_price, max_price: price range in TND
+    - sort: price_asc | price_desc
     """
     try:
         client = get_qdrant_client()
         collection_name = settings.COLLECTION_NAME
-        
-        # Calculate offset for pagination
-        offset = (page - 1) * limit
-        
-        # Fetch products from Qdrant
-        points, _ = client.scroll(
-            collection_name=collection_name,
-            limit=limit,
-            offset=offset,
-            with_payload=True,
-            with_vectors=False
-        )
-        
-        products = []
-        for point in points:
-            payload = point.payload
-            
-            # Filter by category if provided
-            if category and category.lower() != "all":
-                product_category = payload.get("category", "").lower()
-                if category.lower() not in product_category:
+        scroll_limit = 3000
+        offset = None
+        all_points = []
+        while True:
+            points, next_offset = client.scroll(
+                collection_name=collection_name,
+                limit=min(1000, scroll_limit - len(all_points)),
+                offset=offset,
+                with_payload=True,
+                with_vectors=False,
+            )
+            if not points:
+                break
+            all_points.extend(points)
+            if next_offset is None or len(all_points) >= scroll_limit:
+                break
+            offset = next_offset
+
+        def _sort_products(items: list) -> list:
+            if sort == "price_asc":
+                return sorted(
+                    items,
+                    key=lambda p: (p.get("price_numeric") is None, p.get("price_numeric") or 0),
+                )
+            if sort == "price_desc":
+                return sorted(
+                    items,
+                    key=lambda p: (p.get("price_numeric") is None, -(p.get("price_numeric") or 0)),
+                )
+            return items
+
+        has_filters = category or min_price is not None or max_price is not None
+        if has_filters:
+            products = []
+            cat_query = (category or "").strip().lower() if category else ""
+            for point in all_points:
+                payload = point.payload
+                if cat_query and cat_query not in ("all", ""):
+                    cat = _extract_category(payload).strip().lower()
+                    if not cat or cat != cat_query:
+                        continue
+                product = _point_to_product(point)
+                if min_price is not None and (product.get("price_numeric") or 0) < min_price:
                     continue
-            
-            # Extract and convert price
-            raw_price = payload.get("price") or payload.get("final_price") or "N/A"
-            raw_currency = payload.get("currency", "")
-            
-            # Detect currency intelligently
-            try:
-                price_float = float(str(raw_price).replace(",", "")) if raw_price != "N/A" else 0
-            except (ValueError, TypeError):
-                price_float = 0
-            
-            # Auto-detect currency
-            currency = "USD"  # default
-            if raw_currency:
-                raw_currency = str(raw_currency).upper().strip()
-                if "IDR" in raw_currency or "Rp" in raw_currency:
-                    currency = "IDR"
-                elif "DT" in raw_currency or "TND" in raw_currency:
-                    currency = "TND"
-                elif "$" in raw_currency or "USD" in raw_currency:
-                    currency = "USD"
-            else:
-                # If no currency specified, guess based on price magnitude
-                if price_float > 1000:
-                    currency = "IDR"  # Large numbers = IDR
-                else:
-                    currency = "USD"  # Small numbers = USD
-            
-            # Convert to TND
-            if currency == "TND":
-                price_tnd = price_float
-                price_tnd_str = f"{price_float:,.2f} DT"
-            else:
-                try:
-                    price_tnd = convert_to_tnd(price_float, currency)
-                    price_tnd_str = f"{price_tnd:,.2f} DT"
-                except (ValueError, TypeError):
-                    price_tnd = None
-                    price_tnd_str = f"{raw_price} {currency}"
-            
-            product = {
-                "id": point.id,
-                "title": payload.get("name") or payload.get("title") or "Unknown Product",  # Both 'name' and 'title'
-                "name": payload.get("name") or payload.get("title") or "Unknown Product",
-                "price": price_tnd_str,  # Display in TND
-                "price_original": f"{raw_price} {currency}",  # Original price for reference
-                "price_numeric": price_tnd,  # Numeric value for sorting
-                "currency": "TND",  # Display currency is now TND
-                "image": payload.get("image_url") or payload.get("image") or "/static/img/placeholder.png",
-                "availability": payload.get("availability", "In Stock"),
-                "category": payload.get("category", "General"),
-                "description": payload.get("description", "")[:200] if payload.get("description") else "",
-                "rating": payload.get("rating") or 4.5,
-                "url": payload.get("url") or payload.get("product_url") or "#"
+                if max_price is not None and (product.get("price_numeric") or 0) > max_price:
+                    continue
+                product["description"] = (product.get("description") or "")[:200]
+                products.append(product)
+            products = _sort_products(products)
+            total_products = len(products)
+            total_pages = max(1, (total_products + limit - 1) // limit)
+            page = max(1, min(page, total_pages))
+            start = (page - 1) * limit
+            products_page = products[start : start + limit]
+            return {
+                "success": True,
+                "count": len(products_page),
+                "products": products_page,
+                "current_page": page,
+                "total_pages": total_pages,
+                "total_products": total_products,
             }
-            products.append(product)
-        
-        # Ensure we return exactly the requested limit (or less if fewer available)
-        products = products[:limit]
-        
-        # Calculate total pages (approximate, based on collection size)
-        collection_info = client.get_collection(collection_name)
-        total_products = collection_info.points_count
-        total_pages = (total_products + limit - 1) // limit  # Ceiling division
-        
-        return {
-            "success": True,
-            "count": len(products),
-            "products": products,
-            "current_page": page,
-            "total_pages": total_pages,
-            "total_products": total_products
-        }
+        else:
+            products_all = []
+            for point in all_points:
+                product = _point_to_product(point)
+                product["description"] = (product.get("description") or "")[:200]
+                products_all.append(product)
+            products_all = _sort_products(products_all)
+            total_products = len(products_all)
+            total_pages = max(1, (total_products + limit - 1) // limit)
+            page = max(1, min(page, total_pages))
+            start = (page - 1) * limit
+            products_page = products_all[start : start + limit]
+            return {
+                "success": True,
+                "count": len(products_page),
+                "products": products_page,
+                "current_page": page,
+                "total_pages": total_pages,
+                "total_products": total_products,
+            }
     except Exception as e:
         logger.error(f"Error fetching products: {str(e)}")
         return {
@@ -409,8 +617,9 @@ def get_products(limit: int = 12, category: str = None, page: int = 1):
             "products": [],
             "current_page": page,
             "total_pages": 1,
-            "total_products": 0
+            "total_products": 0,
         }
+
 
 @app.get("/")
 def read_root():

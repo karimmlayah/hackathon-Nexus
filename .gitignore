@@ -11,6 +11,9 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Base Django rag_app (panier / favoris liés à l'utilisateur)
+rag_app.db
+
 # Fichiers système
 .DS_Store
 Thumbs.db

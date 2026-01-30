@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -30,6 +30,30 @@
 
     <!-- Template Stylesheet -->
     <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        /* Related items: fixed title height so all boxes are identical */
+        #related-products-list .related-item .related-item-inner .text-center.rounded-bottom .related-item-title {
+            min-height: 2.8em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        /* Bottom list: fixed image height so all cards align */
+        #related-products-list .related-item .related-item-inner .related-item-inner-item {
+            height: 220px;
+            overflow: hidden;
+        }
+        #related-products-list .related-item .related-item-inner .related-item-inner-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        /* Single product page: one consistent layout for all products */
+        .product-tags-items { min-height: 2.5rem; }
+        #featured-products-list { min-height: 4rem; }
+    </style>
 </head>
 
 <body>
@@ -188,205 +212,24 @@
                             aria-describedby="search-icon-1">
                         <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                     </div>
-                    <div class="product-categories mb-4">
-                        <h4>Products Categories</h4>
-                        <ul class="list-unstyled">
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Accessories</a>
-                                    <span>(3)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Electronics & Computer</a>
-                                    <span>(5)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>Laptops & Desktops</a>
-                                    <span>(2)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>Mobiles & Tablets</a>
-                                    <span>(8)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>SmartPhone & Smart TV</a>
-                                    <span>(5)</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="additional-product mb-4">
-                        <h4>Select By Color</h4>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                            <label for="Categories-1" class="text-dark"> Gold</label>
-                        </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                            <label for="Categories-2" class="text-dark"> Green</label>
-                        </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                            <label for="Categories-3" class="text-dark"> White</label>
-                        </div>
-                    </div>
+
                     <div class="featured-product mb-4">
-                        <h4 class="mb-3">Featured products</h4>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-3.png" class="img-fluid rounded" alt="Image">
+                        <h4 class="mb-3">Similar products</h4>
+                        <div id="featured-products-list">
+                            <!-- Items will be loaded here via JS -->
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <div>
-                                <h6 class="mb-2">SmartPhone</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-4.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Smart Camera</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-5.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Smart Camera</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-6.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Smart Camera</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-7.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Camera Leance</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-8.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Smart Camera</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center my-4">
-                            <a href="#" class="btn btn-primary px-4 py-3 rounded-pill w-100">Vew More</a>
                         </div>
                     </div>
-                    <a href="#">
-                        <div class="position-relative">
-                            <img src="/static/img/product-banner-2.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            <div class="text-center position-absolute d-flex flex-column align-items-center justify-content-center rounded p-4"
-                                style="width: 100%; height: 100%; top: 0; right: 0; background: rgba(242, 139, 0, 0.3);">
-                                <h5 class="display-6 text-primary">SALE</h5>
-                                <h4 class="text-secondary">Get UP To 50% Off</h4>
-                                <a href="#" class="btn btn-primary rounded-pill px-4">Shop Now</a>
-                            </div>
-                        </div>
-                    </a>
+
+                    <div id="sale-deal-box" style="min-height: 220px; height: 220px; overflow: hidden;">
+                        <div class="spinner-border text-primary d-flex align-items-center justify-content-center" role="status" style="min-height: 220px;"><span class="visually-hidden">Loading...</span></div>
+                    </div>
                     <div class="product-tags my-4">
-                        <h4 class="mb-3">PRODUCT TAGS</h4>
-                        <div class="product-tags-items bg-light rounded p-3">
-                            <a href="#" class="border rounded py-1 px-2 mb-2">New</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">brand</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">black</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">white</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">tablats</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">phone</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">camera</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">drone</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">talevision</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">slaes</a>
+                        <h4 class="mb-3">PRODUCT CATEGORIES</h4>
+                        <div id="product-tags-items" class="product-tags-items bg-light rounded p-3">
+                            <!-- Filled from product.categories via JS -->
                         </div>
                     </div>
                 </div>
@@ -394,41 +237,18 @@
                     <div class="row g-4 single-product">
                         <div class="col-xl-6">
                             <div class="single-carousel owl-carousel">
-                                <div class="single-item"
-                                    data-dot="<img class='img-fluid' src='img/product-4.png' alt=''>">
+
+
+                                <div class="single-item">
                                     <div class="single-inner bg-light rounded">
-                                        <img src="/static/img/product-4.png" class="img-fluid rounded" alt="Image">
-                                    </div>
-                                </div>
-                                <div class="single-item"
-                                    data-dot="<img class='img-fluid' src='img/product-5.png' alt=''>">
-                                    <div class="single-inner bg-light rounded">
-                                        <img src="/static/img/product-5.png" class="img-fluid rounded" alt="Image">
-                                    </div>
-                                </div>
-                                <div class="single-item"
-                                    data-dot="<img class='img-fluid' src='img/product-6.png' alt=''>">
-                                    <div class="single-inner bg-light rounded">
-                                        <img src="/static/img/product-6.png" class="img-fluid rounded" alt="Image">
-                                    </div>
-                                </div>
-                                <div class="single-item"
-                                    data-dot="<img class='img-fluid' src='img/product-7.png' alt=''>">
-                                    <div class="single-inner bg-light rounded">
-                                        <img src="/static/img/product-7.png" class="img-fluid rounded" alt="Image">
-                                    </div>
-                                </div>
-                                <div class="single-item"
-                                    data-dot="<img class='img-fluid' src='img/product-3.png' alt=''>">
-                                    <div class="single-inner bg-light rounded">
-                                        <img src="/static/img/product-3.png" class="img-fluid rounded" alt="Image">
+                                        <img id="main-product-image" src="/static/img/placeholder.png"
+                                            class="img-fluid rounded" alt="Product" style="background: #f0f0f0;">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <h4 class="fw-bold mb-3" id="singleProductTitle">Smart Camera</h4>
-                            <p class="mb-3" id="singleProductCategory">Category: Electronics</p>
                             <h5 class="fw-bold mb-3" id="singleProductPrice">3,35 $</h5>
                             <div class="d-flex mb-4">
                                 <i class="fa fa-star text-secondary"></i>
@@ -450,8 +270,6 @@
                             <p class="mb-4" id="singleProductDescription">The generated Lorem Ipsum is therefore always
                                 free from repetition injected
                                 humour, or non-characteristic words etc.</p>
-                            <p class="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder;
-                                chain pickerel hatchetfish, pencilfish snailfish</p>
                             <div class="input-group quantity mb-5" style="width: 100px;">
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-minus rounded-circle bg-light border">
@@ -470,136 +288,10 @@
                                     class="fa fa-shopping-bag me-2 text-white"></i> Add to cart</button>
                         </div>
                         <div class="col-lg-12">
-                            <nav>
-                                <div class="nav nav-tabs mb-3">
-                                    <button class="nav-link active border-white border-bottom-0" type="button"
-                                        role="tab" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                        aria-controls="nav-about" aria-selected="true">Description</button>
-                                    <button class="nav-link border-white border-bottom-0" type="button" role="tab"
-                                        id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
-                                        aria-controls="nav-mission" aria-selected="false">Reviews</button>
-                                </div>
-                            </nav>
-                            <div class="tab-content mb-5">
-                                <div class="tab-pane active" id="nav-about" role="tabpanel"
-                                    aria-labelledby="nav-about-tab">
-                                    <p>Our new <b class="fw-bold">HPB12 / A12 battery</b> is rated at 2000mAh and
-                                        designed to power up Black and Decker / FireStorm line of 12V tools allowing
-                                        users to run multiple devices off the same battery pack. The HPB12 is compatible
-                                        with the following Black and Decker power tool models:
-                                    </p>
-                                    <b class="fw-bold">Black & Decker Drills and Drivers:</b>
-                                    <p class="small">BD12PSK, BDG1200K, BDGL12K, BDID1202, CD1200SK, CD12SFK, CDC1200K,
-                                        CDC120AK, CDC120ASB, CP122K, CP122KB, CP12K, CP12KB, EPC12, EPC126, EPC126BK,
-                                        EPC12CA, EPC12CABK, HP122K, HP122KD, HP126F2B, HP126F2K, HP126F3B, HP126F3K,
-                                        HP126FBH, HP126FSC, HP126FSH, HP126K, HP128F3B, HP12K, HP12KD, HPD1200, HPD1202,
-                                        HPD1202KF, HPD12K-2, PS122K, PS122KB, PS12HAK, SS12, SX3000, SX3500, XD1200,
-                                        XD1200K, XTC121
-                                    </p>
-                                    <b class="fw-bold">lack & Decker Impact Wrenches:</b>
-                                    <p class="small">SX5000, XTC12IK, XTC12IKH</p>
-                                    <b class="fw-bold">Black & Decker Multi-Tools:</b>
-                                    <p class="small">KC2000FK</p>
-                                    <b class="fw-bold">Black & Decker Nailers:</b>
-                                    <p class="small">BDBN1202</p>
-                                    <b class="fw-bold">Black & Decker Screwdrivers:</b>
-                                    <p class="small">HP9019K</p>
-                                    <b class="fw-bold mb-0">Best replacement for the following Black and Decker OEM
-                                        battery part numbers:</b>
-                                    <p class="small">HPB12, A12, A12EX, A12-XJ, A1712, B-8315, BD1204L, BD-1204L,
-                                        BPT1047, FS120B, FS120BX, FSB12.</p>
-                                </div>
-                                <div class="tab-pane" id="nav-mission" role="tabpanel"
-                                    aria-labelledby="nav-mission-tab">
-                                    <div class="d-flex">
-                                        <img src="/static/img/avatar.jpg" class="img-fluid rounded-circle p-3"
-                                            style="width: 100px; height: 100px;" alt="">
-                                        <div class="">
-                                            <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                            <div class="d-flex justify-content-between">
-                                                <h5>Jason Smith</h5>
-                                                <div class="d-flex mb-3">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                            </div>
-                                            <p>The generated Lorem Ipsum is therefore always free from repetition
-                                                injected humour, or non-characteristic
-                                                words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <img src="/static/img/avatar.jpg" class="img-fluid rounded-circle p-3"
-                                            style="width: 100px; height: 100px;" alt="">
-                                        <div class="">
-                                            <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
-                                            <div class="d-flex justify-content-between">
-                                                <h5>Sam Peters</h5>
-                                                <div class="d-flex mb-3">
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star text-secondary"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                            </div>
-                                            <p class="text-dark">The generated Lorem Ipsum is therefore always free from
-                                                repetition injected humour, or non-characteristic
-                                                words etc. Susp endisse ultricies nisi vel quam suscipit </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="nav-vision" role="tabpanel">
-                                    <p class="text-dark">Tempor erat elitr rebum at clita. Diam dolor diam ipsum et
-                                        tempor sit. Aliqu diam
-                                        amet diam et eos labore. 3</p>
-                                    <p class="mb-0">Diam dolor diam ipsum et tempor sit. Aliqu diam amet diam et eos
-                                        labore.
-                                        Clita erat ipsum et lorem et sit</p>
-                                </div>
+                            <div id="product-reviews-container">
+                                <!-- Reviews will be loaded here via JS -->
                             </div>
                         </div>
-                        <form action="#">
-                            <h4 class="mb-5 fw-bold">Leave a Reply</h4>
-                            <div class="row g-4">
-                                <div class="col-lg-6">
-                                    <div class="border-bottom rounded">
-                                        <input type="text" class="form-control border-0 me-4" placeholder="Yur Name *">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="border-bottom rounded">
-                                        <input type="email" class="form-control border-0" placeholder="Your Email *">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="border-bottom rounded my-4">
-                                        <textarea name="" id="" class="form-control border-0" cols="30" rows="8"
-                                            placeholder="Your Review *" spellcheck="false"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="d-flex justify-content-between py-3 mb-5">
-                                        <div class="d-flex align-items-center">
-                                            <p class="mb-0 me-3">Please rate:</p>
-                                            <div class="d-flex align-items-center" style="font-size: 12px;">
-                                                <i class="fa fa-star text-muted"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <a href="#"
-                                            class="btn btn-primary border border-secondary text-primary rounded-pill px-4 py-3">
-                                            Post Comment</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -613,209 +305,368 @@
             <div class="mx-auto text-center pb-5" style="max-width: 700px;">
                 <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp"
                     data-wow-delay="0.1s">Related Products</h4>
-                <p class="wow fadeInUp" data-wow-delay="0.2s">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Modi, asperiores ducimus sint quos tempore officia similique quia? Libero, pariatur consectetur?</p>
             </div>
-            <div class="related-carousel owl-carousel pt-4">
-                <div class="related-item rounded">
-                    <div class="related-item-inner border rounded">
-                        <div class="related-item-inner-item">
-                            <img src="/static/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                            <div class="related-new">New</div>
-                            <div class="related-details">
-                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center rounded-bottom p-4">
-                            <a href="#" class="d-block mb-2">SmartPhone</a>
-                            <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                            <del class="me-2 fs-5">$1,250.00</del>
-                            <span class="text-primary fs-5">$1,050.00</span>
-                        </div>
-                    </div>
-                    <div class="related-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="related-item rounded">
-                    <div class="related-item-inner border rounded">
-                        <div class="related-item-inner-item">
-                            <img src="/static/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                            <div class="related-new">New</div>
-                            <div class="related-details">
-                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center rounded-bottom p-4">
-                            <a href="#" class="d-block mb-2">SmartPhone</a>
-                            <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                            <del class="me-2 fs-5">$1,250.00</del>
-                            <span class="text-primary fs-5">$1,050.00</span>
-                        </div>
-                    </div>
-                    <div class="related-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="related-item rounded">
-                    <div class="related-item-inner border rounded">
-                        <div class="related-item-inner-item">
-                            <img src="/static/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                            <div class="related-new">New</div>
-                            <div class="related-details">
-                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center rounded-bottom p-4">
-                            <a href="#" class="d-block mb-2">SmartPhone</a>
-                            <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                            <del class="me-2 fs-5">$1,250.00</del>
-                            <span class="text-primary fs-5">$1,050.00</span>
-                        </div>
-                    </div>
-                    <div class="related-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="related-item rounded">
-                    <div class="related-item-inner border rounded">
-                        <div class="related-item-inner-item">
-                            <img src="/static/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                            <div class="related-new">New</div>
-                            <div class="related-details">
-                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center rounded-bottom p-4">
-                            <a href="#" class="d-block mb-2">SmartPhone</a>
-                            <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                            <del class="me-2 fs-5">$1,250.00</del>
-                            <span class="text-primary fs-5">$1,050.00</span>
-                        </div>
-                    </div>
-                    <div class="related-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="related-item rounded">
-                    <div class="related-item-inner border rounded">
-                        <div class="related-item-inner-item">
-                            <img src="/static/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                            <div class="related-new">New</div>
-                            <div class="related-details">
-                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center rounded-bottom p-4">
-                            <a href="#" class="d-block mb-2">SmartPhone</a>
-                            <a href="#" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                            <del class="me-2 fs-5">$1,250.00</del>
-                            <span class="text-primary fs-5">$1,050.00</span>
-                        </div>
-                    </div>
-                    <div class="related-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star text-primary"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                        class="rounded-circle btn-sm-square border"><i
-                                            class="fas fa-random"></i></i></a>
-                                <a href="#"
-                                    class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                        class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
+
+            <div id="related-products-list">
+                <!-- Items will be loaded here via JS -->
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
+            <!-- NOTE: Original related-carousel was here, replaced by dynamic list above or below. 
+                 The user asked to change featured products content. 
+                 Wait, "featured-product" was sidebar. "related-product" is here.
+                 The user said: "in featured products change these static items...".
+                 Featured items were in sidebar (replaced in previous turn). 
+                 The "Related Products" section is conceptually similar but let's stick to what was asked.
+                 I previously modified the SIDEBAR featured items.
+                 Now I am modifying the Main Content (Description/Reviews).
+            -->
+
+            <script>
+                function generateStars(rating) {
+                    let starsHtml = '';
+                    const ratingValue = parseFloat(rating) || 0;
+                    for (let i = 0; i < 5; i++) {
+                        starsHtml += (i < ratingValue) ? '<i class="fa fa-star text-secondary"></i> ' : '<i class="fa fa-star"></i> ';
+                    }
+                    return starsHtml;
+                }
+
+                function getRefFromPage() {
+                    const params = new URLSearchParams(window.location.search);
+                    let asin = params.get('asin');
+                    let id = params.get('id');
+                    if (!asin && !id) {
+                        try {
+                            const stored = localStorage.getItem('finfit_selected_product');
+                            if (stored) {
+                                const p = JSON.parse(stored);
+                                asin = p.asin || null;
+                                id = p.id || null;
+                            }
+                        } catch (e) {}
+                    }
+                    const qs = asin ? 'asin=' + encodeURIComponent(asin) : (id ? 'id=' + encodeURIComponent(id) : null);
+                    return { asin, id, qs };
+                }
+
+                function setMainProduct(product) {
+                    if (!product) return;
+                    var title = (product.title || product.name) ? String(product.title || product.name) : 'Product';
+                    var price = product.final_price != null ? product.final_price : product.price;
+                    var priceStr = (price != null && price !== undefined && price !== '') ? (typeof price === 'number' ? price.toFixed(2) : String(price)) : '';
+                    var imageUrl = (product.image_url || product.image || (product.image_urls && product.image_urls[0])) || '';
+                    if (!imageUrl) imageUrl = '/static/img/placeholder.png';
+                    var topReview = (product.top_review || product.topreview || '').trim() || '';
+
+                    localStorage.setItem('finfit_selected_product', JSON.stringify({
+                        asin: product.asin,
+                        id: product.id,
+                        title: title,
+                        name: title,
+                        final_price: price,
+                        price: price,
+                        description: (product.description != null && product.description !== undefined) ? String(product.description) : '',
+                        image_url: imageUrl,
+                        image: imageUrl,
+                        category: (product.categories || product.category) || 'General',
+                        rating: product.rating,
+                        availability: product.availability,
+                        top_review: topReview
+                    }));
+
+                    var reviewContainer = document.getElementById('product-reviews-container');
+                    if (reviewContainer) {
+                        if (topReview) {
+                            var stars = (product.rating != null && product.rating !== undefined) ? generateStars(product.rating) : generateStars(4.5);
+                            reviewContainer.innerHTML = '<div class="d-flex mb-3">' + stars + '</div><p class="mb-0">' + (topReview || '').replace(/</g, '&lt;') + '</p>';
+                        } else {
+                            reviewContainer.innerHTML = '<p class="text-muted mb-0">No reviews yet for this product.</p>';
+                        }
+                    }
+
+                    var tagsContainer = document.getElementById('product-tags-items');
+                    if (tagsContainer) {
+                        var categories = [];
+                        var raw = product.categories || product.category;
+                        if (raw != null && raw !== undefined) {
+                            try {
+                                if (typeof raw === 'string') {
+                                    var s = raw.trim();
+                                    if (s.indexOf('[') === 0) {
+                                        var match;
+                                        var re = /\'([^\']*)\'/g;
+                                        while ((match = re.exec(s)) !== null) categories.push(match[1].trim());
+                                        if (categories.length === 0) {
+                                            try {
+                                                var parsed = JSON.parse(s.replace(/'/g, '"'));
+                                                if (Array.isArray(parsed)) categories = parsed.map(function (c) { return (c && String(c).trim()) || ''; }).filter(Boolean);
+                                            } catch (e2) {
+                                                categories = s.replace(/^\[|\]$/g, '').split(',').map(function (x) { return x.replace(/^[\s'\"]+|[\s'\"]+$/g, '').trim(); }).filter(Boolean);
+                                            }
+                                        }
+                                    } else {
+                                        categories = s.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+                                    }
+                                } else if (Array.isArray(raw)) {
+                                    categories = raw.map(function (c) { return (c && String(c).trim()) || ''; }).filter(Boolean);
+                                }
+                            } catch (e) {}
+                        }
+                        if (categories.length === 0 && (product.category || product.categories)) {
+                            var one = (product.category || product.categories);
+                            if (typeof one === 'string' && one.trim()) categories = [one.trim()];
+                        }
+                        tagsContainer.innerHTML = categories.length ? categories.map(function (cat) { return '<a href="shop.html" class="border rounded py-1 px-2 mb-2 me-1 d-inline-block text-decoration-none">' + (cat || '').replace(/</g, '&lt;') + '</a>'; }).join(' ') : '<span class="text-muted">—</span>';
+                    }
+
+                    var titleEl = document.getElementById('singleProductTitle');
+                    var priceEl = document.getElementById('singleProductPrice');
+                    var descEl = document.getElementById('singleProductDescription');
+                    var descTabEl = document.getElementById('product-description-content');
+                    var starsRow = document.querySelector('.single-product .d-flex.mb-4');
+
+                    if (titleEl) titleEl.textContent = title;
+                    if (priceEl) priceEl.textContent = priceStr ? priceStr + ' DT' : '— DT';
+                    if (descEl) descEl.textContent = (product.description != null && product.description !== undefined) ? String(product.description) : '';
+                    if (descTabEl) descTabEl.textContent = (product.description != null && product.description !== undefined) ? String(product.description) : '';
+
+                    var mainImg = document.getElementById('main-product-image');
+                    var safeTitle = (title && String(title) !== 'undefined' && String(title) !== 'null') ? String(title) : 'Product';
+                    if (mainImg) {
+                        mainImg.src = imageUrl;
+                        mainImg.alt = safeTitle;
+                    }
+                    var carouselImgs = document.querySelectorAll('.single-carousel .single-item img');
+                    for (var i = 0; i < carouselImgs.length; i++) {
+                        carouselImgs[i].src = imageUrl;
+                        carouselImgs[i].alt = safeTitle;
+                    }
+
+                    if (starsRow) starsRow.innerHTML = generateStars(product && product.rating != null ? product.rating : 0);
+                }
+
+                function renderSimilarSidebar(qs) {
+                    const container = document.getElementById('featured-products-list');
+                    if (!container) return;
+                    fetch('/api/similar-products?' + qs + '&limit=5')
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) {
+                            if (data.ok && data.results.length > 0) {
+                                container.innerHTML = '';
+                                data.results.forEach(function (item) {
+                                    const rating = parseFloat(item.rating) || 0;
+                                    let starsHtml = '';
+                                    for (let i = 0; i < 5; i++) starsHtml += (i < rating) ? '<i class="fa fa-star text-secondary"></i> ' : '<i class="fa fa-star"></i> ';
+                                    const linkUrl = item.asin ? 'single.html?asin=' + encodeURIComponent(item.asin) : (item.id ? 'single.html?id=' + encodeURIComponent(item.id) : '#');
+                                    const imgSrc = (item.image_url || item.image) || '/static/img/placeholder.png';
+                                    const div = document.createElement('div');
+                                    div.className = 'featured-product-item d-flex align-items-center mb-3';
+                                    var itemPrice = (item.price != null && item.price !== undefined && item.price !== '') ? (typeof item.price === 'number' ? item.price.toFixed(2) : String(item.price)) : '0.00';
+                                    div.innerHTML = '<a href="' + linkUrl + '" class="similar-product-link d-flex align-items-center text-decoration-none text-dark w-100" data-asin="' + (item.asin || '') + '" data-id="' + (item.id || '') + '"><div class="rounded me-4" style="width: 100px; height: 100px; flex-shrink: 0;"><img src="' + imgSrc + '" class="img-fluid rounded" alt="" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src=\'/static/img/placeholder.png\'"></div><div><h6 class="mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">' + (item.name || item.title || 'Product').replace(/</g, '&lt;') + '</h6><div class="d-flex mb-2">' + starsHtml + '</div><div class="d-flex mb-2"><h5 class="fw-bold me-2">' + itemPrice + ' DT</h5></div></div></a>';
+                                    container.appendChild(div);
+                                });
+                            } else {
+                                container.innerHTML = '<p>No similar products found.</p>';
+                            }
+                        })
+                        .catch(function () { container.innerHTML = '<p>Could not load products.</p>'; });
+                }
+
+                function truncateTitleForBottomList(s, maxLen) {
+                    s = (s || '').trim();
+                    if (s.length <= maxLen) return s.replace(/</g, '&lt;');
+                    var cut = s.substring(0, maxLen - 1);
+                    var lastSpace = cut.lastIndexOf(' ');
+                    var out = (lastSpace > 0 ? cut.substring(0, lastSpace) : cut) + '…';
+                    return out.replace(/</g, '&lt;');
+                }
+
+                function renderRelatedSection(qs) {
+                    const relatedContainer = document.getElementById('related-products-list');
+                    if (!relatedContainer) return;
+                    var BOTTOM_LIST_MAX_TITLE = 35;
+                    fetch('/api/similar-products?' + qs + '&limit=5')
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) {
+                            if (!data.ok || !data.results || data.results.length === 0) {
+                                relatedContainer.innerHTML = '<p class="text-center">No related products found.</p>';
+                                return;
+                            }
+                            var items = data.results;
+                            var titles = items.map(function (it) { return it.name || 'Product'; });
+                            return fetch('/api/shorten-titles', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ titles: titles, max_chars: BOTTOM_LIST_MAX_TITLE })
+                            }).then(function (r) { return r.json(); }).then(function (shortResp) {
+                                var shortTitles = (shortResp.ok && shortResp.short_titles && shortResp.short_titles.length) ? shortResp.short_titles : titles;
+                                var carouselHtml = '<div class="related-carousel owl-carousel pt-4">';
+                                for (var i = 0; i < items.length; i++) {
+                                    var item = items[i];
+                                    var linkUrl = item.asin ? 'single.html?asin=' + encodeURIComponent(item.asin) : (item.id ? 'single.html?id=' + encodeURIComponent(item.id) : '#');
+                                    var imgSrc = (item.image_url || item.image) || '/static/img/placeholder.png';
+                                    var starsHtml = generateStars(item.rating != null ? item.rating : 0);
+                                    var rawTitle = shortTitles[i] || item.name || item.title || 'Product';
+                                    var shortTitle = truncateTitleForBottomList(rawTitle, BOTTOM_LIST_MAX_TITLE);
+                                    var avail = (item.availability || 'Available').replace(/</g, '&lt;');
+                                    var rp = (item.price != null && item.price !== undefined && item.price !== '') ? (typeof item.price === 'number' ? item.price.toFixed(2) : String(item.price)) : '0.00';
+                                    carouselHtml += '<div class="related-item rounded"><div class="related-item-inner border rounded"><div class="related-item-inner-item">' +
+                                        '<a href="' + linkUrl + '"><img src="' + imgSrc + '" class="img-fluid w-100 rounded-top" alt="" onerror="this.src=\'/static/img/placeholder.png\'"></a>' +
+                                        '<div class="related-details"><a href="' + linkUrl + '"><i class="fa fa-eye fa-1x"></i></a></div></div>' +
+                                        '<div class="text-center rounded-bottom p-4"><a href="' + linkUrl + '" class="d-block mb-2">' + avail + '</a><a href="' + linkUrl + '" class="d-block h4 related-item-title">' + shortTitle + '</a><span class="text-primary fs-5">' + rp + ' DT</span></div></div>' +
+                                        '<div class="related-item-add border border-top-0 rounded-bottom text-center p-4 pt-0"><a href="' + linkUrl + '" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i class="fas fa-shopping-cart me-2"></i> Add To Cart</a>' +
+                                        '<div class="d-flex justify-content-between align-items-center"><div class="d-flex">' + starsHtml + '</div><div class="d-flex"><a href="' + linkUrl + '" class="text-primary d-flex align-items-center justify-content-center me-3"><span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span></a><a href="' + linkUrl + '" class="text-primary d-flex align-items-center justify-content-center me-0"><span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span></a></div></div></div></div>';
+                                }
+                                carouselHtml += '</div>';
+                                relatedContainer.innerHTML = carouselHtml;
+                                if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
+                                    try { $(relatedContainer).find('.related-carousel').owlCarousel('destroy'); } catch (e) {}
+                                    $(relatedContainer).find('.related-carousel').owlCarousel({
+                                        autoplay: true,
+                                        smartSpeed: 1500,
+                                        dots: false,
+                                        loop: true,
+                                        margin: 25,
+                                        nav: true,
+                                        navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                                        responsiveClass: true,
+                                        responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 4 } }
+                                    });
+                                }
+                            }).catch(function () {
+                                var carouselHtml = '<div class="related-carousel owl-carousel pt-4">';
+                                items.forEach(function (item, i) {
+                                    var linkUrl = item.asin ? 'single.html?asin=' + encodeURIComponent(item.asin) : (item.id ? 'single.html?id=' + encodeURIComponent(item.id) : '#');
+                                    var imgSrc = (item.image_url || item.image) || '/static/img/placeholder.png';
+                                    var starsHtml = generateStars(item.rating != null ? item.rating : 0);
+                                    var t = truncateTitleForBottomList(item.name || item.title || 'Product', 35);
+                                    var avail = (item.availability || 'Available').replace(/</g, '&lt;');
+                                    var rp = (item.price != null && item.price !== undefined && item.price !== '') ? (typeof item.price === 'number' ? item.price.toFixed(2) : String(item.price)) : '0.00';
+                                    carouselHtml += '<div class="related-item rounded"><div class="related-item-inner border rounded"><div class="related-item-inner-item"><a href="' + linkUrl + '"><img src="' + imgSrc + '" class="img-fluid w-100 rounded-top" alt="" onerror="this.src=\'/static/img/placeholder.png\'"></a><div class="related-details"><a href="' + linkUrl + '"><i class="fa fa-eye fa-1x"></i></a></div></div><div class="text-center rounded-bottom p-4"><a href="' + linkUrl + '" class="d-block mb-2">' + avail + '</a><a href="' + linkUrl + '" class="d-block h4 related-item-title">' + t + '</a><span class="text-primary fs-5">' + rp + ' DT</span></div></div><div class="related-item-add border border-top-0 rounded-bottom text-center p-4 pt-0"><a href="' + linkUrl + '" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i class="fas fa-shopping-cart me-2"></i> Add To Cart</a><div class="d-flex justify-content-between align-items-center"><div class="d-flex">' + starsHtml + '</div><div class="d-flex"><a href="' + linkUrl + '" class="text-primary d-flex align-items-center justify-content-center me-3"><span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span></a><a href="' + linkUrl + '" class="text-primary d-flex align-items-center justify-content-center me-0"><span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span></a></div></div></div></div>';
+                                });
+                                carouselHtml += '</div>';
+                                relatedContainer.innerHTML = carouselHtml;
+                                if (typeof $ !== 'undefined' && $.fn.owlCarousel) {
+                                    try { $(relatedContainer).find('.related-carousel').owlCarousel('destroy'); } catch (e) {}
+                                    $(relatedContainer).find('.related-carousel').owlCarousel({ autoplay: true, smartSpeed: 1500, dots: false, loop: true, margin: 25, nav: true, navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'], responsiveClass: true, responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 4 } } });
+                                }
+                            });
+                        })
+                        .catch(function () { relatedContainer.innerHTML = '<p class="text-center">Could not load products.</p>'; });
+                }
+
+                function loadProduct(asin, id) {
+                    const qs = asin ? 'asin=' + encodeURIComponent(asin) : (id ? 'id=' + encodeURIComponent(id) : null);
+                    if (!qs) {
+                        document.getElementById('featured-products-list').innerHTML = '<p>Select a product to see similar items.</p>';
+                        var rc = document.getElementById('related-products-list');
+                        if (rc) rc.innerHTML = '<p class="text-center">Select a product to see similar items.</p>';
+                        return;
+                    }
+                    fetch('/api/product-details?' + qs)
+                        .then(function (r) { if (!r.ok) return {}; return r.json(); })
+                        .catch(function () { return {}; })
+                        .then(function (data) {
+                            if (data && data.ok && data.product) {
+                                setMainProduct(data.product);
+                            } else {
+                                var stored = localStorage.getItem('finfit_selected_product');
+                                if (stored) {
+                                    try {
+                                        var p = JSON.parse(stored);
+                                        var product = {
+                                            id: p.id, asin: p.asin, title: p.name || p.title || 'Product',
+                                            name: p.name || p.title, final_price: p.price || p.final_price,
+                                            price: p.price || p.final_price, description: p.description || '',
+                                            image_url: p.image || p.image_url, image: p.image || p.image_url,
+                                            categories: p.category || p.categories, category: p.category,
+                                            rating: p.rating, availability: p.availability, top_review: p.top_review
+                                        };
+                                        setMainProduct(product);
+                                    } catch (e) {}
+                                }
+                            }
+                            renderSimilarSidebar(qs);
+                            renderRelatedSection(qs);
+                        })
+                        .catch(function () {
+                            var stored = localStorage.getItem('finfit_selected_product');
+                            if (stored) {
+                                try {
+                                    var p = JSON.parse(stored);
+                                    var product = {
+                                        id: p.id, asin: p.asin, title: p.name || p.title || 'Product',
+                                        name: p.name || p.title, final_price: p.price || p.final_price,
+                                        price: p.price || p.final_price, description: p.description || '',
+                                        image_url: p.image || p.image_url, image: p.image || p.image_url,
+                                        categories: p.category || p.categories, category: p.category,
+                                        rating: p.rating, availability: p.availability, top_review: p.top_review
+                                    };
+                                    setMainProduct(product);
+                                } catch (e) {}
+                            }
+                            renderSimilarSidebar(qs);
+                            renderRelatedSection(qs);
+                        });
+                }
+
+                var saleDealIndex = 0;
+                var saleDealItems = [];
+
+                function renderSaleDeal(item) {
+                    var box = document.getElementById('sale-deal-box');
+                    if (!box) return;
+                    var linkUrl = item.asin ? 'single.html?asin=' + encodeURIComponent(item.asin) : (item.id ? 'single.html?id=' + encodeURIComponent(item.id) : '#');
+                    var imgSrc = (item.image_url || item.image) || '/static/img/placeholder.png';
+                    var discount = item.discount != null ? Math.round(Number(item.discount)) : 50;
+                    box.innerHTML = '<a href="' + linkUrl + '" class="text-decoration-none d-block position-relative rounded" style="height: 220px; overflow: hidden;">' +
+                        '<img src="' + imgSrc + '" class="img-fluid w-100 h-100 rounded" alt="" style="object-fit: cover; object-position: center;" onerror="this.src=\'/static/img/placeholder.png\'">' +
+                        '<div class="text-center position-absolute d-flex flex-column align-items-center justify-content-center rounded p-4" style="width: 100%; height: 100%; top: 0; left: 0; background: rgba(242, 139, 0, 0.35);">' +
+                        '<h5 class="display-6 text-primary fw-bold">' + discount + '% OFF</h5>' +
+                        '<h6 class="text-dark mb-2" style="font-size: 0.9rem; max-height: 2.4em; overflow: hidden; text-overflow: ellipsis;">' + (item.name || 'Deal').replace(/</g, '&lt;') + '</h6>' +
+                        '<span class="btn btn-primary rounded-pill px-4">Shop Now</span>' +
+                        '</div></a>';
+                }
+
+                function loadSaleDeals() {
+                    var box = document.getElementById('sale-deal-box');
+                    if (!box) return;
+                    fetch('/api/discounted-products?min_discount=30&limit=10')
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) {
+                            if (data.ok && data.results && data.results.length > 0) {
+                                saleDealItems = data.results;
+                                saleDealIndex = 0;
+                                renderSaleDeal(saleDealItems[0]);
+                                if (saleDealItems.length > 1) {
+                                    setInterval(function () {
+                                        saleDealIndex = (saleDealIndex + 1) % saleDealItems.length;
+                                        renderSaleDeal(saleDealItems[saleDealIndex]);
+                                    }, 4000);
+                                }
+                            } else {
+                                box.innerHTML = '<div class="bg-light rounded p-4 text-center text-muted d-flex align-items-center justify-content-center" style="height: 220px;"><small>No deals 30%+ right now. Check back later!</small></div>';
+                            }
+                        })
+                        .catch(function () {
+                            box.innerHTML = '<div class="bg-light rounded p-4 text-center text-muted d-flex align-items-center justify-content-center" style="height: 220px;"><small>Deals unavailable.</small></div>';
+                        });
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    var ref = getRefFromPage();
+                    loadProduct(ref.asin, ref.id);
+                    loadSaleDeals();
+                });
+            </script>
         </div>
     </div>
-    <!-- Related Product End -->
+    </div>
+    </div>
+    </div>
+    <!-- Single Products End -->
 
     <!-- Footer Start -->
     <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
@@ -1005,38 +856,80 @@
         });
 
         function loadProductDetails() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('asin') || params.get('id')) {
+                return;
+            }
             const productJson = localStorage.getItem('finfit_selected_product');
             if (!productJson) {
-                // Redirect back if no product selected
                 window.location.href = 'shop.html';
                 return;
             }
 
             const product = JSON.parse(productJson);
 
-            // Populate Text Fields
-            document.getElementById('singleProductTitle').textContent = product.name || product.title || 'Product Name';
-            document.getElementById('singleProductCategory').textContent = 'Category: ' + (product.category || 'General');
+            // Populate Text Fields (never show "undefined")
+            var prodTitle = product.name || product.title || 'Product Name';
+            document.getElementById('singleProductTitle').textContent = prodTitle ? String(prodTitle) : 'Product';
 
-            const price = product.price || product.final_price || 0;
-            document.getElementById('singleProductPrice').textContent = '$' + (typeof price === 'number' ? price.toFixed(2) : price);
+            const price = product.price ?? product.final_price ?? 0;
+            var priceDisplay = (price != null && price !== undefined && price !== '') ? (typeof price === 'number' ? price.toFixed(2) : String(price)) + ' DT' : '— DT';
+            document.getElementById('singleProductPrice').textContent = priceDisplay;
 
-            if (product.description) {
-                document.getElementById('singleProductDescription').textContent = product.description;
+            if (product.description != null && product.description !== undefined) {
+                document.getElementById('singleProductDescription').textContent = String(product.description);
+            }
+
+            var topReview = (product.top_review || product.topreview || '').trim();
+            var reviewContainer = document.getElementById('product-reviews-container');
+            if (reviewContainer) {
+                if (topReview) {
+                    reviewContainer.innerHTML = '<p class="mb-0">' + topReview.replace(/</g, '&lt;') + '</p>';
+                } else {
+                    reviewContainer.innerHTML = '<p class="text-muted mb-0">No reviews yet for this product.</p>';
+                }
+            }
+
+            var tagsContainer = document.getElementById('product-tags-items');
+            if (tagsContainer) {
+                var cats = [];
+                var raw = product.categories || product.category;
+                if (raw != null && raw !== undefined) {
+                    if (typeof raw === 'string') {
+                        var s = raw.trim();
+                        if (s.indexOf('[') === 0) {
+                            var re = /\'([^\']*)\'/g, m;
+                            while ((m = re.exec(s)) !== null) cats.push(m[1].trim());
+                            if (cats.length === 0) try { var p = JSON.parse(s.replace(/'/g, '"')); if (Array.isArray(p)) cats = p.map(function (c) { return (c && String(c).trim()) || ''; }).filter(Boolean); } catch (e2) { cats = s.replace(/^\[|\]$/g, '').split(',').map(function (x) { return x.replace(/^[\s'\"]+|[\s'\"]+$/g, '').trim(); }).filter(Boolean); }
+                        } else cats = s.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+                    } else if (Array.isArray(raw)) cats = raw.map(function (c) { return (c && String(c).trim()) || ''; }).filter(Boolean);
+                }
+                if (cats.length === 0 && (product.category || product.categories)) { var one = (product.category || product.categories); if (typeof one === 'string' && one.trim()) cats = [one.trim()]; }
+                tagsContainer.innerHTML = cats.length ? cats.map(function (cat) { return '<a href="shop.html" class="border rounded py-1 px-2 mb-2 me-1 d-inline-block text-decoration-none">' + (cat || '').replace(/</g, '&lt;') + '</a>'; }).join(' ') : '<span class="text-muted">—</span>';
             }
 
             // Populate Images (Handling the carousel is tricky with static HTML structure, 
             // simpliest way is to update all images to the main product image for now)
-            const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png';
+            const imageUrl = product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png';
+            var safeAlt = (prodTitle && String(prodTitle) !== 'undefined' && String(prodTitle) !== 'null') ? String(prodTitle) : 'Product';
 
-            // Update carousel images
+            // Update carousel images (set alt to avoid "undefined" under image)
             const carouselImages = document.querySelectorAll('.single-carousel .single-item img');
             carouselImages.forEach(img => {
                 img.src = imageUrl;
+                img.alt = safeAlt;
             });
 
             // Re-initialize carousel if needed, or just relying on existing init might be flaky if DOM changed too much.
             // Since we just swapped src, it should be fine.
+        }
+
+        function getCartKey() {
+            try {
+                var u = localStorage.getItem('finfit_user');
+                if (u) { var o = JSON.parse(u); if (o && o.email) return 'finfit_cart_' + String(o.email); }
+            } catch (e) {}
+            return 'finfit_cart';
         }
 
         function addToCartCurrent() {
@@ -1045,7 +938,7 @@
             if (!productJson) return;
             const product = JSON.parse(productJson);
 
-            let cart = JSON.parse(localStorage.getItem('finfit_cart')) || [];
+            let cart = JSON.parse(localStorage.getItem(getCartKey()) || 'null') || [];
 
             const existingItem = cart.find(item => item.name === product.name);
             if (existingItem) {
@@ -1054,12 +947,12 @@
                 cart.push({
                     name: product.name,
                     price: product.price || product.final_price || 0,
-                    image: product.image || (product.image_urls && product.image_urls[0]) || 'img/placeholder.png',
+                    image: product.image || (product.image_urls && product.image_urls[0]) || '/static/img/placeholder.png',
                     quantity: 1
                 });
             }
 
-            localStorage.setItem('finfit_cart', JSON.stringify(cart));
+            localStorage.setItem(getCartKey(), JSON.stringify(cart));
             alert(`Added ${product.name} to cart!`);
 
             // Update header counter if possible (requires reloading or shared function)

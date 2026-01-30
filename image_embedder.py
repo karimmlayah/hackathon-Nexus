@@ -48,3 +48,19 @@ class ImageEmbedder:
         if image.mode != "RGB":
             image = image.convert("RGB")
         return self.embed_image(image)
+
+    def embed_text(self, text: str) -> List[float]:
+        """Encode text in the same CLIP space as images (for multimodal image + text search)."""
+        if not (text and str(text).strip()):
+            return [0.0] * self.vector_size
+        try:
+            import numpy as np
+            embedding = self.model.encode(
+                str(text).strip(),
+                convert_to_numpy=True,
+                normalize_embeddings=True,
+            )
+            return embedding.tolist() if hasattr(embedding, "tolist") else list(embedding)
+        except Exception as e:
+            print(f"Error in embed_text: {e}")
+            return [0.0] * self.vector_size

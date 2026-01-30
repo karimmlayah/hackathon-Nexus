@@ -123,3 +123,54 @@ def query_llm(context: str, question: str) -> str:
         except Exception as e:
             logger.error(f"Unexpected LLM error: {str(e)}")
             raise RuntimeError(f"Unexpected error querying LLM: {str(e)}")
+
+def shorten_titles(titles: List[str], max_chars: int = 35) -> List[str]:
+    """
+    Use Groq LLM to shorten product titles to fit a fixed-width box (e.g. card).
+    Returns one shortened title per input, in the same order.
+    Falls back to truncation if LLM fails.
+    """
+    if not titles:
+        return []
+    # Fallback: truncate with ellipsis
+    def truncate(s: str) -> str:
+        s = (s or "").strip()
+        if len(s) <= max_chars:
+            return s
+        return s[: max_chars - 1].rsplit(" ", 1)[0] if " " in s[: max_chars - 1] else s[: max_chars - 1] + "…"
+
+    if groq_client is None:
+        return [truncate(t) for t in titles]
+
+    numbered = "\n".join(f"{i+1}. {t}" for i, t in enumerate(titles))
+    prompt = f"""Shorten each product title below to at most {max_chars} characters. Keep the key product name. Do not add quotes or numbers.
+Output ONLY the shortened titles, one per line, in the same order (line 1 = title 1, line 2 = title 2, etc.). No other text.
+
+TITLES:
+{numbered}
+
+SHORTENED (one per line):"""
+
+    try:
+        chat_completion = groq_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model=settings.GROQ_MODEL,
+            temperature=0.0,
+            max_tokens=512,
+        )
+        raw = (chat_completion.choices[0].message.content or "").strip()
+        lines = [ln.strip() for ln in raw.split("\n") if ln.strip()]
+        # Remove leading numbers/dots if LLM added them
+        result = []
+        for i, ln in enumerate(lines[: len(titles)]):
+            cleaned = ln.lstrip("0123456789.)- ")
+            if len(cleaned) > max_chars:
+                cleaned = truncate(cleaned)
+            result.append(cleaned or truncate(titles[i]))
+        # Pad if we got fewer lines than titles
+        while len(result) < len(titles):
+            result.append(truncate(titles[len(result)]))
+        return result[: len(titles)]
+    except Exception as e:
+        logger.warning(f"Shorten titles LLM failed, using truncation: {e}")
+        return [truncate(t) for t in titles]

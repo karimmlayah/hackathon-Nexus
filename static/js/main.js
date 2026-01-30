@@ -93,12 +93,12 @@
     });
 
 
-    // Single Products carousel
+    // Single Products carousel (dotsData: false to avoid "undefined" under image)
     $(".single-carousel").owlCarousel({
         autoplay: true,
         smartSpeed: 1500,
         dots: true,
-        dotsData: true,
+        dotsData: false,
         loop: true,
         items: 1,
         nav: true,
@@ -143,20 +143,18 @@
 
 
 
-    // Product Quantity
+    // Product Quantity (works on single.html and cart/shop)
     $('.quantity button').on('click', function () {
         var button = $(this);
-        var oldValue = button.parent().parent().find('input').val();
+        var input = button.parent().parent().find('input');
+        var oldValue = parseFloat(input.val()) || 0;
+        var newVal;
         if (button.hasClass('btn-plus')) {
-            var newVal = parseFloat(oldValue) + 1;
+            newVal = Math.min(99, oldValue + 1);
         } else {
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
-            }
+            newVal = Math.max(0, oldValue - 1);
         }
-        button.parent().parent().find('input').val(newVal);
+        input.val(newVal);
     });
 
 

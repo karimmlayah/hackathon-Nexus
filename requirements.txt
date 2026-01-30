@@ -12,3 +12,8 @@ python-jose[cryptography]>=3.3,<4.0
 passlib[bcrypt]>=1.7,<2.0
 groq==1.0.0
 pydantic-settings>=2.0,<3.0
+django-environ>=0.11.0
+psycopg2-binary>=2.9.0
+
+# ADK recommendation agent (optional)
+google-adk>=0.1.0

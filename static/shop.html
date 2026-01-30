@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -149,6 +149,288 @@
             font-weight: 500;
         }
 
+        /* Shop product card: simple, small, attractive typography */
+        .shop-product-card .shop-product-category {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: #64748b;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .shop-product-card .shop-product-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: #334155;
+            text-decoration: none;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+            min-height: 2.7em;
+        }
+
+        .shop-product-card .shop-product-title:hover {
+            color: #0f172a;
+        }
+
+        .shop-product-card .shop-product-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 0.8rem;
+            line-height: 1.35;
+        }
+        .shop-product-card .shop-product-price {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0ea5e9;
+            letter-spacing: 0.01em;
+        }
+
+        /* View overlay always visible and clickable on shop cards */
+        .shop-product-card .product-item-inner-item .product-details {
+            opacity: 1;
+            z-index: 5;
+            pointer-events: auto;
+        }
+        .shop-product-card .product-details a.view-details-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #fff;
+            background: #0ea5e9;
+            padding: 0.4rem 0.65rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .shop-product-card .product-details a.view-details-btn:hover {
+            background: #0284c7;
+            color: #fff;
+            transform: scale(1.03);
+        }
+
+        .shop-product-card .product-item-inner-item {
+            position: relative;
+        }
+        .product-discount-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #dc2626;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            z-index: 2;
+        }
+
+        /* Shop filters sidebar design */
+        .shop-filters-sidebar {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .shop-filters-sidebar .filter-block {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .shop-filters-sidebar .filter-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .shop-filters-sidebar .filter-block h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .shop-filters-sidebar .filter-block h4 i {
+            color: #0ea5e9;
+            font-size: 0.9rem;
+        }
+
+        .shop-filters-sidebar .filter-option {
+            display: flex;
+            align-items: center;
+            padding: 0.45rem 0;
+            cursor: pointer;
+            border-radius: 6px;
+            padding-left: 0.5rem;
+            margin-bottom: 0.2rem;
+            transition: background 0.15s;
+        }
+
+        .shop-filters-sidebar .filter-option:hover {
+            background: #f1f5f9;
+        }
+
+        .shop-filters-sidebar .filter-option input {
+            cursor: pointer;
+            accent-color: #0ea5e9;
+        }
+
+        .shop-filters-sidebar .filter-option span {
+            font-size: 0.8rem;
+            color: #334155;
+        }
+
+        .shop-filters-sidebar .filter-price-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .shop-filters-sidebar #filterPriceApply {
+            font-size: 0.8rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* Scrollable category list */
+        #filter-categories {
+            max-height: 260px;
+            overflow: auto;
+            padding-right: 6px;
+        }
+
+        #filter-categories::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #filter-categories::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        #filter-categories::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Dual range slider (min/max) */
+        .price-values {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 0.65rem;
+            font-size: 0.8rem;
+            color: #334155;
+        }
+
+        .price-values strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .range-slider {
+            position: relative;
+            height: 34px;
+            margin: 0.35rem 0 0.85rem;
+        }
+
+        .range-slider .range-track {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+        }
+
+        .range-slider .range-fill {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 8px;
+            background: #0ea5e9;
+            border-radius: 999px;
+            left: 0%;
+            right: 0%;
+        }
+
+        .range-slider input[type="range"] {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 34px;
+            background: transparent;
+            pointer-events: none;
+            /* allow both sliders to overlap */
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            /* re-enable dragging */
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #0ea5e9;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+            cursor: pointer;
+        }
+
+        .range-slider input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: transparent;
+        }
+
+        .range-slider input[type="range"]::-moz-range-thumb {
+            pointer-events: auto;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #0ea5e9;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+            cursor: pointer;
+        }
+
+        .range-slider input[type="range"]::-moz-range-track {
+            height: 8px;
+            background: transparent;
+        }
+
         .chat-message.message-user {
             background: var(--chat-user-bubble) !important;
             color: white !important;
@@ -178,51 +460,7 @@
     <!-- Navbar & Hero Start -->
     <div class="container-fluid nav-bar p-0">
         <div class="row gx-0 bg-primary px-5 align-items-center">
-            <div class="col-lg-3 d-none d-lg-block">
-                <nav class="navbar navbar-light position-relative" style="width: 250px;">
-                    <button class="navbar-toggler border-0 fs-4 w-100 px-0 text-start" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#allCat">
-                        <h4 class="m-0"><i class="fa fa-bars me-2"></i>All Categories</h4>
-                    </button>
-                    <div class="collapse navbar-collapse rounded-bottom" id="allCat">
-                        <div class="navbar-nav ms-auto py-0">
-                            <ul class="list-unstyled categories-bars">
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">Accessories</a>
-                                        <span>(3)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">Electronics & Computer</a>
-                                        <span>(5)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">Laptops & Desktops</a>
-                                        <span>(2)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">Mobiles & Tablets</a>
-                                        <span>(8)</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">SmartPhone & Smart TV</a>
-                                        <span>(5)</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <div class="col-12 col-lg-9">
+            <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-light bg-primary ">
                     <a href="" class="navbar-brand d-block d-lg-none">
                         <h1 class="display-5 text-secondary m-0"><i
@@ -237,59 +475,8 @@
                         <div class="navbar-nav ms-auto py-0">
                             <a href="index.html" class="nav-item nav-link">Home</a>
                             <a href="shop.html" class="nav-item nav-link active">Shop</a>
-                            <a href="single.html" class="nav-item nav-link">Single Page</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link" data-bs-toggle="dropdown"><span
-                                        class="dropdown-toggle">Pages</span></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="bestseller.html" class="dropdown-item">Bestseller</a>
-                                    <a href="cart.html" class="dropdown-item">Cart Page</a>
-                                    <a href="cheackout.html" class="dropdown-item">Cheackout</a>
-                                    <a href="404.html" class="dropdown-item">404 Page</a>
-                                </div>
-                            </div>
                             <a href="contact.html" class="nav-item nav-link me-2">Contact</a>
-                            <div class="nav-item dropdown d-block d-lg-none mb-3">
-                                <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">All
-                                        Category</span></a>
-                                <div class="dropdown-menu m-0">
-                                    <ul class="list-unstyled categories-bars">
-                                        <li>
-                                            <div class="categories-bars-item">
-                                                <a href="#">Accessories</a>
-                                                <span>(3)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="categories-bars-item">
-                                                <a href="#">Electronics & Computer</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="categories-bars-item">
-                                                <a href="#">Laptops & Desktops</a>
-                                                <span>(2)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="categories-bars-item">
-                                                <a href="#">Mobiles & Tablets</a>
-                                                <span>(8)</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="categories-bars-item">
-                                                <a href="#">SmartPhone & Smart TV</a>
-                                                <span>(5)</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
-                        <a href="" class="btn btn-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0"><i
-                                class="fa fa-mobile-alt me-2"></i> +0123 456 7890</a>
                     </div>
                 </nav>
             </div>
@@ -414,195 +601,41 @@
     </div>
     <!-- Products Offer End -->
 
-
     <!-- Shop Page Start -->
     <div class="container-fluid shop py-5">
         <div class="container py-5">
             <div class="row g-4">
                 <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="product-categories mb-4">
-                        <h4>Products Categories</h4>
-                        <ul class="list-unstyled">
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Accessories</a>
-                                    <span>(3)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Electronics & Computer</a>
-                                    <span>(5)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>Laptops & Desktops</a>
-                                    <span>(2)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>Mobiles & Tablets</a>
-                                    <span>(8)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="categories-item">
-                                    <a href="#" class="text-dark"><i
-                                            class="fas fa-apple-alt text-secondary me-2"></i>SmartPhone & Smart TV</a>
-                                    <span>(5)</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="price mb-4">
-                        <h4 class="mb-2">Price</h4>
-                        <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500"
-                            value="0" oninput="amount.value=rangeInput.value">
-                        <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
-                        <div class=""></div>
-                    </div>
-                    <div class="product-color mb-3">
-                        <h4>Select By Color</h4>
-                        <ul class="list-unstyled">
-                            <li>
-                                <div class="product-color-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Gold</a>
-                                    <span>(1)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="product-color-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        Green</a>
-                                    <span>(1)</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="product-color-item">
-                                    <a href="#" class="text-dark"><i class="fas fa-apple-alt text-secondary me-2"></i>
-                                        White</a>
-                                    <span>(1)</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="additional-product mb-4">
-                        <h4>Additional Products</h4>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                            <label for="Categories-1" class="text-dark"> Accessories</label>
+                    <div class="shop-filters-sidebar">
+                        <div class="filter-block">
+                            <h4><i class="fas fa-layer-group"></i> PRODUCT TYPE</h4>
+                            <ul class="list-unstyled mb-0" id="filter-categories">
+                                <li>
+                                    <label class="filter-option mb-0 w-100">
+                                        <input type="radio" class="me-2" name="filterCategory" value="" checked>
+                                        <span>All types</span>
+                                    </label>
+                                </li>
+                                <!-- Populated by JS -->
+                            </ul>
                         </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                            <label for="Categories-2" class="text-dark"> Electronics & Computer</label>
-                        </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                            <label for="Categories-3" class="text-dark"> Laptops & Desktops</label>
-                        </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                            <label for="Categories-4" class="text-dark"> Mobiles & Tablets</label>
-                        </div>
-                        <div class="additional-product-item">
-                            <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                            <label for="Categories-5" class="text-dark"> SmartPhone & Smart TV</label>
-                        </div>
-                    </div>
-                    <div class="featured-product mb-4">
-                        <h4 class="mb-3">Featured products</h4>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-3.png" class="img-fluid rounded" alt="Image">
+                        <div class="filter-block">
+                            <h4><i class="fas fa-tag"></i> Price (DT)</h4>
+                            <!-- hidden fields used by getFilters() - synced by initPriceSlider -->
+                            <input type="hidden" id="filterMinPrice" value="0">
+                            <input type="hidden" id="filterMaxPrice" value="20000000">
+
+                            <div class="price-values">
+                                <span>Min: <strong id="priceMinLabel">0</strong> DT</span>
+                                <span>Max: <strong id="priceMaxLabel">20,000,000</strong> DT</span>
                             </div>
-                            <div>
-                                <h6 class="mb-2">SmartPhone</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
+                            <div class="range-slider" aria-label="Price range">
+                                <div class="range-track"></div>
+                                <div class="range-fill" id="priceRangeFill"></div>
+                                <input type="range" id="priceMinRange" min="0" max="20000000" value="0" step="1000">
+                                <input type="range" id="priceMaxRange" min="0" max="20000000" value="20000000" step="1000">
                             </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-4.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Smart Camera</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product-item">
-                            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="/static/img/product-5.png" class="img-fluid rounded" alt="Image">
-                            </div>
-                            <div>
-                                <h6 class="mb-2">Camera Leance</h6>
-                                <div class="d-flex mb-2">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="d-flex mb-2">
-                                    <h5 class="fw-bold me-2">2.99 $</h5>
-                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center my-4">
-                            <a href="#" class="btn btn-primary px-4 py-3 rounded-pill w-100">Vew More</a>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="position-relative">
-                            <img src="/static/img/product-banner-2.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            <div class="text-center position-absolute d-flex flex-column align-items-center justify-content-center rounded p-4"
-                                style="width: 100%; height: 100%; top: 0; right: 0; background: rgba(242, 139, 0, 0.3);">
-                                <h5 class="display-6 text-primary">SALE</h5>
-                                <h4 class="text-secondary">Get UP To 50% Off</h4>
-                                <a href="#" class="btn btn-primary rounded-pill px-4">Shop Now</a>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="product-tags py-4">
-                        <h4 class="mb-3">PRODUCT TAGS</h4>
-                        <div class="product-tags-items bg-light rounded p-3">
-                            <a href="#" class="border rounded py-1 px-2 mb-2">New</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">brand</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">black</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">white</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">tablats</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">phone</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">camera</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">drone</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">talevision</a>
-                            <a href="#" class="border rounded py-1 px-2 mb-2">slaes</a>
+                            <button type="button" id="filterPriceApply" class="btn btn-sm btn-primary">Apply</button>
                         </div>
                     </div>
                 </div>
@@ -620,24 +653,23 @@
                     <div class="row g-4">
                         <div class="col-xl-7">
                             <div class="input-group w-100 mx-auto d-flex">
-                                <input type="search" class="form-control p-3" placeholder="keywords"
-                                    aria-describedby="search-icon-1">
-                                <span id="search-icon-1" class="input-group-text p-3"><i
-                                        class="fa fa-search"></i></span>
+                                <input id="shopSearchInput" type="search" class="form-control p-3"
+                                    placeholder="Search products..." aria-describedby="shop-search-btn">
+                                <button id="shop-search-btn" type="button" class="input-group-text p-3"
+                                    style="cursor:pointer; border:0;">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-xl-3 text-end">
-                            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between">
-                                <label for="electronics">Sort By:</label>
-                                <select id="electronics" name="electronicslist"
-                                    class="border-0 form-select-sm bg-light me-3" form="electronicsform">
-                                    <option value="volvo">Default Sorting</option>
-                                    <option value="volv">Nothing</option>
-                                    <option value="sab">Popularity</option>
-                                    <option value="saab">Newness</option>
-                                    <option value="opel">Average Rating</option>
-                                    <option value="audio">Low to high</option>
-                                    <option value="audi">High to low</option>
+                        <div class="col-xl-3">
+                            <div class="bg-light px-3 py-2 rounded d-flex align-items-center justify-content-end gap-2">
+                                <label for="sortSelect" class="mb-0 text-muted small" style="white-space:nowrap;">Sort
+                                    by</label>
+                                <select id="sortSelect" name="sortSelect" class="border-0 form-select-sm bg-light"
+                                    style="max-width: 180px;">
+                                    <option value="">Default</option>
+                                    <option value="price_asc">Price: Low to High</option>
+                                    <option value="price_desc">Price: High to Low</option>
                                 </select>
                             </div>
                         </div>
@@ -664,90 +696,360 @@
                             <div class="col-12">
                                 <div class="pagination d-flex justify-content-center mt-5"
                                     style="gap: 15px; align-items: center;">
-                                    <button id="prev" class="btn btn-primary rounded-pill px-4">⬅ Prev</button>
+                                    <button id="prev" class="btn btn-primary rounded-pill px-4">&#171; Previous</button>
                                     <span id="pageInfo" class="fw-bold fs-5 text-dark"></span>
-                                    <button id="next" class="btn btn-primary rounded-pill px-4">Next ➡</button>
+                                    <button id="next" class="btn btn-primary rounded-pill px-4">Next &#187;</button>
                                 </div>
                             </div>
 
                             <script>
-                                const API_URL = "http://127.0.0.1:8000/products";
-                                const LIMIT = 9; // Matching the visual layout (rows of 3)
+                                const API_BASE = (window.location.origin && window.location.origin !== 'file://')
+                                    ? window.location.origin : 'http://127.0.0.1:8000';
+                                const API_URL = API_BASE + '/products';
+                                const FACETS_URL = API_BASE + '/products/facets';
+                                const PRICE_RANGE_URL = API_BASE + '/products/price-range';
+                                const SEARCH_URL = API_BASE + '/api/search';   // same as home page (RAG semantic)
+                                const SEARCH_GET_URL = API_BASE + '/search';   // fallback: app.py semantic GET
+                                const LIMIT = 9;
 
                                 let currentPage = 1;
                                 let totalPages = 1;
+                                let mode = 'browse'; // browse | search
+                                let searchBaseResults = [];
 
-                                async function loadProducts(page = 1) {
+                                function getFilters() {
+                                    const category = document.querySelector('input[name="filterCategory"]:checked');
+                                    const minP = document.getElementById('filterMinPrice');
+                                    const maxP = document.getElementById('filterMaxPrice');
+                                    return {
+                                        category: category ? category.value : '',
+                                        min_price: minP && minP.value ? parseFloat(minP.value) : null,
+                                        max_price: maxP && maxP.value ? parseFloat(maxP.value) : null
+                                    };
+                                }
+                                function getSort() {
+                                    const el = document.getElementById('sortSelect');
+                                    return el ? el.value : '';
+                                }
+                                function getPriceNum(p) {
+                                    if (p.price_numeric != null && !isNaN(p.price_numeric)) return Number(p.price_numeric);
+                                    const v = p.price;
+                                    if (v == null) return 0;
+                                    const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[^\d.-]/g, ''));
+                                    return isNaN(n) ? 0 : n;
+                                }
+
+                                function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+                                function getDiscountPercent(p) {
+                                    if (p.discount_percent != null && p.discount_percent > 0) return p.discount_percent;
+                                    if (p.discount) { const m = String(p.discount).match(/(\d+)/); return m ? parseInt(m[1], 10) : 0; }
+                                    const init = p.initial_price != null ? parseFloat(p.initial_price) : NaN;
+                                    const pr = (p.price_numeric != null ? p.price_numeric : parseFloat(p.price));
+                                    if (!isNaN(init) && init > 0 && !isNaN(pr) && pr < init) return Math.min(99, Math.round((init - pr) / init * 100));
+                                    return 0;
+                                }
+                                function formatPriceDT(p) {
+                                    if (p.price_display) return p.price_display;
+                                    const n = p.price_numeric != null ? p.price_numeric : (p.price != null ? parseFloat(p.price) : NaN);
+                                    if (!isNaN(n)) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' DT';
+                                    return (p.price != null && p.price !== '') ? String(p.price) : '—';
+                                }
+                                function truncateDesc(s, len) {
+                                    if (!s) return ''; s = String(s).trim(); return s.length <= len ? s : s.slice(0, len) + '…';
+                                }
+                                async function loadFacets() {
+                                    let categories = [];
                                     try {
-                                        const res = await fetch(`${API_URL}?page=${page}&limit=${LIMIT}`);
-                                        if (!res.ok) throw new Error('Failed to fetch');
-                                        const data = await res.json();
+                                        const res = await fetch(FACETS_URL);
+                                        if (res.ok) {
+                                            const data = await res.json();
+                                            if (data && data.success && Array.isArray(data.categories)) categories = data.categories.filter(Boolean);
+                                        }
+                                    } catch (e) { console.warn('Facets load failed:', e); }
+                                    // Fallback: derive categories from /products response
+                                    if (categories.length === 0) {
+                                        try {
+                                            const res2 = await fetch(`${API_URL}?page=1&limit=300`);
+                                            const data2 = await res2.json();
+                                            const set = new Set();
+                                            const products = Array.isArray(data2) ? data2 : (data2.products || []);
+                                            products.forEach(p => {
+                                                if (p && (p.category != null && p.category !== '')) set.add(String(p.category).trim());
+                                            });
+                                            categories = Array.from(set).filter(Boolean).sort((a, b) => a.localeCompare(b)).slice(0, 80);
+                                        } catch (e) { console.warn('Products fallback categories failed:', e); }
+                                    }
+                                    const catList = document.getElementById('filter-categories');
+                                    if (!catList) return;
+                                    catList.querySelectorAll('li:not(:first-child)').forEach(el => el.remove());
+                                    categories.forEach(c => {
+                                        const li = document.createElement('li');
+                                        const v = (c || '').replace(/"/g, '&quot;');
+                                        li.innerHTML = `<label class="filter-option mb-0 w-100"><input type="radio" class="me-2" name="filterCategory" value="${escapeHtml(v)}"><span>${escapeHtml(c)}</span></label>`;
+                                        catList.appendChild(li);
+                                    });
+                                    document.querySelectorAll('input[name="filterCategory"]').forEach(el => {
+                                        el.removeEventListener('change', window._onFilterCategory);
+                                        window._onFilterCategory = () => handleFiltersChanged();
+                                        el.addEventListener('change', window._onFilterCategory);
+                                    });
+                                }
 
-                                        const container = document.getElementById("products-dynamic-container");
-                                        container.innerHTML = "";
-
-                                        data.products.forEach(p => {
-                                            container.innerHTML += `
-                                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                                <div class="product-item rounded">
-                                                    <div class="product-item-inner border rounded">
-                                                        <div class="product-item-inner-item">
-                                                            <img src="${p.image || '/static/img/product-1.png'}" class="img-fluid w-100 rounded-top" style="height: 300px; object-fit: cover;" alt="${p.title}">
-                                                            <div class="product-new">New</div>
-                                                            <div class="product-details">
-                                                                <a href="#"><i class="fa fa-eye fa-1x"></i></a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="text-center rounded-bottom p-4">
-                                                            <a href="#" class="d-block mb-2">${p.category || 'Category'}</a>
-                                                            <a href="single.html?id=${p.id}" class="d-block h4 mb-3" style="min-height: 60px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.title || 'Product Title'}</a>
-                                                            <span class="text-primary fs-5 fw-bold">${p.price || '$0.00'}</span>
+                                function renderProducts(products) {
+                                    const container = document.getElementById("products-dynamic-container");
+                                    container.innerHTML = "";
+                                    products.forEach(p => {
+                                        const hasId = p.id != null && p.id !== '';
+                                        const hasAsin = p.asin != null && p.asin !== '';
+                                        const singleUrl = hasId
+                                            ? `single.html?id=${encodeURIComponent(String(p.id))}`
+                                            : hasAsin
+                                                ? `single.html?asin=${encodeURIComponent(String(p.asin))}`
+                                                : '#';
+                                        const discountPct = getDiscountPercent(p);
+                                        const priceText = formatPriceDT(p);
+                                        const descText = truncateDesc(p.description, 140);
+                                        container.innerHTML += `
+                                        <div class="col-lg-4 col-md-6 wow fadeInUp shop-product-card" data-wow-delay="0.1s">
+                                            <div class="product-item rounded">
+                                                <div class="product-item-inner border rounded">
+                                                    <div class="product-item-inner-item">
+                                                        <img src="${p.image || '/static/img/product-1.png'}" class="img-fluid w-100 rounded-top" style="height: 300px; object-fit: cover;" alt="${escapeHtml(p.name || p.title || '')}">
+                                                        ${discountPct > 0 ? `<div class="product-discount-badge">-${discountPct}%</div>` : ''}
+                                                        <div class="product-details">
+                                                            <a href="${singleUrl}" class="view-details-btn" title="View product details" onclick="event.stopPropagation();"><i class="fa fa-eye me-1"></i> View</a>
                                                         </div>
                                                     </div>
-                                                    <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
-                                                        <a href="#" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="d-flex">
-                                                                <i class="fas fa-star text-primary"></i>
-                                                                <i class="fas fa-star text-primary"></i>
-                                                                <i class="fas fa-star text-primary"></i>
-                                                                <i class="fas fa-star text-primary"></i>
-                                                                <i class="fas fa-star"></i>
-                                                            </div>
-                                                            <div class="d-flex">
-                                                                <a href="#" class="text-primary d-flex align-items-center justify-content-center me-3"><span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span></a>
-                                                                <a href="#" class="text-primary d-flex align-items-center justify-content-center me-0"><span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span></a>
-                                                            </div>
-                                                        </div>
+                                                    <div class="text-center rounded-bottom p-3">
+                                                        <a href="${singleUrl}" class="shop-product-category">${escapeHtml(p.category || 'General')}</a>
+                                                        <a href="${singleUrl}" class="shop-product-title d-block">${escapeHtml(p.name || p.title || 'Product')}</a>
+                                                        ${descText ? `<p class="shop-product-description small text-muted mb-2 text-start">${escapeHtml(descText)}</p>` : ''}
+                                                        <span class="shop-product-price">${escapeHtml(priceText)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="product-item-add border border-top-0 rounded-bottom text-center p-3 pt-0">
+                                                    <a href="${singleUrl}" class="btn btn-sm btn-outline-primary rounded-pill py-2 px-3 mb-3" style="font-size: 0.75rem;"><i class="fas fa-info-circle me-1"></i> Details</a>
+                                                    <a href="#" class="btn btn-sm btn-primary border-secondary rounded-pill py-2 px-3 mb-3" style="font-size: 0.75rem;"><i class="fas fa-shopping-cart me-1"></i> Cart</a>
+                                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                                        <i class="fas fa-star text-warning" style="font-size: 0.65rem;"></i>
+                                                        <i class="fas fa-star text-warning" style="font-size: 0.65rem;"></i>
+                                                        <i class="fas fa-star text-warning" style="font-size: 0.65rem;"></i>
+                                                        <i class="fas fa-star text-warning" style="font-size: 0.65rem;"></i>
+                                                        <i class="fas fa-star text-muted" style="font-size: 0.65rem;"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            `;
+                                        </div>
+                                        `;
+                                    });
+                                }
+
+                                function applyLocalFilters(list) {
+                                    const f = getFilters();
+                                    let out = Array.isArray(list) ? [...list] : [];
+                                    if (f.category) {
+                                        const q = f.category.trim().toLowerCase();
+                                        out = out.filter(p => (p.category || '').trim().toLowerCase() === q);
+                                    }
+                                    if (f.min_price != null && !isNaN(f.min_price)) {
+                                        out = out.filter(p => getPriceNum(p) >= f.min_price);
+                                    }
+                                    if (f.max_price != null && !isNaN(f.max_price)) {
+                                        out = out.filter(p => getPriceNum(p) <= f.max_price);
+                                    }
+                                    const sort = getSort();
+                                    if (sort === 'price_asc') {
+                                        out.sort((a, b) => getPriceNum(a) - getPriceNum(b));
+                                    } else if (sort === 'price_desc') {
+                                        out.sort((a, b) => getPriceNum(b) - getPriceNum(a));
+                                    }
+                                    return out;
+                                }
+
+                                function renderSearchPage(page = 1) {
+                                    const filtered = applyLocalFilters(searchBaseResults);
+                                    totalPages = Math.max(1, Math.ceil(filtered.length / LIMIT));
+                                    currentPage = Math.max(1, Math.min(page, totalPages));
+                                    const start = (currentPage - 1) * LIMIT;
+                                    const pageItems = filtered.slice(start, start + LIMIT);
+                                    renderProducts(pageItems);
+                                    document.getElementById("pageInfo").innerText = `Page ${currentPage} / ${totalPages}`;
+                                    document.getElementById("prev").disabled = currentPage <= 1;
+                                    document.getElementById("next").disabled = currentPage >= totalPages;
+                                }
+
+                                async function performShopSearch() {
+                                    const qEl = document.getElementById('shopSearchInput');
+                                    const query = qEl ? qEl.value.trim() : '';
+                                    if (!query) {
+                                        mode = 'browse';
+                                        searchBaseResults = [];
+                                        return loadProducts(1);
+                                    }
+                                    const container = document.getElementById('products-dynamic-container');
+                                    if (container) container.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Searching...</p></div>';
+                                    const sort = getSort();
+                                    let results = [];
+                                    // Same semantic search as home page: POST /api/search
+                                    try {
+                                        const response = await fetch(SEARCH_URL, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                user_query: query,
+                                                limit: 50,
+                                                sort_by: sort || null
+                                            })
                                         });
+                                        if (response.ok) {
+                                            const data = await response.json();
+                                            results = data.results || data.products || [];
+                                        }
+                                    } catch (e) { console.warn('POST /api/search failed:', e); }
+                                    // Fallback: GET /search (app.py) if POST fails or returns empty
+                                    if (results.length === 0) {
+                                        try {
+                                            const url = `${SEARCH_GET_URL}?q=${encodeURIComponent(query)}&limit=50&threshold=0.25`;
+                                            const res = await fetch(url);
+                                            if (res.ok) {
+                                                const data = await res.json();
+                                                results = data.results || data.items || [];
+                                            }
+                                        } catch (e) { console.warn('GET /search fallback failed:', e); }
+                                    }
+                                    mode = 'search';
+                                    searchBaseResults = Array.isArray(results) ? results : [];
+                                    renderSearchPage(1);
+                                }
 
-                                        currentPage = data.current_page;
-                                        totalPages = data.total_pages;
+                                function handleFiltersChanged() {
+                                    if (mode === 'search') return renderSearchPage(1);
+                                    return loadProducts(1);
+                                }
 
-                                        document.getElementById("pageInfo").innerText = `Page ${currentPage} / ${totalPages}`;
+                                async function loadProducts(page = 1) {
+                                    try {
+                                        const f = getFilters();
+                                        let url = `${API_URL}?page=${page}&limit=${LIMIT}`;
+                                        if (f.category) url += '&category=' + encodeURIComponent(f.category);
+                                        if (f.min_price != null && !isNaN(f.min_price)) url += '&min_price=' + f.min_price;
+                                        if (f.max_price != null && !isNaN(f.max_price)) url += '&max_price=' + f.max_price;
+                                        const sort = getSort();
+                                        if (sort) url += '&sort=' + encodeURIComponent(sort);
+                                        const res = await fetch(url);
+                                        if (!res.ok) throw new Error('Failed to fetch');
+                                        const data = await res.json();
+                                        if (data && !data.success && data.error) throw new Error(data.error);
+                                        mode = 'browse';
+                                        const products = Array.isArray(data) ? data : (data.products || []);
+                                        renderProducts(products);
+
+                                        currentPage = (data && typeof data.current_page === 'number') ? data.current_page : 1;
+                                        totalPages = (data && typeof data.total_pages === 'number') ? data.total_pages : 1;
+
+                                        const pageInfoEl = document.getElementById("pageInfo");
+                                        if (pageInfoEl) pageInfoEl.innerText = `Page ${currentPage} / ${totalPages}`;
                                         document.getElementById("prev").disabled = currentPage <= 1;
                                         document.getElementById("next").disabled = currentPage >= totalPages;
 
                                     } catch (error) {
                                         console.error("Error loading products:", error);
-                                        document.getElementById("products-dynamic-container").innerHTML = `<div class="col-12 text-center text-danger"><h3>Failed to load products. Is the server running?</h3></div>`;
+                                        const msg = (error && error.message) ? error.message : 'Network or server error';
+                                        document.getElementById("products-dynamic-container").innerHTML = `
+                                            <div class="col-12 text-center text-danger py-5">
+                                                <h3>Failed to load products</h3>
+                                                <p class="text-muted mb-2">${msg}</p>
+                                                <p class="small">Start the backend with: <code>uvicorn app:app --reload</code> (from project root). Products are loaded from Qdrant Cloud.</p>
+                                            </div>`;
                                     }
                                 }
 
                                 document.getElementById("prev").onclick = () => {
-                                    if (currentPage > 1) loadProducts(currentPage - 1);
+                                    if (currentPage <= 1) return;
+                                    if (mode === 'search') return renderSearchPage(currentPage - 1);
+                                    return loadProducts(currentPage - 1);
                                 };
-
                                 document.getElementById("next").onclick = () => {
-                                    if (currentPage < totalPages) loadProducts(currentPage + 1);
+                                    if (currentPage >= totalPages) return;
+                                    if (mode === 'search') return renderSearchPage(currentPage + 1);
+                                    return loadProducts(currentPage + 1);
                                 };
+                                document.getElementById("filterPriceApply").addEventListener('click', () => handleFiltersChanged());
+                                document.getElementById("sortSelect").addEventListener('change', () => handleFiltersChanged());
+                                document.getElementById("shop-search-btn").addEventListener('click', () => performShopSearch());
+                                document.getElementById("shopSearchInput").addEventListener('keydown', (e) => {
+                                    if (e.key === 'Enter') performShopSearch();
+                                });
 
-                                // Load only when tab is shown if needed, or immediately
-                                loadProducts();
+                                function formatPriceLabel(n) {
+                                    if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+                                    if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+                                    return String(n);
+                                }
+                                function initPriceSlider() {
+                                    const minRange = document.getElementById('priceMinRange');
+                                    const maxRange = document.getElementById('priceMaxRange');
+                                    const minHidden = document.getElementById('filterMinPrice');
+                                    const maxHidden = document.getElementById('filterMaxPrice');
+                                    const minLabel = document.getElementById('priceMinLabel');
+                                    const maxLabel = document.getElementById('priceMaxLabel');
+                                    const fill = document.getElementById('priceRangeFill');
+                                    if (!minRange || !maxRange || !minHidden || !maxHidden || !fill) return;
+
+                                    const min = parseInt(minRange.min || '0', 10);
+                                    const maxVal = parseInt(minRange.max || '20000000', 10);
+                                    const clamp = (v) => Math.min(maxVal, Math.max(min, v));
+
+                                    function updateFill() {
+                                        let a = clamp(parseInt(minRange.value || '0', 10));
+                                        let b = clamp(parseInt(maxRange.value || String(maxVal), 10));
+                                        if (a > b) [a, b] = [b, a];
+                                        minRange.value = String(a);
+                                        maxRange.value = String(b);
+                                        minHidden.value = String(a);
+                                        maxHidden.value = String(b);
+                                        if (minLabel) minLabel.textContent = formatPriceLabel(a);
+                                        if (maxLabel) maxLabel.textContent = formatPriceLabel(b);
+                                        const range = maxVal - min || 1;
+                                        const left = ((a - min) / range) * 100;
+                                        const right = 100 - ((b - min) / range) * 100;
+                                        fill.style.left = `${left}%`;
+                                        fill.style.right = `${right}%`;
+                                    }
+
+                                    minRange.addEventListener('input', updateFill);
+                                    maxRange.addEventListener('input', updateFill);
+                                    updateFill();
+                                }
+                                async function loadPriceRange() {
+                                    try {
+                                        const res = await fetch(PRICE_RANGE_URL);
+                                        if (!res.ok) return;
+                                        const data = await res.json();
+                                        if (!data.success || data.max_price == null) return;
+                                        const minP = Math.floor(Number(data.min_price) || 0);
+                                        const maxP = Math.ceil(Number(data.max_price) || 2000);
+                                        const maxVal = maxP > minP ? maxP : minP + 100;
+                                        const minVal = minP;
+                                        const minRange = document.getElementById('priceMinRange');
+                                        const maxRange = document.getElementById('priceMaxRange');
+                                        const minHidden = document.getElementById('filterMinPrice');
+                                        const maxHidden = document.getElementById('filterMaxPrice');
+                                        const minLabel = document.getElementById('priceMinLabel');
+                                        const maxLabel = document.getElementById('priceMaxLabel');
+                                        if (minRange) { minRange.min = minVal; minRange.max = maxVal; minRange.value = minVal; minRange.step = maxVal > 10000 ? 100 : (maxVal > 1000 ? 10 : 1); }
+                                        if (maxRange) { maxRange.min = minVal; maxRange.max = maxVal; maxRange.value = maxVal; maxRange.step = minRange ? minRange.step : 1; }
+                                        if (minHidden) minHidden.value = String(minVal);
+                                        if (maxHidden) maxHidden.value = String(maxVal);
+                                        if (minLabel) minLabel.textContent = formatPriceLabel(minVal);
+                                        if (maxLabel) maxLabel.textContent = formatPriceLabel(maxVal);
+                                    } catch (e) { console.warn('Price range load failed:', e); }
+                                }
+
+                                loadFacets();
+                                loadPriceRange()
+                                    .then(() => { initPriceSlider(); loadProducts(); })
+                                    .catch(() => { initPriceSlider(); loadProducts(); });
                             </script>
                         </div>
                     </div>
@@ -757,42 +1059,6 @@
     </div>
     </div>
     <!-- Shop Page End -->
-
-    <!-- Product Banner Start -->
-    <div class="container-fluid py-5">
-        <div class="container pb-5">
-            <div class="row g-4">
-                <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
-                    <a href="#">
-                        <div class="bg-primary rounded position-relative">
-                            <img src="/static/img/product-banner.jpg" class="img-fluid w-100 rounded" alt="">
-                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
-                                style="background: rgba(255, 255, 255, 0.5);">
-                                <h3 class="display-5 text-primary">EOS Rebel <br> <span>T7i Kit</span></h3>
-                                <p class="fs-4 text-muted">$899.99</p>
-                                <a href="#" class="btn btn-primary rounded-pill align-self-start py-2 px-4">Shop Now</a>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
-                    <a href="#">
-                        <div class="text-center bg-primary rounded position-relative">
-                            <img src="/static/img/product-banner-2.jpg" class="img-fluid w-100" alt="">
-                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
-                                style="background: rgba(242, 139, 0, 0.5);">
-                                <h2 class="display-2 text-secondary">SALE</h2>
-                                <h4 class="display-5 text-white mb-4">Get UP To 50% Off</h4>
-                                <a href="#" class="btn btn-secondary rounded-pill align-self-center py-2 px-4">Shop
-                                    Now</a>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Product Banner End -->
 
     <!-- Footer Start -->
     <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
@@ -916,8 +1182,8 @@
                 </div>
                 <div class="col-md-6 text-center text-md-end text-white">
 
-                    <!--/*** This template is free as long as you keep the below authorâ€™s credit link/attribution link/backlink. ***/-->
-                    <!--/*** If you'd like to use the template without the below authorâ€™s credit link/attribution link/backlink, ***/-->
+                    <!--/*** This template is free as long as you keep the below authorÃ¢â‚¬â„¢s credit link/attribution link/backlink. ***/-->
+                    <!--/*** If you'd like to use the template without the below authorÃ¢â‚¬â„¢s credit link/attribution link/backlink, ***/-->
                     <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
                     Designed By <a class="border-bottom text-white" href="https://htmlcodex.com">HTML Codex</a>.
                     Distributed By <a class="border-bottom text-white" href="https://themewagon.com">ThemeWagon</a>
@@ -1037,7 +1303,7 @@
                             <div class="product-info">
                                 <div class="product-name">${p.name}</div>
                                 <div class="product-meta">
-                                    <span class="product-price">${p.price}</span> • <span class="product-availability">${p.availability}</span>
+                                    <span class="product-price">${p.price}</span> â€¢ <span class="product-availability">${p.availability}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -1062,8 +1328,10 @@
         async function loadFeaturedOffers() {
             const container = document.getElementById('productsOfferContainer');
             if (!container) return;
+            const apiBase = (window.location.origin && window.location.origin !== 'file://')
+                ? window.location.origin : 'http://127.0.0.1:8000';
             try {
-                const response = await fetch('/products?limit=50');
+                const response = await fetch(apiBase + '/products?limit=50');
                 const data = await response.json();
                 const products = data.products || [];
                 const productsWithDiscounts = products
@@ -1104,7 +1372,7 @@
 
         // Final Load
         window.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Shop DOM Ready');
+            console.log('ðŸš€ Shop DOM Ready');
             loadFeaturedOffers();
         });
     </script>
